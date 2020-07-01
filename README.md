@@ -65,7 +65,7 @@ Você deve utilizar o banco MongoDB para a gestão de dados. Além disso, a API 
 ```json
 {
   "name": "product_name",
-  "quantity": "product_quantity",
+  "quantity": "product_quantity"
 }
 ```
 
@@ -113,8 +113,8 @@ Você deve utilizar o banco MongoDB para a gestão de dados. Além disso, a API 
 [
   {
   "productId": "product_id",
-  "quantity": "product_quantity",
-  },
+  "quantity": "product_quantity"
+  }
   ...
 ]
 ```
@@ -149,7 +149,7 @@ Você deve utilizar o banco MongoDB para a gestão de dados. Além disso, a API 
 
 ```json
 {
-  "quantity": "product_quantity",
+  "quantity": "product_quantity"
 }
 ```
 
