@@ -145,13 +145,7 @@ Você deve utilizar o banco MongoDB para a gestão de dados. Além disso, a API 
 
 - O endpoint deve ser acessível através do caminho (`/sales/:id`);
 
-- O corpo da requisição deve receber a seguinte estrutura:
-
-```json
-{
-  "quantity": "product_quantity"
-}
-```
+- O corpo da requisição deve receber a mesma estrutura utilizada para criar uma venda;
 
 - `quantity` deve ser um número inteiro maior que 0;
 
