@@ -176,10 +176,7 @@ Você deve utilizar o banco MongoDB para a gestão de dados. Além disso, a API 
   - Entre na pasta do repositório que você acabou de clonar:
     - `cd sd-0x-blockxx-storage-manager`
 
-2. Instale as dependências
-  - `npm install`
-
-3. Crie uma branch a partir da branch `master`
+2. Crie uma branch a partir da branch `master`
   - Verifique que você está na branch `master`
     - Exemplo: `git branch`
   - Se não estiver, mude para a branch `master`
@@ -188,7 +185,7 @@ Você deve utilizar o banco MongoDB para a gestão de dados. Além disso, a API 
     - Você deve criar uma branch no seguinte formato: `nome-de-usuario-nome-do-projeto`
     - Exemplo: `git checkout -b joaozinho-storage-manager`
 
-4. Adicione as mudanças ao _stage_ do Git e faça um `commit`
+3. Adicione as mudanças ao _stage_ do Git e faça um `commit`
   - Verifique que as mudanças ainda não estão no _stage_
     - Exemplo: `git status` (deve aparecer listado o arquivo alterado em vermelho)
   - Adicione o arquivo alterado ao _stage_ do Git
@@ -200,10 +197,10 @@ Você deve utilizar o banco MongoDB para a gestão de dados. Além disso, a API 
       - `git commit -m 'Iniciando o projeto Storage-manager'` (fazendo o primeiro commit)
       - `git status` (deve aparecer uma mensagem tipo _nothing to commit_ )
 
-5. Adicione a sua branch com o novo `commit` ao repositório remoto
+4. Adicione a sua branch com o novo `commit` ao repositório remoto
   - Usando o exemplo anterior: `git push -u origin joaozinho-storage-manager`
 
-6. Crie um novo `Pull Request` _(PR)_
+5. Crie um novo `Pull Request` _(PR)_
   - Vá até a página de _Pull Requests_ do [repositório no GitHub](https://github.com/tryber/sd-0x-blockxx-storage-manager/pulls)
   - Clique no botão verde _"New pull request"_
   - Clique na caixa de seleção _"Compare"_ e escolha a sua branch **com atenção**
