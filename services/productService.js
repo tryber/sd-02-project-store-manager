@@ -9,8 +9,12 @@ const showSingleProduct = async (id) =>
 const createNewProduct = async (product) =>
   productModel.addProduct(product);
 
+const deleteSingleProduct = async (id) =>
+  productModel.deleteProduct(id);
+
 module.exports = {
   listAllProducts,
   showSingleProduct,
   createNewProduct,
+  deleteSingleProduct,
 };

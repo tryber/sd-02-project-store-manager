@@ -14,12 +14,15 @@ router.get('/', async (_req, res) => {
 router.post('/', async (req, res) => {
   const { name, quantity } = req.body;
 
-  if (name.length <= 5 || typeof name !== 'string' || quantity < 1) {
+  const validName = name.length > 5 && typeof name === 'string';
+  const validQuantity = quantity > 0 && Number.isInteger(quantity);
+
+  if (!validName || !validQuantity) {
     return res.status(400).json({
       error: {
         message: 'Invalid data',
         code: 'invalid_data',
-        data: 'The product name must be at least 5 letters and be a string. The quantity must be at least 1.',
+        data: 'The product name must be at least 5 letters and be a string. The quantity must be at least 1 an be an interger.',
       },
     });
   }
@@ -31,8 +34,8 @@ router.post('/', async (req, res) => {
   } catch (err) {
     res.status(500).json({
       error: {
-        message: 'Something went wrong when registering the product. Try again later.',
-        code: 'create_err',
+        message: 'Error when connecting with database',
+        code: 'db_connection_err',
         data: err,
       },
     });
@@ -41,28 +44,51 @@ router.post('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
-  const product = await productService.showSingleProduct(id);
 
-  if (!product) {
-    return res.status(400).json({
+  try {
+    const product = await productService.showSingleProduct(id);
+    if (!product) {
+      return res.status(400).json({
+        error: {
+          message: 'Product not found.',
+          code: 'not_found',
+        },
+      });
+    }
+
+    res.status(200).json(product);
+  } catch (err) {
+    res.status(500).json({
       error: {
-        message: 'Product not found.',
-        code: 'not_found',
+        message: 'Error when connecting with database',
+        code: 'db_connection_err',
+        data: err,
       },
     });
   }
-
-  res.status(200).json(product);
 });
 
 router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
   try {
-    const products = await new ProductModel().delete(req.params.id);
+    const deletedProduct = await productService.deleteSingleProduct(id);
+    if (!deletedProduct) {
+      return res.status(400).json({
+        error: {
+          message: 'Product not found.',
+          code: 'not_found',
+        },
+      });
+    }
 
-    res.status(200).json(products);
-  } catch (_e) {
+    res.status(200).json({ message: 'Successfully deleted' });
+  } catch (err) {
     res.status(500).json({
-      message: 'Something went wrong when deleting the product. Try again later.',
+      error: {
+        message: 'Error when connecting with database',
+        code: 'db_connection_err',
+        data: err,
+      },
     });
   }
 });
