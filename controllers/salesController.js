@@ -4,7 +4,7 @@ const getAllSales = async (req, res) => {
   const sales = await getSales();
   res.status(200).json({
     sales,
-  })
+  });
 };
 
 module.exports = {

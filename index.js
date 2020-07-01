@@ -1,7 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const dotenv = require('dotenv').config();
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const productsRouter = require('./routes/productsRouter');
 const salesRouter = require('./routes/salesRouter');
