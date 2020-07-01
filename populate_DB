@@ -1,0 +1,28 @@
+db.products.insertMany([
+      { name: "Bola de futebol", quantity: 10 },
+      { name: "Camiseta", quantity: 20 },
+      { name: "Luva de academia" , quantity: 30 }
+]);
+
+db.sales.insertMany([
+  {
+    itensSold: [
+      {
+        productId: "5efcd484cccc7aaeb5c010f8",
+        quantity: 1
+      },
+      {
+        productId: "5efcd484cccc7aaeb5c010fa",
+        quantity: 3
+      }
+    ]
+  },
+  {
+    itensSold: [
+      {
+        productId: "5efcd484cccc7aaeb5c010f9",
+        quantity: 5
+      },
+    ]
+  },
+]);
