@@ -19,9 +19,9 @@ const sales = {
     for (let i = 0; i < salesArr.length; i += 1) {
       const promise = new Promise(async (resolve, reject) => {
         if (await Product.getById(salesArr[i].productId)) {
-          return resolve(true)
+          return resolve(true);
         }
-        return reject({ details: [{ message: `Id: "${salesArr[i].productId}" não existe.` }] })
+        return reject({ details: [{ message: `Id: "${salesArr[i].productId}" não existe.` }] });
       });
       promises.push(promise);
     }
@@ -31,7 +31,7 @@ const sales = {
     const promises = [];
     for (let i = 0; i < salesArr.length; i += 1) {
       const { quantity } = salesArr[i];
-      promises.push(await schemasJoi.sales.validateAsync({ quantity }));
+      promises.push(schemasJoi.sales.validateAsync({ quantity }));
     }
     return Promise.all(promises);
   },
