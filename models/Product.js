@@ -10,25 +10,21 @@ class Product {
 
   setName = (name) => {
     this.name = name;
-  }
-
-  getName = () => this.name;
+  };
 
   setQuantity = (quantity) => {
     this.quantity = quantity;
-  }
-
-  getQuantity = () => this.quantity;
+  };
 
   getAll = () =>
     connection().then((db) => db.collection('products').find().toArray());
-  
+
 
   add = () =>
     connection().then((db) =>
       db.collection('products').insertOne({ name: this.name, quantity: this.quantity }),
     );
-   
+
   getById = (id) =>
     connection().then((db) =>
       db.collection('products').findOne(ObjectId(id)),

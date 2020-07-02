@@ -27,8 +27,7 @@ const saleInsertMany = rescue(async (req, res) => {
     await validator.sales.productIds(sales);
     await validator.sales.productStock(sales);
   } catch (err) {
-    err = JoiError(err);
-    return res.status(400).json(err);
+    return res.status(400).json(JoiError(err));
   }
   const response = await new Sale().insertMany(sales);
   productUpdateStock(sales);
@@ -49,8 +48,7 @@ const saleUpdateById = rescue(async (req, res) => {
   try {
     await schemaJoi.sales.validateAsync({ quantity });
   } catch (err) {
-    err = JoiError(err);
-    return res.status(400).json(err);
+    return res.status(400).json(JoiError(err));
   }
 
   const response = await new Sale().updateById(id, quantity);

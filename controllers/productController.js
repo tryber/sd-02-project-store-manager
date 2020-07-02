@@ -16,9 +16,7 @@ const insertProduct = rescue(async (req, res) => {
     await validator.product.hasName(name);
     await schemaJoi.product.validateAsync({ name, quantity });
   } catch (err) {
-    console.log(err)
-    // err = JoiError(err);
-    return res.status(400).json(err);
+    return res.status(400).json(JoiError(err));
   }
 
   const result = await newProduct.add();
@@ -52,8 +50,7 @@ const productUpdateById = rescue(async (req, res) => {
   try {
     await schemaJoi.product.validateAsync({ name, quantity });
   } catch (err) {
-    err = JoiError(err);
-    return res.status(400).json(err);
+    return res.status(400).json(JoiError(err));
   }
 
   const response = await newProduct.updateById(id);
