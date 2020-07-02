@@ -8,20 +8,20 @@ class Sale {
     this.productId = productId;
   }
 
-  getAll = () =>
+  getAll = async () =>
     connection().then((db) => db.collection('sales').find().toArray());
 
-  getById = (id) =>
+  getById = async (id) =>
     connection().then((db) =>
       db.collection('sales').findOne(ObjectId(id)),
     );
 
-  insertMany = (sales) =>
+  insertMany = async (sales) =>
     connection().then((db) =>
       db.collection('sales').insertMany(sales),
     );
 
-  deleteById = (id) =>
+  deleteById = async (id) =>
     connection().then((db) =>
       db.collection('sales').deleteOne({ _id: new mongodb.ObjectID(id) }),
     );

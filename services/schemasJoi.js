@@ -21,8 +21,6 @@ const sales = Joi.object({
     .required(),
 });
 
-
-
 module.exports = {
   product,
   sales,

@@ -10,7 +10,7 @@ const sumSaleProductQuantity = (sales) => {
     }
   }
   return obj;
-}
+};
 
 const productUpdateStock = async (sales) => {
   const obj = sumSaleProductQuantity(sales);

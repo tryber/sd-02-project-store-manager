@@ -3,11 +3,10 @@ const schemasJoi = require('./schemasJoi');
 const { sumSaleProductQuantity } = require('./productQuantity');
 
 const product = {
-  hasName: async (name) => {
-    return (await new Product().getByName(name)) ?
+  hasName: async (name) =>
+    (await new Product().getByName(name)) ?
       Promise.reject({ error: { message: 'nome já existe', code: 'alredy_exist' } }) :
-      Promise.resolve(true);
-  },
+      Promise.resolve(true),
 };
 
 const sales = {
@@ -37,9 +36,9 @@ const sales = {
     const obj = sumSaleProductQuantity(salesArr);
     for (let i = 0; i < salesArr.length; i += 1) {
       const { productId } = salesArr[i];
-      const product = await new Product().getById(productId);
       const promise = new Promise(async (resolve, reject) => {
-        if (product.quantity >= obj[productId]) {
+        const { quantity } = await new Product().getById(productId);
+        if (quantity >= obj[productId]) {
           return resolve(true);
         }
         return reject({ error: { message: `Produto "${productId}" não tem estoque o suficiente`, code: 'invalid_data' } });
