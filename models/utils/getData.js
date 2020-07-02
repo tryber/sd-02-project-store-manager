@@ -6,6 +6,13 @@ const getAllData = (collection) => async () => {
   return data;
 };
 
+const getDataFromField = async (collection, field) => {
+  const db = await connection();
+  const data = await db.collection(collection).find(field).toArray();
+  return data;
+};
+
 module.exports = {
   getAllData,
+  getDataFromField,
 };
