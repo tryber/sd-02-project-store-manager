@@ -17,11 +17,12 @@ const sales = {
   productIds: async (salesArr) => {
     const promises = [];
     for (let i = 0; i < salesArr.length; i += 1) {
-      const promise = new Promise(async (resolve, reject) =>
-        (await Product.getById(salesArr[i].productId)) ?
-          resolve(true) :
-          reject({ details: [{ message: `Id: "${salesArr[i].productId}" não existe.` }] }),
-      );
+      const promise = new Promise(async (resolve, reject) => {
+        if (await Product.getById(salesArr[i].productId)) {
+          return resolve(true)
+        }
+        return reject({ details: [{ message: `Id: "${salesArr[i].productId}" não existe.` }] })
+      });
       promises.push(promise);
     }
     return Promise.all(promises);
