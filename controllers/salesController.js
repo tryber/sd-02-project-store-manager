@@ -2,6 +2,7 @@ const Sale = require('../models/Sale');
 const rescue = require('express-rescue');
 const schemaJoi = require('../services/schemasJoi');
 const validator = require('../services/validator');
+const JoiError = require('../services/JoiError');
 const { productUpdateStock } = require('../services/productQuantity');
 
 const listSales = rescue(async (_req, res) => {
@@ -26,7 +27,8 @@ const saleInsertMany = rescue(async (req, res) => {
     await validator.sales.productIds(sales);
     await validator.sales.productStock(sales);
   } catch (err) {
-    return res.status(400).json({ message: err.details[0].message });
+    err = JoiError(err);
+    return res.status(400).json(err);
   }
   const response = await new Sale().insertMany(sales);
   productUpdateStock(sales);
@@ -47,7 +49,8 @@ const saleUpdateById = rescue(async (req, res) => {
   try {
     await schemaJoi.sales.validateAsync({ quantity });
   } catch (err) {
-    return res.status(400).json({ message: err.details[0].message });
+    err = JoiError(err);
+    return res.status(400).json(err);
   }
 
   const response = await new Sale().updateById(id, quantity);

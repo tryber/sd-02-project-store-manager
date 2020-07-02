@@ -13,7 +13,6 @@ const product = Joi.object({
     .required(),
 });
 
-
 const sales = Joi.object({
   quantity: Joi
     .number()
@@ -21,6 +20,8 @@ const sales = Joi.object({
     .min(1)
     .required(),
 });
+
+
 
 module.exports = {
   product,
