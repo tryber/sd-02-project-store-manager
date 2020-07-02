@@ -28,10 +28,9 @@ const saleInsertMany = rescue(async (req, res) => {
   } catch (err) {
     return res.status(400).json({ message: err.details[0].message });
   }
-  return res.json();
-  // const response = await Sales.insertMany(sales);
+  const response = await Sales.insertMany(sales);
 
-  // return res.status(201).json(response.ops);
+  return res.status(201).json(response.ops);
 });
 
 const saleDeleteById = rescue(async (req, res) => {

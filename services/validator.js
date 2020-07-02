@@ -28,10 +28,12 @@ const sales = {
     return Promise.all(promises);
   },
   isValidSchemaJoi: async (salesArr) => {
+    const promises = [];
     for (let i = 0; i < salesArr.length; i += 1) {
       const { quantity } = salesArr[i];
-      await schemasJoi.sales.validateAsync({ quantity });
+      promises.push(await schemasJoi.sales.validateAsync({ quantity }));
     }
+    return Promise.all(promises);
   },
 };
 
