@@ -1,4 +1,3 @@
-const { ObjectId } = require('mongodb');
 const productModel = require('../models/productModel');
 
 const listAllProducts = async () =>
