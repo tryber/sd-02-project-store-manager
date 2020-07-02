@@ -7,22 +7,22 @@ const getAll = async () =>
 
 const getById = async (id) =>
   connection().then((db) =>
-    db.collection('sales').findOne(ObjectId(id))
+    db.collection('sales').findOne(ObjectId(id)),
   );
- 
+
 const insertMany = async (sales) =>
   connection().then((db) =>
-    db.collection('sales').insertMany(sales)
+    db.collection('sales').insertMany(sales),
   );
 
 const deleteById = async (id) =>
   connection().then((db) =>
-    db.collection('sales').deleteOne({ _id: new mongodb.ObjectID(id) })
+    db.collection('sales').deleteOne({ _id: new mongodb.ObjectID(id) }),
   );
 
 const updateById = async (id, quantity) =>
   connection().then((db) =>
-    db.collection('sales').updateOne({ _id: new mongodb.ObjectID(id) }, { $set: { quantity } })
+    db.collection('sales').updateOne({ _id: new mongodb.ObjectID(id) }, { $set: { quantity } }),
   );
 
 

@@ -4,31 +4,31 @@ const schemasJoi = require('../models/schemasJoi');
 const product = {
   hasName: async (name) => {
     if (await Product.getByName(name)) {
-      throw {
+      throw new Error({
         details: [
-          { message: 'Nome já existe.' }
+          { message: 'Nome já existe.' },
         ],
-      };
+      });
     }
   },
 };
 
 const sales = {
-  productIds: async (sales) => {
-    for (const sale of sales) {
-      const product = await Product.getById(sale.productId);
-      if (!product) {
-        throw {
-          details: [
-            { message: `Id: "${sale.productId}" não existe.` }
-          ],
-        };
-      }
+  productIds: async (salesArr) => {
+    const promises = [];
+    for (let i = 0; i < salesArr.length; i += 1) {
+      const promise = new Promise(async (resolve, reject) =>
+        (await Product.getById(salesArr[i].productId)) ?
+          resolve(true) :
+          reject({ details: [{ message: `Id: "${salesArr[i].productId}" não existe.` }] }),
+      );
+      promises.push(promise);
     }
+    return Promise.all(promises);
   },
-  isValidSchemaJoi: async (sales) => {
-    for (const sale of sales) {
-      const { quantity } = sale;
+  isValidSchemaJoi: async (salesArr) => {
+    for (let i = 0; i < salesArr.length; i += 1) {
+      const { quantity } = salesArr[i];
       await schemasJoi.sales.validateAsync({ quantity });
     }
   },

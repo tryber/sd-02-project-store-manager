@@ -7,27 +7,27 @@ const getAll = async () =>
 
 const add = ({ name, quantity }) =>
   connection().then((db) =>
-    db.collection('products').insertOne({ name, quantity })
+    db.collection('products').insertOne({ name, quantity }),
   );
 
 const getById = async (id) =>
   connection().then((db) =>
-    db.collection('products').findOne(ObjectId(id))
+    db.collection('products').findOne(ObjectId(id)),
   );
 
 const getByName = async (name) =>
   connection().then((db) =>
-    db.collection('products').findOne({ name })
+    db.collection('products').findOne({ name }),
   );
 
 const deleteById = async (id) =>
   connection().then((db) =>
-    db.collection('products').deleteOne({ _id: new mongodb.ObjectID(id) })
+    db.collection('products').deleteOne({ _id: new mongodb.ObjectID(id) }),
   );
 
 const updateById = async (id, name, quantity) =>
   connection().then((db) =>
-    db.collection('products').updateOne({ _id: new mongodb.ObjectID(id) }, { $set: { name, quantity } })
+    db.collection('products').updateOne({ _id: new mongodb.ObjectID(id) }, { $set: { name, quantity } }),
   );
 
 module.exports = {

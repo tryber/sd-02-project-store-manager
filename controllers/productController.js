@@ -14,8 +14,7 @@ const insertProduct = rescue(async (req, res) => {
   try {
     await validator.product.hasName(name);
     await schemaJoi.product.validateAsync({ name, quantity });
-  }
-  catch (err) {
+  } catch (err) {
     return res.status(400).json({ message: err.details[0].message });
   }
 
@@ -48,8 +47,7 @@ const productUpdateById = rescue(async (req, res) => {
 
   try {
     await schemaJoi.product.validateAsync({ name, quantity });
-  }
-  catch (err) {
+  } catch (err) {
     return res.status(400).json({ message: err.details[0].message });
   }
 

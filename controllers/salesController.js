@@ -3,6 +3,7 @@ const rescue = require('express-rescue');
 const schemaJoi = require('../models/schemasJoi');
 const validator = require('../services/validator');
 
+
 const listSales = rescue(async (_req, res) => {
   const sales = await Sales.getAll();
   return res.status(200).json(sales);
@@ -24,14 +25,13 @@ const saleInsertMany = rescue(async (req, res) => {
   try {
     await validator.sales.isValidSchemaJoi(sales);
     await validator.sales.productIds(sales);
-  }
-  catch (err) {
+  } catch (err) {
     return res.status(400).json({ message: err.details[0].message });
   }
+  return res.json();
+  // const response = await Sales.insertMany(sales);
 
-  const response = await Sales.insertMany(sales);
-
-  return res.status(201).json(response.ops);
+  // return res.status(201).json(response.ops);
 });
 
 const saleDeleteById = rescue(async (req, res) => {
@@ -47,8 +47,7 @@ const saleUpdateById = rescue(async (req, res) => {
 
   try {
     await schemaJoi.sales.validateAsync({ quantity });
-  }
-  catch (err) {
+  } catch (err) {
     return res.status(400).json({ message: err.details[0].message });
   }
 
