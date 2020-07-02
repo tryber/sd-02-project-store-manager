@@ -1,20 +1,34 @@
+const { ObjectId } = require('mongodb');
 const productModel = require('../models/productModel');
 
 const listAllProducts = async () =>
   productModel.getAllProducts();
 
-const showSingleProduct = async (id) =>
+const getProductById = async (id) =>
   productModel.getProductById(id);
 
-const createNewProduct = async (product) =>
-  productModel.addProduct(product);
+const createNewProduct = async (product) => {
+  const { name } = product;
+  const repeatedProduct = await productModel.getProductByName(name);
+  if (repeatedProduct) return { repeated: true };
+  return productModel.addProduct(product);
+};
 
-const deleteSingleProduct = async (id) =>
+const deleteProduct = async (id) =>
   productModel.deleteProduct(id);
+
+const updateProduct = async (id, productData) => {
+  const { name } = productData;
+  const repeatedProduct = await productModel.getProductByName(name);
+  const { _id } = repeatedProduct;
+  if (repeatedProduct && id !== _id.toString()) return { repeated: true };
+  return productModel.updateProduct(id, productData);
+};
 
 module.exports = {
   listAllProducts,
-  showSingleProduct,
+  getProductById,
   createNewProduct,
-  deleteSingleProduct,
+  deleteProduct,
+  updateProduct,
 };
