@@ -1,5 +1,5 @@
-const { getProducts, validationProductService,
-  checkProduct, addProduct, getProductId,
+const { getProducts, validationProductService, deleteProduct,
+  checkProduct, addProduct, getProductId, updateProductById,
 } = require('../services/productsService');
 
 const getAllProducts = async (req, res) => {
@@ -54,9 +54,56 @@ const getProductById = async (req, res) => {
   }
 };
 
+const deleteProductById = async (req, res) => {
+  try {
+    const productDeleted = await deleteProduct(req.params);
+    console.log(productDeleted);
+    if (productDeleted.length) {
+      return res.status(200).json({
+        ...productDeleted[0],
+      });
+    }
+    return res.status(404).json({
+      error: {
+        message: 'Product not found', code: 'not_found',
+      },
+    });
+  } catch (error) {
+    return res.status(404).json({
+      error: {
+        message: 'Wrong id format', code: 'not_found',
+      },
+    });
+  }
+};
+
+const updateProduct = async (req, res) => {
+  try {
+    const productUpdated = await updateProductById(req.params, req.body);
+    if (productUpdated.length) {
+      return res.status(200).json({
+        ...productUpdated[0],
+      });
+    }
+    return res.status(404).json({
+      error: {
+        message: 'Product not found', code: 'not_found',
+      },
+    });
+  } catch (error) {
+    return res.status(404).json({
+      error: {
+        message: 'Wrong id format', code: 'not_found',
+      },
+    });
+  }
+};
+
 module.exports = {
   getAllProducts,
   validateProduct,
   addNewProduct,
   getProductById,
+  deleteProductById,
+  updateProduct,
 };

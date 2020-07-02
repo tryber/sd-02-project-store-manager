@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllProducts, validateProduct,
+const { getAllProducts, validateProduct, deleteProductById, updateProduct,
   addNewProduct, getProductById } = require('../controllers/productsController');
 
 const router = express.Router();
@@ -11,6 +11,8 @@ router
 
 router
   .route('/:id')
-  .get(getProductById);
+  .get(getProductById)
+  .delete(deleteProductById)
+  .put(validateProduct, updateProduct);
 
 module.exports = router;

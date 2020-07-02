@@ -1,7 +1,7 @@
 const Joi = require('@hapi/joi');
 
-const { getAllProducts, getProductByName,
-  addNewProduct, getProductById } = require('../models/productsModel');
+const { getAllProducts, getProductByName, updateProduct,
+  addNewProduct, getProductById, deleteProductByID } = require('../models/productsModel');
 
 const getProducts = getAllProducts;
 
@@ -35,10 +35,16 @@ const addProduct = async ({ name, quantity }) => addNewProduct(name, quantity);
 
 const getProductId = async ({ id }) => getProductById(id);
 
+const deleteProduct = async ({ id }) => deleteProductByID(id);
+
+const updateProductById = async ({ id }, body) => updateProduct(id, body);
+
 module.exports = {
   getProducts,
   validationProductService,
   checkProduct,
   addProduct,
   getProductId,
+  deleteProduct,
+  updateProductById,
 };
