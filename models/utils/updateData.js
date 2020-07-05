@@ -1,13 +1,10 @@
 const connection = require('../connection');
 
-const updateData = async (collection, itemToUpdate, { name, quantity }) => {
+const updateData = async (collection, itemToUpdate, fields) => {
   const db = await connection();
   await db.collection(collection).updateOne(itemToUpdate,
     {
-      $set: {
-        name,
-        quantity,
-      },
+      $set: fields,
     });
 
   return db.collection(collection).find(itemToUpdate).toArray();

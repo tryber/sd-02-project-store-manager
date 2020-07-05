@@ -1,4 +1,5 @@
-const { getSales, getSale, addSale, deleteSaleID } = require('../services/salesService');
+const { getSales, getSale, addSale,
+  deleteSaleID, updateSaleById } = require('../services/salesService');
 const { getProductId } = require('../services/productsService');
 
 const getAllSales = async (req, res) => {
@@ -49,7 +50,6 @@ const validateSale = async (req, res, next) => {
 
 const createSale = async (req, res) => {
   const addedItem = await addSale(req.body);
-  console.log(addedItem);
   return res.status(200).json(...addedItem);
 };
 
@@ -67,10 +67,34 @@ const deleteSale = async (req, res, next) => {
   }
 };
 
+const updateSale = async (req, res, next) => {
+  const saleUpdated = await updateSaleById(req.params, req.body);
+  if (saleUpdated.length) {
+    return res.status(200).json({
+      ...saleUpdated[0],
+    });
+  }
+  next({ code: 'not_found', message: 'Sale not found' });
+};
+
+const checkSaleId = async (req, res, next) => {
+  try {
+    const sale = await getSale(req.params);
+    if (sale.length) {
+      return next();
+    }
+    next({ code: 'not_found', message: 'Sale not found' });
+  } catch (error) {
+    next({ code: 'invalid_data', message: 'Wrong sale ID format' });
+  }
+};
+
 module.exports = {
   getAllSales,
   getSaleById,
   validateSale,
   createSale,
   deleteSale,
+  checkSaleId,
+  updateSale,
 };
