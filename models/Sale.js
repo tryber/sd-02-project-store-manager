@@ -18,7 +18,7 @@ class Sale {
     );
   }
 
-  static async insertMan(sales) {
+  static async insertMany(sales) {
     return connection().then((db) =>
       db.collection('sales').insertMany(sales),
     );

@@ -6,13 +6,13 @@ const JoiError = require('../services/JoiError');
 const { productUpdateStock } = require('../services/productQuantity');
 
 const listSales = rescue(async (_req, res) => {
-  const sales = await new Sale().getAll();
+  const sales = await Sale.getAll();
   return res.status(200).json(sales);
 });
 
 const saleById = rescue(async (req, res) => {
   const { id } = req.params;
-  const sale = await new Sale().getById(id);
+  const sale = await Sale.getById(id);
   if (!sale) {
     return res.status(404).json({ message: 'Venda não encontrada' });
   }
@@ -29,7 +29,7 @@ const saleInsertMany = rescue(async (req, res) => {
   } catch (err) {
     return res.status(400).json(JoiError(err));
   }
-  const response = await new Sale().insertMany(sales);
+  const response = await Sale.insertMany(sales);
   productUpdateStock(sales);
 
   return res.status(201).json(response.ops);
@@ -37,7 +37,7 @@ const saleInsertMany = rescue(async (req, res) => {
 
 const saleDeleteById = rescue(async (req, res) => {
   const { id } = req.params;
-  await new Sale().deleteById(id);
+  await Sale.deleteById(id);
 
   return res.status(200).json({ message: 'Venda deletada com sucesso!' });
 });
@@ -51,7 +51,7 @@ const saleUpdateById = rescue(async (req, res) => {
     return res.status(400).json(JoiError(err));
   }
 
-  const response = await new Sale().updateById(id, quantity);
+  const response = await Sale.updateById(id, quantity);
 
   if (!response.matchedCount) {
     return res.status(404).json({ message: 'Venda não encontrada' });

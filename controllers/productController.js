@@ -5,7 +5,7 @@ const validator = require('../services/validator');
 const JoiError = require('../services/JoiError');
 
 const listProducts = rescue(async (_req, res) => {
-  const products = await new Product().getAll();
+  const products = await Product.getAll();
   return res.status(200).json(products);
 });
 
@@ -26,7 +26,7 @@ const insertProduct = rescue(async (req, res) => {
 
 const productById = rescue(async (req, res) => {
   const { id } = req.params;
-  const product = await new Product().getById(id);
+  const product = await Product.getById(id);
 
   if (!product) {
     return res.status(404).json({ message: 'Produto não encontrado' });
@@ -37,7 +37,7 @@ const productById = rescue(async (req, res) => {
 
 const productDeleteById = rescue(async (req, res) => {
   const { id } = req.params;
-  await new Product().deleteById(id);
+  await Product.deleteById(id);
 
   return res.status(200).json({ message: 'Produto deletado com sucesso!' });
 });
