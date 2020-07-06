@@ -2,12 +2,6 @@ const productService = require('../services/productService');
 const schemasJoi = require('./schemasJoi');
 const errorJoi = require('./errorJoi');
 
-const objError = {
-  not_found: 404,
-  already_exists: 409,
-  exists_with_another_id: 409,
-};
-
 const validateJoi = async (reqInfo) =>
   schemasJoi.addProduct.validateAsync(reqInfo).catch((fail) => errorJoi(fail));
 

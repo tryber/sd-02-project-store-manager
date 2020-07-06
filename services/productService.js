@@ -33,7 +33,8 @@ const deleteProductById = async (id) => productModel.deleteProductById(id);
 
 const updateProduct = async (id, name, quantity) => {
   const isUnique = await productModel.getProductByName(name);
-  if (isUnique !== null && !isUnique._id.equals(id)) {
+  const { _id: isUniqueId } = isUnique || {};
+  if (isUnique !== null && !isUniqueId.equals(id)) {
     return {
       error: true,
       message: 'This product already exists with another Id',
