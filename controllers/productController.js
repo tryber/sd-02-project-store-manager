@@ -49,8 +49,28 @@ const getById = async (req, res) => {
   }
 };
 
+const deleteById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const product = await productModel.deleteProductById(id);
+    if (product.deletedCount === 0) {
+      return res.status(404).json({
+        error: { message: 'No product was found with the ID provided', code: 'not_found' },
+      });
+    }
+    res.status(200).json({
+      success: { message: `Item with ID ${id} was successfully deleted`, code: 'success' },
+    });
+  } catch (fail) {
+    res.status(500).json({
+      error: { message: `${fail.message}`, code: 'internal_error' },
+    });
+  }
+};
+
 module.exports = {
   getAll,
   createOne,
   getById,
+  deleteById,
 };
