@@ -8,42 +8,47 @@ class Product {
     this.quantity = quantity;
   }
 
-  setName = (name) => {
+  setName(name) {
     this.name = name;
   }
 
-  setQuantity = (quantity) => {
+  setQuantity(quantity) {
     this.quantity = quantity;
   }
 
-  getAll = () =>
-    connection().then((db) => db.collection('products').find().toArray());
+  static async getAll() {
+    return connection().then((db) => db.collection('products').find().toArray());
+  }
 
-
-  add = () =>
-    connection().then((db) =>
+  async add() {
+    return connection().then((db) =>
       db.collection('products').insertOne({ name: this.name, quantity: this.quantity }),
     );
+  }
 
-  getById = (id) =>
-    connection().then((db) =>
+  static async getById(id) {
+    return connection().then((db) =>
       db.collection('products').findOne(ObjectId(id)),
     );
+  }
 
-  getByName = (name) =>
-    connection().then((db) =>
+  static async getByName(name) {
+    return connection().then((db) =>
       db.collection('products').findOne({ name }),
     );
+  }
 
-  deleteById = (id) =>
-    connection().then((db) =>
+  static async deleteById(id) {
+    return connection().then((db) =>
       db.collection('products').deleteOne({ _id: new mongodb.ObjectID(id) }),
     );
+  }
 
-  updateById = (id) =>
-    connection().then((db) =>
+  async updateById(id) {
+    return connection().then((db) =>
       db.collection('products').updateOne({ _id: new mongodb.ObjectID(id) }, { $set: this }),
     );
+  }
 }
 
 module.exports = Product;
