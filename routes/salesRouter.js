@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllSales, getSaleById, validateSale, updateSale, checkSaleId,
+const { getAllSales, getSaleById, validateSale, updateSale, checkSaleId, validateNewSale,
   createSale, deleteSale, checkStock } = require('../controllers/salesController');
 
 const router = express.Router();
@@ -7,7 +7,7 @@ const router = express.Router();
 router
   .route('/')
   .get(getAllSales)
-  .post(validateSale, checkStock, createSale);
+  .post(validateNewSale, checkStock, createSale);
 
 router
   .route('/:id')

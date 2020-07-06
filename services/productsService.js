@@ -58,7 +58,6 @@ const serviceStockChecker = async (prod) => {
 };
 
 const removeService = async (products) => {
-  console.log(products);
   Promise.all(products.map(({ productId, quantity }) => removeQuantity(productId, quantity)));
 };
 
