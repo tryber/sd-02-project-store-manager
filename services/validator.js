@@ -47,7 +47,7 @@ const sales = {
       promises.push(promise);
     }
     return Promise.all(promises);
-  }
+  },
 };
 
 module.exports = {

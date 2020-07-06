@@ -8,7 +8,7 @@ class Product {
     this.quantity = quantity;
   }
 
-  setName = (name) => {
+  setName(name) {
     this.name = name;
   };
 
@@ -16,9 +16,9 @@ class Product {
     this.quantity = quantity;
   };
 
-  getAll = () =>
+  getAll() {
     connection().then((db) => db.collection('products').find().toArray());
-
+  }
 
   add = () =>
     connection().then((db) =>
