@@ -4,6 +4,11 @@ const errorMessage = require('./errorMessages');
 
 const router = express.Router();
 
+const isDataValid = (productId, quantity) => {
+  if (!productId || quantity < 0 || !Number.isInteger(quantity)) return false;
+  return true;
+};
+
 router.get('/', async (_req, res) => {
   const sales = await saleService.listAllSales();
 
@@ -13,18 +18,18 @@ router.get('/', async (_req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const sales = await saleService.insertNewSales(req.body);
+  const validData = Array.isArray(req.body) && req.body
+    .reduce((acc, cur) => acc && cur.quantity && cur.quantity > 0 && cur.productId, true);
 
-  if (sales.invalidSales) {
-    res.status(404).json({
-      ...errorMessage.notFoundError,
-      data: `${sales.invalidSales.map(({ productId }) => productId)} not found`,
-    });
+  if (!validData) return res.status(422).json(errorMessage.invalidSaleDataError);
+
+  try {
+    const sales = await saleService.insertNewSales(req.body);
+    if (!sales) return res.status(404).json(errorMessage.productNotFoundError);
+    res.status(201).json(sales);
+  } catch (err) {
+    return res.status(500).json(errorMessage.dbError);
   }
-
-  if (!sales) return res.status(500).json(errorMessage.dbError);
-
-  res.status(200).json(sales.registeredSales);
 });
 
 router.get('/:id', async (req, res) => {
@@ -32,6 +37,7 @@ router.get('/:id', async (req, res) => {
 
   try {
     const sale = await saleService.getSaleById(id);
+
     if (!sale) {
       return res.status(404).json(errorMessage.saleNotFoundError);
     }
@@ -45,12 +51,31 @@ router.get('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const deletedSale = await saleService.deleteSale(id);
-    if (!deletedSale) {
+    await saleService.deleteSale(id);
+    res.status(204).end();
+  } catch (err) {
+    res.status(500).json(errorMessage.dbError);
+  }
+});
+
+router.put('/:id', async (req, res) => {
+  const { productId, quantity } = req.body;
+  const { id } = req.params;
+
+  const validData = isDataValid(productId, quantity);
+
+  if (!validData) {
+    return res.status(422).json(errorMessage.invalidSaleDataError);
+  }
+
+  try {
+    const updatedSale = await saleService.updateSale(id, { productId, quantity });
+
+    if (!updatedSale) {
       return res.status(404).json(errorMessage.saleNotFoundError);
     }
 
-    res.status(200).json({ message: 'Successfully deleted' });
+    res.status(200).json(updatedSale);
   } catch (err) {
     res.status(500).json(errorMessage.dbError);
   }

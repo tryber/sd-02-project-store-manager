@@ -9,13 +9,15 @@ const productNotFoundError = {
   error: {
     message: 'Product not found.',
     code: 'not_found',
+    data: 'Verify the productId or name and try again.',
   },
 };
 
 const saleNotFoundError = {
   error: {
-    message: 'Sale not found.',
+    message: 'Sale or product not found.',
     code: 'not_found',
+    data: 'Field productId must be a valid and registered _id from products database and endpoint sales/id must be a valid registered _id in sales database.',
   },
 };
 
@@ -26,11 +28,19 @@ const repeatedName = {
   },
 };
 
-const invalidDataError = {
+const invalidProductDataError = {
   error: {
     message: 'Invalid data',
     code: 'invalid_data',
     data: 'The product name must be at least 5 letters and be a string. The quantity must be at least 1 an be an interger.',
+  },
+};
+
+const invalidSaleDataError = {
+  error: {
+    message: 'Invalid data',
+    code: 'invalid_data',
+    data: 'Field productId must be a valid and registered _id from products database. The quantity must be at least 0 an be an interger.',
   },
 };
 
@@ -39,5 +49,6 @@ module.exports = {
   productNotFoundError,
   saleNotFoundError,
   repeatedName,
-  invalidDataError,
+  invalidProductDataError,
+  invalidSaleDataError,
 };

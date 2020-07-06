@@ -24,10 +24,14 @@ const updateProduct = async (id, productData) => {
   return productModel.updateProduct(id, productData);
 };
 
+const getProductsById = (productIds) =>
+  productModel.getProductsById(productIds);
+
 module.exports = {
   listAllProducts,
   getProductById,
   createNewProduct,
   deleteProduct,
   updateProduct,
+  getProductsById,
 };

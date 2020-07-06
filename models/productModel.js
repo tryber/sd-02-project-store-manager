@@ -40,6 +40,14 @@ const updateProduct = async (id, productData) => {
   return product;
 };
 
+const getProductsById = async (productsIds) => {
+  const productObjectIds = productsIds.filter(ObjectId.isValid).map(ObjectId);
+  if (!productObjectIds.length) return [];
+  const db = await connection();
+  const products = await db.collection('products').find({ _id: { $in: productObjectIds } }).toArray();
+  return products;
+};
+
 module.exports = {
   getAllProducts,
   getProductById,
@@ -47,4 +55,5 @@ module.exports = {
   deleteProduct,
   updateProduct,
   getProductByName,
+  getProductsById,
 };

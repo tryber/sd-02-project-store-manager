@@ -29,8 +29,15 @@ const getSaleByProductId = async (productId) => {
 const deleteSale = async (id) => {
   const db = await connection();
   if (!ObjectId.isValid(id)) return null;
-  const product = await db.collection('sales').deleteOne({ _id: ObjectId(id) });
-  return product;
+  const sale = await db.collection('sales').deleteOne({ _id: ObjectId(id) });
+  return sale;
+};
+
+const updateSale = async (id, saleData) => {
+  const db = await connection();
+  if (!ObjectId.isValid(id)) return null;
+  const sale = await db.collection('sales').updateOne({ _id: ObjectId(id) }, { $set: saleData });
+  return sale;
 };
 
 module.exports = {
@@ -39,4 +46,5 @@ module.exports = {
   insertNewSales,
   getSaleByProductId,
   deleteSale,
+  updateSale,
 };

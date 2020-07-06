@@ -5,8 +5,8 @@ const errorMessage = require('./errorMessages');
 const router = express.Router();
 
 const isDataValid = (name, quantity) => {
-  const validName = name.length > 5 && typeof name === 'string';
-  const validQuantity = quantity > 0 && Number.isInteger(quantity);
+  const validName = name && name.length > 5 && typeof name === 'string';
+  const validQuantity = quantity && quantity > 0 && Number.isInteger(quantity);
   if (validName && validQuantity) return true;
   return false;
 };
@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
   const validData = isDataValid(name, quantity);
 
   if (!validData) {
-    return res.status(400).json(errorMessage.invalidDataError);
+    return res.status(422).json(errorMessage.invalidProductDataError);
   }
 
   try {
@@ -57,12 +57,8 @@ router.get('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   const { id } = req.params;
   try {
-    const deletedProduct = await productService.deleteProduct(id);
-    if (!deletedProduct) {
-      return res.status(404).json(errorMessage.notFoundError);
-    }
-
-    res.status(200).json({ message: 'Successfully deleted' });
+    await productService.deleteProduct(id);
+    res.status(204).end();
   } catch (err) {
     res.status(500).json(errorMessage.dbError);
   }
@@ -75,13 +71,13 @@ router.put('/:id', async (req, res) => {
   const validData = isDataValid(name, quantity);
 
   if (!validData) {
-    return res.status(400).json(errorMessage.invalidDataError);
+    return res.status(422).json(errorMessage.invalidProductDataError);
   }
 
   try {
     const updateProduct = await productService.updateProduct(id, { name, quantity });
 
-    if (updateProduct.repeated) return res.status(400).json(errorMessage.repeatedName);
+    if (updateProduct.repeated) return res.status(409).json(errorMessage.repeatedName);
 
     if (!updateProduct) {
       return res.status(404).json(errorMessage.notFoundError);
