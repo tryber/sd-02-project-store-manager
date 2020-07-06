@@ -2,7 +2,7 @@ const ObjectId = require('mongodb').ObjectID;
 const { getAllData, getDataFromField } = require('./utils/getData');
 const { addData } = require('./utils/addData');
 const { deleteData } = require('./utils/deleteData');
-const { updateData } = require('./utils/updateData');
+const { updateData, addQty, rmvQty } = require('./utils/updateData');
 
 const getAllProducts = getAllData('products');
 
@@ -18,6 +18,14 @@ const updateProduct = (_id, body) => (
   updateData('products', { _id: new ObjectId(_id) }, body)
 );
 
+const addQuantity = (productId, quantity) => (
+  addQty('products', { _id: new ObjectId(productId) }, quantity)
+);
+
+const removeQuantity = (productId, quantity) => (
+  rmvQty('products', { _id: new ObjectId(productId) }, quantity)
+);
+
 module.exports = {
   getAllProducts,
   getProductByName,
@@ -25,4 +33,6 @@ module.exports = {
   getProductById,
   deleteProductByID,
   updateProduct,
+  addQuantity,
+  removeQuantity,
 };

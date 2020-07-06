@@ -1,6 +1,6 @@
 const errorController = async (err, req, res, _next) => {
-  console.log(err);
-  return res.status(404)
+  const statusCode = err.code === 'invalid_data' ? 422 : 404;
+  return res.status(statusCode)
     .json({
       err,
     });

@@ -10,6 +10,20 @@ const updateData = async (collection, itemToUpdate, fields) => {
   return db.collection(collection).find(itemToUpdate).toArray();
 };
 
+const addQty = async (collection, id, quantity) => {
+  const db = await connection();
+  await db.collection(collection).updateOne(id,
+    { $inc: { quantity } });
+};
+
+const rmvQty = async (collection, id, quantity) => {
+  const db = await connection();
+  await db.collection(collection).updateOne(id,
+    { $inc: { quantity: -quantity } });
+};
+
 module.exports = {
   updateData,
+  addQty,
+  rmvQty,
 };
