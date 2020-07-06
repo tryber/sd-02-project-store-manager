@@ -43,7 +43,6 @@ const removeService = async (products) => {
 
 module.exports = {
   getProducts,
-  validationProductService,
   checkProduct,
   addProduct,
   getProductId,
