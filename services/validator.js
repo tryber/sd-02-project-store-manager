@@ -3,10 +3,11 @@ const schemasJoi = require('./schemasJoi');
 const { sumSaleProductQuantity } = require('./productQuantity');
 
 const product = {
-  hasName: async (name) =>
-    (await new Product().getByName(name)) ?
-      Promise.reject({ error: { message: 'nome já existe', code: 'alredy_exist' } }) :
-      Promise.resolve(true),
+  hasName: async (name) => {
+    if (await new Product().getByName(name)) {
+      Promise.reject({ error: { message: 'nome já existe', code: 'alredy_exist' } });
+    }
+  },
 };
 
 const sales = {
