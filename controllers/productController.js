@@ -8,80 +8,64 @@ const objError = {
   exists_with_another_id: 409,
 };
 
-const getAll = async (_req, res) => {
+const validateJoi = async (reqInfo) =>
+  schemasJoi.addProduct.validateAsync(reqInfo).catch((fail) => errorJoi(fail));
+
+const getAll = async (_req, res, next) => {
   try {
     const products = await productService.getAllProducts();
     res.status(200).json(products);
   } catch (fail) {
-    res.status(500).json({
-      error: {
-        error: true,
-        message: `internal_error: ${fail.message}`,
-        code: 'internal_error',
-      },
-    });
+    return next(
+      { error: true, message: `${fail.message}`, code: 'internal_error' },
+    );
   }
 };
 
-const createOne = async (req, res) => {
-  try {
-    await schemasJoi.addProduct.validateAsync(req.body);
-  } catch (fail) {
-    return res.status(422).json(errorJoi(fail));
+const createOne = async (req, res, next) => {
+  const isValid = await validateJoi(req.body);
+  if (isValid.error) {
+    return next(isValid);
   }
   const { name, quantity } = req.body;
   const serviceAnswer = await productService.createOne(name, quantity);
   if (serviceAnswer.error) {
-    const statusCode = objError[serviceAnswer.code] || 500;
-    return res.status(statusCode).json({
-      error: {
-        error: true,
-        message: serviceAnswer.message,
-        code: serviceAnswer.code,
-      },
-    });
+    return next(serviceAnswer);
   }
   res.status(201).json(serviceAnswer);
 };
 
-const getById = async (req, res) => {
+const getById = async (req, res, next) => {
   const { id } = req.params;
   const serviceAnswer = await productService.getProductById(id);
   if (serviceAnswer.error) {
-    const statusCode = objError[serviceAnswer.code] || 500;
-    return res.status(statusCode).json({
-      error: { message: serviceAnswer.message, code: serviceAnswer.code },
-    });
+    return next(serviceAnswer);
   }
   res.status(200).json(serviceAnswer);
 };
 
-const deleteById = async (req, res) => {
+const deleteById = async (req, res, next) => {
   const { id } = req.params;
   try {
     await productService.deleteProduct(id);
     res.status(204).end();
   } catch (fail) {
-    res.status(500).json({
-      error: { message: `${fail.message}`, code: 'internal_error' },
-    });
+    return next(
+      { error: true, message: `${fail.message}`, code: 'internal_error' },
+    );
   }
 };
 
-const updateById = async (req, res) => {
-  try {
-    await schemasJoi.addProduct.validateAsync(req.body);
-  } catch (fail) {
-    return res.status(422).json(errorJoi(fail));
+const updateById = async (req, res, next) => {
+  const isValid = validateJoi(req.body);
+  if (isValid.error) {
+    return next(isValid);
   }
   const { name, quantity } = req.body;
   const { id } = req.params;
   const serviceAnswer = await productService.updateProduct(id, name, quantity);
   if (serviceAnswer.error) {
-    const statusCode = objError[serviceAnswer.code] || 500;
-    return res.status(statusCode).json({
-      error: { message: serviceAnswer.message, code: serviceAnswer.code },
-    });
+    return next(serviceAnswer);
   }
   return res.status(200).json(serviceAnswer);
 };
