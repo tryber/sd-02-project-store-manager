@@ -32,4 +32,25 @@ const createOne = async (req, res) => {
   res.status(201).json(req.body);
 };
 
-module.exports = { getAll, createOne };
+const getById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const product = await productModel.getProductById(id);
+    if (product === null) {
+      return res.status(404).json({
+        error: { message: 'No product was found with the ID provided', code: 'not_found' },
+      });
+    }
+    res.status(200).json(product);
+  } catch (fail) {
+    res.status(500).json({
+      error: { message: `${fail.message}`, code: 'internal_error' },
+    });
+  }
+};
+
+module.exports = {
+  getAll,
+  createOne,
+  getById,
+};

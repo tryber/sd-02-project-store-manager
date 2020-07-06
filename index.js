@@ -8,7 +8,9 @@ const app = express();
 const PORT = process.env.DB_PORT;
 app.use(bodyParser.json());
 
-app.post('/products', productController.createOne);
 app.get('/products', productController.getAll);
+app.post('/products', productController.createOne);
+
+app.get('/products/:id', productController.getById);
 
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
