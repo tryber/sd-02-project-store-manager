@@ -17,8 +17,6 @@ const productUpdateStock = async (sales) => {
   Object.keys(obj).forEach(async (id) => {
     const newProduct = new Product();
     const { name, quantity } = await Product.getById(id);
-    console.log(await Product.getById(id))
-    console.log(name, quantity)
     newProduct.setName(name);
     newProduct.setQuantity(quantity - obj[id]);
     await newProduct.updateById(id);
