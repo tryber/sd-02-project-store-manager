@@ -1,7 +1,5 @@
-// const mongodb = require('mongodb');
-// const { ObjectId } = require('mongodb');
 const { ObjectId } = require('mongodb');
-const connection = require('./connection');
+const connection = require('../models/connection');
 
 const createOneProduct = async (newProduct) => {
   const db = await connection();
@@ -30,8 +28,18 @@ const getProductById = async (id) => {
 const deleteProductById = async (id) => {
   const db = await connection();
   const product = await db.collection('products').deleteOne({ _id: ObjectId(id) });
-  console.log('delCount', product.deletedCount);
   return product;
+};
+
+const updateProductById = async (id, name, quantity) => {
+  const db = await connection();
+  const product = await db.collection('products')
+    .findOneAndUpdate(
+      { _id: ObjectId(id) },
+      { $set: { name, quantity } },
+      { returnOriginal: false },
+    );
+  return product.value;
 };
 
 module.exports = {
@@ -40,4 +48,5 @@ module.exports = {
   getProductByName,
   getProductById,
   deleteProductById,
+  updateProductById,
 };

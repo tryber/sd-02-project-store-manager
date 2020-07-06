@@ -13,5 +13,6 @@ app.post('/products', productController.createOne);
 
 app.get('/products/:id', productController.getById);
 app.delete('/products/:id', productController.deleteById);
+app.put('/products/:id', productController.updateById);
 
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
