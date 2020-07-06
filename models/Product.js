@@ -12,38 +12,44 @@ class Product {
     this.name = name;
   };
 
-  setQuantity = (quantity) => {
+  setQuantity(quantity) {
     this.quantity = quantity;
   };
 
   getAll() {
-    connection().then((db) => db.collection('products').find().toArray());
+    return connection()
+      .then((db) => db.collection('products').find().toArray());
   }
 
-  add = () =>
-    connection().then((db) =>
+  add() {
+    return connection().then((db) =>
       db.collection('products').insertOne({ name: this.name, quantity: this.quantity }),
     );
+  }
 
-  getById = (id) =>
-    connection().then((db) =>
+  getById(id) {
+    return connection().then((db) =>
       db.collection('products').findOne(ObjectId(id)),
     );
+  }
 
-  getByName = (name) =>
-    connection().then((db) =>
+  getByName(name) {
+    return connection().then((db) =>
       db.collection('products').findOne({ name }),
     );
+  }
 
-  deleteById = (id) =>
-    connection().then((db) =>
+  deleteById(id) {
+    return connection().then((db) =>
       db.collection('products').deleteOne({ _id: new mongodb.ObjectID(id) }),
     );
+  }
 
-  updateById = (id) =>
-    connection().then((db) =>
+  updateById(id) {
+    return connection().then((db) =>
       db.collection('products').updateOne({ _id: new mongodb.ObjectID(id) }, { $set: this }),
     );
+  }
 }
 
 module.exports = Product;

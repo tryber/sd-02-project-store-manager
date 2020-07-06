@@ -8,28 +8,33 @@ class Sale {
     this.productId = productId;
   }
 
-  getAll = async () =>
-    connection().then((db) => db.collection('sales').find().toArray());
+  async getAll() {
+    return connection().then((db) => db.collection('sales').find().toArray());
+  }
 
-  getById = async (id) =>
-    connection().then((db) =>
+  async getById(id) {
+    return  connection().then((db) =>
       db.collection('sales').findOne(ObjectId(id)),
     );
+  }
 
-  insertMany = async (sales) =>
-    connection().then((db) =>
+  async insertMany(sales) {
+    return connection().then((db) =>
       db.collection('sales').insertMany(sales),
     );
+  }
 
-  deleteById = async (id) =>
-    connection().then((db) =>
+  async deleteById(id) {
+    return connection().then((db) =>
       db.collection('sales').deleteOne({ _id: new mongodb.ObjectID(id) }),
     );
+  }
 
-  updateById = async (id, quantity) =>
-    connection().then((db) =>
+  async updateById(id, quantity) {
+    return connection().then((db) =>
       db.collection('sales').updateOne({ _id: new mongodb.ObjectID(id) }, { $set: { quantity } }),
     );
+  }
 }
 
 module.exports = Sale;
