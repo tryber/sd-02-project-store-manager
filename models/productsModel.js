@@ -1,4 +1,4 @@
-const ObjectId = require('mongodb').ObjectID;
+const { ObjectId } = require('mongodb');
 const { getAllData, getDataFromField } = require('./utils/getData');
 const { addData } = require('./utils/addData');
 const { deleteData } = require('./utils/deleteData');

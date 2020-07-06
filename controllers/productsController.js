@@ -1,6 +1,7 @@
-const { getProducts, validationProductService, deleteProduct,
+const { getProducts, deleteProduct,
   checkProduct, addProduct, getProductId, updateProductById,
 } = require('../services/productsService');
+const { validationProductService } = require('./utils/validateSchema');
 
 const getAllProducts = async (req, res) => {
   const products = await getProducts();
