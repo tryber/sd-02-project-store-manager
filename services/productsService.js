@@ -27,13 +27,10 @@ const serviceStockChecker = async (prod) => {
   const productsArray = await Promise.all(prod.map(({ productId }) => getProductById(productId)));
   const canSell = [];
   productsArray.forEach((product, i) => {
-    console.log(1, product);
-    console.log(2, prod[i]);
     if (product[0].quantity <= prod[i].quantity) {
       canSell.push(i);
     }
   });
-  console.log(canSell);
   return !canSell.length;
 };
 
