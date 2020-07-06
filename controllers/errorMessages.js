@@ -5,9 +5,16 @@ const dbError = {
   },
 };
 
-const notFoundError = {
+const productNotFoundError = {
   error: {
     message: 'Product not found.',
+    code: 'not_found',
+  },
+};
+
+const saleNotFoundError = {
+  error: {
+    message: 'Sale not found.',
     code: 'not_found',
   },
 };
@@ -29,7 +36,8 @@ const invalidDataError = {
 
 module.exports = {
   dbError,
-  notFoundError,
+  productNotFoundError,
+  saleNotFoundError,
   repeatedName,
   invalidDataError,
 };
