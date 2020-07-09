@@ -1,0 +1,20 @@
+{
+  "name": "sd-02-project-store-manager",
+  "version": "1.0.0",
+  "description": "## O que deverá ser desenvolvido",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tryber/sd-02-project-store-manager.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tryber/sd-02-project-store-manager/issues"
+  },
+  "homepage": "https://github.com/tryber/sd-02-project-store-manager#readme"
+}
