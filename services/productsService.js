@@ -1,4 +1,16 @@
+function isFieldsValid(body) {
+  const HEADERS_FIELDS = JSON.parse(process.env.HEADERS_FIELDS);
+
+  return Object.entries(body).every(([key]) => HEADERS_FIELDS.includes(key));
+}
+
+function isValid(body) {
+  if (!isFieldsValid(body)) return false;
+  return true;
+}
+
 async function create(body) {
+  if (!isValid(body)) throw new Error('Invalid Fields');
   throw new Error('Bad Request');
 }
 

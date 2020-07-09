@@ -21,7 +21,7 @@ app.use((err, req, res, next) => {
   if (err.message === 'Not Implemented') {
     return res.status(501).json({ error: { message: err.message } });
   }
-  res.status(500).json({ error: 'Internal Sever Error' });
+  res.status(500).json({ error: err.message });
 });
 
 const PORT = process.env.PORT || 3000;
