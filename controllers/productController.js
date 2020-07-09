@@ -2,9 +2,9 @@ const productsService = require('../services/productsService');
 
 async function create(req, res) {
   try {
-    await productsService.erro1(true);
+    const product = await productsService.create(req.body);
 
-    await productsService.erro2(false);
+    res.send(201).json({ product });
   } catch (err) {
     throw new Error(err.message);
   }
