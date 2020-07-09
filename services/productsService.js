@@ -14,6 +14,7 @@ function isValid(body) {
 async function create(body) {
   const { error, value } = await joinSchemas.productsSchema.validate(body);
   console.log(error.details, value);
+  Boom.boomify(error, { statusCode: 404 });
   throw new Error('Bad Request');
 }
 
