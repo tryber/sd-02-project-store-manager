@@ -1,3 +1,5 @@
+const joinSchemas = require('./joinSchemas');
+
 function isFieldsValid(body) {
   const HEADERS_FIELDS = JSON.parse(process.env.HEADERS_FIELDS);
 
@@ -10,7 +12,8 @@ function isValid(body) {
 }
 
 async function create(body) {
-  if (!isValid(body)) throw new Error('Invalid Fields');
+  const { error, value } = await joinSchemas.productsSchema.validate(body);
+  console.log(error.details, value);
   throw new Error('Bad Request');
 }
 
