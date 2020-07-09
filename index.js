@@ -9,7 +9,7 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-app.post('/products', indexController.newProductController.newProduct)
+app.post('/products', indexController.newProductController.newProduct);
 
 app.use(indexController.errorController);
 
