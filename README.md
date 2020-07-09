@@ -1,4 +1,4 @@
-# Boas vindas ao projeto Storage-Manager!
+# Boas vindas ao projeto Storage-Manager! Bolivar Lindo
 
 Você já usa o GitHub diariamente para desenvolver os exercícios, certo? Agora, para desenvolver os projetos, você deverá seguir as instruções a seguir. Fique atento a cada passo, e se tiver qualquer dúvida, nos envie por Slack! #vqv 🚀
 
@@ -27,6 +27,7 @@ Você deve utilizar o banco MongoDB para a gestão de dados. Além disso, a API 
 - Deve ser possível que o usuário, independente de cadastramento ou login, possa adicionar, ler, deletar e atualizar produtos no seu estoque. O usuário deve poder também enviar vendas para o sistema. Essas vendas devem validar se o produto em questão existe. Deve, também, ser possível ler, deletar e atualizar vendas.
 
 - Para **todos os endpoints** garanta que:
+
   - Caso o recurso não seja encontrado, sua API retorne o status HTTP adequado com o body `{ message: '<recurso> não encontrado' }`
   - Em caso de erro, sua API retorne o status HTTP adequado com o body `{ error: { message: <mensagem de erro>, code: <código do erro> } }`
     - O código do erro deve ser determinado por você e deve seguir o mesmo padrão para toda a aplicação. Por exemplo: `'not_found'`, `'invalid_data'` e afins
@@ -172,42 +173,47 @@ Você deve utilizar o banco MongoDB para a gestão de dados. Além disso, a API 
 ### ANTES DE COMEÇAR A DESENVOLVER:
 
 1. Clone o repositório
-  - `git clone git@github.com:tryber/sd-0x-blockxx-storage-manager.git`.
-  - Entre na pasta do repositório que você acabou de clonar:
-    - `cd sd-0x-blockxx-storage-manager`
+
+- `git clone git@github.com:tryber/sd-0x-blockxx-storage-manager.git`.
+- Entre na pasta do repositório que você acabou de clonar:
+  - `cd sd-0x-blockxx-storage-manager`
 
 2. Crie uma branch a partir da branch `master`
-  - Verifique que você está na branch `master`
-    - Exemplo: `git branch`
-  - Se não estiver, mude para a branch `master`
-    - Exemplo: `git checkout master`
-  - Agora crie uma branch à qual você vai submeter os `commits` do seu projeto
-    - Você deve criar uma branch no seguinte formato: `nome-de-usuario-nome-do-projeto`
-    - Exemplo: `git checkout -b joaozinho-storage-manager`
+
+- Verifique que você está na branch `master`
+  - Exemplo: `git branch`
+- Se não estiver, mude para a branch `master`
+  - Exemplo: `git checkout master`
+- Agora crie uma branch à qual você vai submeter os `commits` do seu projeto
+  - Você deve criar uma branch no seguinte formato: `nome-de-usuario-nome-do-projeto`
+  - Exemplo: `git checkout -b joaozinho-storage-manager`
 
 3. Adicione as mudanças ao _stage_ do Git e faça um `commit`
-  - Verifique que as mudanças ainda não estão no _stage_
-    - Exemplo: `git status` (deve aparecer listado o arquivo alterado em vermelho)
-  - Adicione o arquivo alterado ao _stage_ do Git
-    - Exemplo:
-      - `git add .` (adicionando todas as mudanças - _que estavam em vermelho_ - ao stage do Git)
-      - `git status` (deve aparecer listado o arquivo adicionado em verde)
-  - Faça o `commit` inicial
-    - Exemplo:
-      - `git commit -m 'Iniciando o projeto Storage-manager'` (fazendo o primeiro commit)
-      - `git status` (deve aparecer uma mensagem tipo _nothing to commit_ )
+
+- Verifique que as mudanças ainda não estão no _stage_
+  - Exemplo: `git status` (deve aparecer listado o arquivo alterado em vermelho)
+- Adicione o arquivo alterado ao _stage_ do Git
+  - Exemplo:
+    - `git add .` (adicionando todas as mudanças - _que estavam em vermelho_ - ao stage do Git)
+    - `git status` (deve aparecer listado o arquivo adicionado em verde)
+- Faça o `commit` inicial
+  - Exemplo:
+    - `git commit -m 'Iniciando o projeto Storage-manager'` (fazendo o primeiro commit)
+    - `git status` (deve aparecer uma mensagem tipo _nothing to commit_ )
 
 4. Adicione a sua branch com o novo `commit` ao repositório remoto
-  - Usando o exemplo anterior: `git push -u origin joaozinho-storage-manager`
+
+- Usando o exemplo anterior: `git push -u origin joaozinho-storage-manager`
 
 5. Crie um novo `Pull Request` _(PR)_
-  - Vá até a página de _Pull Requests_ do [repositório no GitHub](https://github.com/tryber/sd-0x-blockxx-storage-manager/pulls)
-  - Clique no botão verde _"New pull request"_
-  - Clique na caixa de seleção _"Compare"_ e escolha a sua branch **com atenção**
-  - Clique no botão verde _"Create pull request"_
-  - Adicione uma descrição para o _Pull Request_ e clique no botão verde _"Create pull request"_
-  - **Não se preocupe em preencher mais nada por enquanto!**
-  - Volte até a [página de _Pull Requests_ do repositório](https://github.com/tryber/sd-0x-blockxx-storage-manager/pulls) e confira que o seu _Pull Request_ está criado
+
+- Vá até a página de _Pull Requests_ do [repositório no GitHub](https://github.com/tryber/sd-0x-blockxx-storage-manager/pulls)
+- Clique no botão verde _"New pull request"_
+- Clique na caixa de seleção _"Compare"_ e escolha a sua branch **com atenção**
+- Clique no botão verde _"Create pull request"_
+- Adicione uma descrição para o _Pull Request_ e clique no botão verde _"Create pull request"_
+- **Não se preocupe em preencher mais nada por enquanto!**
+- Volte até a [página de _Pull Requests_ do repositório](https://github.com/tryber/sd-0x-blockxx-storage-manager/pulls) e confira que o seu _Pull Request_ está criado
 
 ---
 
