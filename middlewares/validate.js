@@ -15,7 +15,7 @@ const validate = async (obj) => {
     const val = await schema.validateAsync(obj)
     if (val) return true;
   } catch (err) {
-    return { err };
+    return { error: { message: err.details[0].message, code: 422 } };
   }
 };
 
