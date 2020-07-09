@@ -4,7 +4,9 @@
   "description": "## O que deverá ser desenvolvido",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js",
+    "watch": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -16,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/tryber/sd-02-project-store-manager/issues"
   },
-  "homepage": "https://github.com/tryber/sd-02-project-store-manager#readme"
+  "homepage": "https://github.com/tryber/sd-02-project-store-manager#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
 }
