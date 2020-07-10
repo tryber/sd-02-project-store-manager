@@ -8,14 +8,11 @@ function errorBoom(err, res) {
 
   const response = res.status(statusCode);
 
-  if (statusCode === 400) {
-    if (data) {
-      return response.json({ error: { message: 'Dados Inválidos', erros: data, code: message } });
-    }
-    return response.json({ error: { message } });
+  if (data) {
+    return response.json({ error: { message, erros: data } });
   }
 
-  return response.json({ error: { message: data, code: message } });
+  return response.json({ error: { message } });
 }
 
 function errorMiddleware(err, _req, res, _next) {
@@ -23,7 +20,7 @@ function errorMiddleware(err, _req, res, _next) {
     return errorBoom(err, res);
   }
 
-  return res.status(500).json({ error: { message: err.message, code: 'ServerError' } });
+  return res.status(500).json({ error: { message: err.message } });
 }
 
 module.exports = errorMiddleware;

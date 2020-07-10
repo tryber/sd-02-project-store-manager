@@ -38,14 +38,6 @@ Além disso, a API deve ser RESTful.
 
 - Retorne os códigos de status corretos (recurso criado, erro de validação, autorização, etc).
 
-### 3 - Crie um endpoint para listar os produtos
-
-- O endpoint deve ser acessível através do caminho (`/products`) ou (`/products/:id`);
-
-- Através do caminho `/products`, todos os produtos devem ser retornados;
-
-- Através do caminho `/products/:id`, apenas o produto com o `id` presente na URL deve ser retornado;
-
 ### 4 - Crie um endpoint para deletar um produto
 
 - O endpoint deve ser acessível através do caminho (`/products/:id`);

@@ -12,7 +12,7 @@ async function create(body) {
 
     if (error) {
       throw Boom.badRequest(
-        error.name,
+        'Dados inválidos',
         error.details.map(({ message }) => message),
       );
     }
@@ -31,6 +31,21 @@ async function create(body) {
   }
 }
 
+async function find(id) {
+  try {
+    const product = await productsModel.find({ key: 'id', value: id });
+
+    if (!product) {
+      throw Boom.notFound('Produto não cadastrado');
+    }
+
+    return product;
+  } catch (err) {
+    throw err;
+  }
+}
+
 module.exports = {
   create,
+  find,
 };
