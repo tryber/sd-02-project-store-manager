@@ -1,6 +1,6 @@
 const productsService = require('../services/productsService');
 
-const productsModel = require('../models/productsModels');
+const productsModel = require('../models/productsModel');
 
 async function create(req, res) {
   try {

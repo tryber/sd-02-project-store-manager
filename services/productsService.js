@@ -2,7 +2,7 @@ const joinSchemas = require('./joinSchemas');
 
 const Boom = require('@hapi/boom');
 
-const productsModel = require('../models/productsModels');
+const productsModel = require('../models/productsModel');
 
 async function create(body) {
   try {
@@ -62,9 +62,7 @@ async function update({ id, body }) {
 
     await productsModel.update({ id, product });
 
-    const newProduct = await find(id);
-
-    return newProduct;
+    return find(id);
   } catch (err) {
     throw err;
   }

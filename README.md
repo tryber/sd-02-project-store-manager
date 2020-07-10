@@ -38,58 +38,6 @@ Além disso, a API deve ser RESTful.
 
 - Retorne os códigos de status corretos (recurso criado, erro de validação, autorização, etc).
 
-### 6 - Crie um endpoint para cadastrar vendas
-
-- O endpoint deve ser acessível através do caminho (`/sales`);
-
-- As vendas enviadas devem ser salvas em uma `collection` do MongoDB;
-
-- Deve ser possível cadastrar a venda de vários produtos através da uma mesma requisição;
-
-- O endpoint deve receber a seguinte estrutura:
-
-```json
-[
-  {
-  "productId": "product_id",
-  "quantity": "product_quantity"
-  }
-  ...
-]
-```
-
-- O `productId` devem ser igual ao `id` de um produto anteriormente cadastrado;
-
-- `quantity` deve ser um número inteiro maior que 0;
-
-- Cada venda deve ter um id que seja único e gerado no momento em que o recurso for criado;
-
-- A resposta do endpoint em caso de sucesso deve ser a(s) venda(s) criada(s).
-
-### 7 - Crie um endpoint para listar as vendas
-
-- O endpoint deve ser acessível através do caminho (`/sales`) ou (`/sales/:id`);
-
-- Através do caminho `/sales`, todas as vendas devem ser retornadas;
-
-- Através do caminho `/sales/:id`, apenas a venda com o `id` presente na URL deve ser retornada;
-
-### 8 - Crie um endpoint para deletar uma venda
-
-- O endpoint deve ser acessível através do caminho (`/sales/:id`);
-
-- Apenas a venda com o `id` presente na URL deve ser deletado;
-
-### 9 - Crie um endpoint para atualizar uma venda
-
-- O endpoint deve ser acessível através do caminho (`/sales/:id`);
-
-- O corpo da requisição deve receber a mesma estrutura utilizada para criar uma venda;
-
-- `quantity` deve ser um número inteiro maior que 0;
-
-- Apenas a venda com o `id` presente na URL deve ser atualizada;
-
 ## Bônus
 
 ### 10 - Atualize a quantidade de produtos
