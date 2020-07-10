@@ -9,11 +9,10 @@ function errorBoom(err, res) {
   const response = res.status(statusCode);
 
   if (statusCode === 400) {
-    return response.json({ error: { message: 'Dados Inválidos', erros: data, code: message } });
-  }
-
-  if (statusCode === 404) {
-    return response.json({ error: { message: `${data} não encontrado` } });
+    if (data) {
+      return response.json({ error: { message: 'Dados Inválidos', erros: data, code: message } });
+    }
+    return response.json({ error: { message } });
   }
 
   return response.json({ error: { message: data, code: message } });

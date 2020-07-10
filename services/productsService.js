@@ -17,40 +17,19 @@ async function create(body) {
       );
     }
 
-    const productDb = await productsModel.find({ name: product.name, field: 'name' });
+    const productDb = await productsModel.find({ key: 'name', value: product.name });
 
-    if (!productDb) {
-      throw Boom.notFound(
-        'NotFound',
-        error.details.map(({ message }) => message),
-      );
+    if (productDb) {
+      throw Boom.badRequest('Produto já existe');
     }
 
     const newProduct = await productsModel.create(product);
 
-    return newProduct;
+    return newProduct.ops[0];
   } catch (err) {
     throw err;
   }
 }
-
-// async function erro1(bool) {
-//   return new Promise((resolve, reject) => {
-//     if (bool) {
-//       resolve(2);
-//     }
-//     reject(new Error('Bad Request'));
-//   });
-// }
-
-// async function erro2(bool) {
-//   return new Promise((resolve, reject) => {
-//     if (bool) {
-//       resolve(1);
-//     }
-//     reject(new Error('Not Implemented'));
-//   });
-// }
 
 module.exports = {
   create,

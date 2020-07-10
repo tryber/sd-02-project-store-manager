@@ -1,30 +1,30 @@
 # Esse projeto vai ser foda gay!!!
 
+# Boas vindas ao projeto Storage-Manager!
+
+Você já usa o GitHub diariamente para desenvolver os exercícios, certo? Agora, para desenvolver os projetos, você deverá seguir as instruções a seguir. Fique atento a cada passo, e se tiver qualquer dúvida, nos envie por Slack! #vqv 🚀
+
+Aqui você vai encontrar os detalhes de como estruturar o desenvolvimento do seu projeto a partir deste repositório, utilizando uma branch específica e um Pull Request para colocar seus códigos.
+
+---
+
 ## O que deverá ser desenvolvido
 
-API utilizando a arquitetura MSC;
+Você vai desenvolver sua primeira API utilizando a arquitetura MSC!
 
-sistema de gerenciamento de vendas, onde será possível criar, visualizar, deletar e atualizar produtos e vendas;
+A API a ser construída trata-se de um sistema de gerenciamento de vendas, onde será possível criar, visualizar, deletar e atualizar produtos e vendas.
 
 ---
 
 ## Desenvolvimento
 
-camadas da API (Models, Service caso necessário, e Controllers);
+Através dessa aplicação, será possível realizar as operações básicas que se pode fazer em um determinado banco de dados: Criação, Leitura, Atualização e Exclusão (ou `CRUD`, pros mais íntimos 😜).
 
-Criação, Leitura, Atualização e Exclusão;
+Além disso, a API deve ser RESTful.
 
-MongoDB; RESTful;
+⚠️ **Dicas Importantes** ⚠️:
 
 - Deve ser possível que o usuário, independente de cadastramento ou login, possa adicionar, ler, deletar e atualizar produtos no seu estoque. O usuário deve poder também enviar vendas para o sistema. Essas vendas devem validar se o produto em questão existe. Deve, também, ser possível ler, deletar e atualizar vendas.
-
-- Para **todos os endpoints** garanta que:
-
-  - Caso o recurso não seja encontrado, sua API retorne o status HTTP adequado com o body `{ message: '<recurso> não encontrado' }`
-  - Em caso de dados inválidos, sua API retorne o status HTTP adequado, com o body `{ error: { message: 'Dados inválidos', code: <código do erro> } }`.
-  - Todos os retornos de erro devem seguir o mesmo formato. Para erros que requerem dados adicionais (por exemplo, para informar quais campos estão incorretos) utilize a propriedade `data` dentro do objeto `error`.
-
----
 
 ## Requisitos do projeto
 
@@ -37,29 +37,6 @@ MongoDB; RESTful;
 - Garanta que seus endpoints sempre retornem uma resposta, havendo sucesso nas operações ou não.
 
 - Retorne os códigos de status corretos (recurso criado, erro de validação, autorização, etc).
-
-### 2 - Crie um endpoint para o cadastramento de produtos
-
-- O endpoint deve ser acessível através do caminho (`/products`);
-
-- Os produtos enviados devem ser salvos em uma **collection** do MongoDB;
-
-- O endpoint deve receber a seguinte estrutura:
-
-```json
-{
-  "name": "product_name",
-  "quantity": "product_quantity"
-}
-```
-
-- `name` deve ser uma _string_ com mais de 5 caracteres e deve ser único;
-
-- `quantity` deve ser um número inteiro maior que 0;
-
-- Cada produto deve ter um id que seja único e gerado no momento em que o recurso for criado. Você pode utilizar o ID gerado pelo MongoDB
-
-- A resposta do endpoint em caso de sucesso deve ser o produto criado.
 
 ### 3 - Crie um endpoint para listar os produtos
 
@@ -150,88 +127,3 @@ MongoDB; RESTful;
 - Quando uma venda for realizada, garanta que a quantidade sendo vendida está disponível no estoque
 
 ---
-
-## Instruções para entregar seu projeto:
-
-### ANTES DE COMEÇAR A DESENVOLVER:
-
-1. Clone o repositório
-
-- `git clone git@github.com:tryber/sd-0x-blockxx-storage-manager.git`.
-- Entre na pasta do repositório que você acabou de clonar:
-  - `cd sd-0x-blockxx-storage-manager`
-
-2. Crie uma branch a partir da branch `master`
-
-- Verifique que você está na branch `master`
-  - Exemplo: `git branch`
-- Se não estiver, mude para a branch `master`
-  - Exemplo: `git checkout master`
-- Agora crie uma branch à qual você vai submeter os `commits` do seu projeto
-  - Você deve criar uma branch no seguinte formato: `nome-de-usuario-nome-do-projeto`
-  - Exemplo: `git checkout -b joaozinho-storage-manager`
-
-3. Adicione as mudanças ao _stage_ do Git e faça um `commit`
-
-- Verifique que as mudanças ainda não estão no _stage_
-  - Exemplo: `git status` (deve aparecer listado o arquivo alterado em vermelho)
-- Adicione o arquivo alterado ao _stage_ do Git
-  - Exemplo:
-    - `git add .` (adicionando todas as mudanças - _que estavam em vermelho_ - ao stage do Git)
-    - `git status` (deve aparecer listado o arquivo adicionado em verde)
-- Faça o `commit` inicial
-  - Exemplo:
-    - `git commit -m 'Iniciando o projeto Storage-manager'` (fazendo o primeiro commit)
-    - `git status` (deve aparecer uma mensagem tipo _nothing to commit_ )
-
-4. Adicione a sua branch com o novo `commit` ao repositório remoto
-
-- Usando o exemplo anterior: `git push -u origin joaozinho-storage-manager`
-
-5. Crie um novo `Pull Request` _(PR)_
-
-- Vá até a página de _Pull Requests_ do [repositório no GitHub](https://github.com/tryber/sd-0x-blockxx-storage-manager/pulls)
-- Clique no botão verde _"New pull request"_
-- Clique na caixa de seleção _"Compare"_ e escolha a sua branch **com atenção**
-- Clique no botão verde _"Create pull request"_
-- Adicione uma descrição para o _Pull Request_ e clique no botão verde _"Create pull request"_
-- **Não se preocupe em preencher mais nada por enquanto!**
-- Volte até a [página de _Pull Requests_ do repositório](https://github.com/tryber/sd-0x-blockxx-storage-manager/pulls) e confira que o seu _Pull Request_ está criado
-
----
-
-### DURANTE O DESENVOLVIMENTO
-
-- Faça `commits` das alterações que você fizer no código regularmente
-
-- Lembre-se de sempre após um (ou alguns) `commits` atualizar o repositório remoto
-
-- Os comandos que você utilizará com mais frequência são:
-  1. `git status` _(para verificar o que está em vermelho - fora do stage - e o que está em verde - no stage)_
-  2. `git add` _(para adicionar arquivos ao stage do Git)_
-  3. `git commit` _(para criar um commit com os arquivos que estão no stage do Git)_
-  4. `git push -u nome-da-branch` _(para enviar o commit para o repositório remoto na primeira vez que fizer o `push` de uma nova branch)_
-  5. `git push` _(para enviar o commit para o repositório remoto após o passo anterior)_
-
----
-
-### DEPOIS DE TERMINAR O DESENVOLVIMENTO
-
-Para **"entregar"** seu projeto, siga os passos a seguir:
-
-- Vá até a página **DO SEU** _Pull Request_, adicione a label de _"code-review"_ e marque seus colegas
-  - No menu à direita, clique no _link_ **"Labels"** e escolha a _label_ **code-review**
-  - No menu à direita, clique no _link_ **"Assignees"** e escolha **o seu usuário**
-  - No menu à direita, clique no _link_ **"Reviewers"** e digite `students`, selecione o time `tryber/students-sd-02`
-
-Se ainda houver alguma dúvida sobre como entregar seu projeto, [aqui tem um video explicativo](https://vimeo.com/362189205).
-
----
-
-### REVISANDO UM PULL REQUEST
-
-⚠⚠⚠
-
-À medida que você e os outros alunos forem entregando os projetos, vocês serão alertados **via Slack** para também fazer a revisão dos _Pull Requests_ dos seus colegas. Fiquem atentos às mensagens do _"Pull Reminders"_ no _Slack_!
-
-Use o material que você já viu sobre [Code Review](https://course.betrybe.com/real-life-engineer/code-review/) para te ajudar a revisar os projetos que chegaram para você.

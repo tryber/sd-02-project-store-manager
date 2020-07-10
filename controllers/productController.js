@@ -4,7 +4,7 @@ async function create(req, res) {
   try {
     const product = await productsService.create(req.body);
 
-    res.send(201).json({ product });
+    res.status(201).json({ product });
   } catch (err) {
     throw err;
   }
