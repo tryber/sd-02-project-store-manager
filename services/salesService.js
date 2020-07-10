@@ -24,6 +24,19 @@ async function check(body) {
       if (!productDb) {
         throw Boom.badRequest('Produto não existe');
       }
+
+      if (productDb.quantity < eachSale.quantity) {
+        throw Boom.badRequest(`Quantidade insuficiente do produto ${productDb.name} no estoque`);
+      }
+    }),
+  );
+}
+
+async function consumeProducts(body) {
+  return Promise.all(
+    body.map(async (product) => {
+      console.log(product);
+      return productsModel.consume({ id: product.productId, quantity: -product.quantity });
     }),
   );
 }
@@ -33,6 +46,8 @@ async function create(body) {
     await check(body);
 
     const newProduct = await salesModel.create(body);
+
+    await consumeProducts(body);
 
     return newProduct.ops[0];
   } catch (err) {
@@ -54,15 +69,43 @@ async function find(id) {
   }
 }
 
+async function remove(id) {
+  try {
+    const sale = await find(id);
+
+    if (!sale) return;
+
+    const update = sale.products.map((product) => {
+      product.quantity = -product.quantity;
+      return product;
+    });
+
+    await consumeProducts(update);
+
+    await salesModel.remove(id);
+  } catch (err) {
+    throw err;
+  }
+}
+
 async function update({ id, body }) {
   try {
-    await await check(body);
+    await check(body);
 
-    await find(id);
+    const oldSale = await find(id);
 
     await salesModel.update({ id, products: body });
 
-    return find(id);
+    const newSale = await find(id);
+
+    const update = body.map((product, index) => {
+      product.quantity = newSale.products[index].quantity - oldSale.products[index].quantity;
+      return product;
+    });
+
+    await consumeProducts(update);
+
+    return newSale;
   } catch (err) {
     throw err;
   }
@@ -71,5 +114,6 @@ async function update({ id, body }) {
 module.exports = {
   create,
   find,
+  remove,
   update,
 };

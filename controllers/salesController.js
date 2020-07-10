@@ -24,7 +24,7 @@ async function list(_req, res) {
 
 async function remove(req, res) {
   try {
-    await salesModel.remove(req.params.id);
+    await salesService.remove(req.params.id);
 
     res.status(200).json({ message: 'Removed with sucess' });
   } catch (err) {

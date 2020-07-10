@@ -1,6 +1,12 @@
 const connection = require('./connection');
 const { ObjectId } = require('mongodb');
 
+async function consume({ id, quantity }) {
+  return connection().then((db) =>
+    db.collection('products').updateOne({ _id: ObjectId(id) }, { $inc: { quantity } }),
+  );
+}
+
 async function create({ name, quantity }) {
   return connection().then((db) => db.collection('products').insertOne({ name, quantity }));
 }
@@ -27,7 +33,16 @@ async function update({ id, product: { name, quantity } }) {
   );
 }
 
+function updateStatistics(update) {
+  return update.map(async ({ collection, name }) =>
+    connection().then((db) =>
+      db.collection(collection).updateOne({ name }, { $inc: { quantity: 1 } }),
+    ),
+  );
+}
+
 module.exports = {
+  consume,
   create,
   find,
   list,
