@@ -2,7 +2,6 @@ const Sale = require('../models/Sale');
 const rescue = require('express-rescue');
 const schemaJoi = require('../services/schemasJoi');
 const validator = require('../services/validator');
-const JoiError = require('../services/JoiError');
 const { productUpdateStock } = require('../services/productQuantity');
 
 const listSales = rescue(async (_req, res) => {
@@ -14,7 +13,10 @@ const saleById = rescue(async (req, res) => {
   const { id } = req.params;
   const sale = await Sale.getById(id);
   if (!sale) {
-    return res.status(404).json({ message: 'Venda não encontrada' });
+    return Promise.reject({ error: {
+      message: 'Venda não encontrada',
+      code: 'not_found' },
+    });
   }
 
   return res.status(200).json(sale);
@@ -22,13 +24,11 @@ const saleById = rescue(async (req, res) => {
 
 const saleInsertMany = rescue(async (req, res) => {
   const sales = req.body;
-  try {
-    await validator.sales.isValidSchemaJoi(sales);
-    await validator.sales.productIds(sales);
-    await validator.sales.productStock(sales);
-  } catch (err) {
-    return res.status(400).json(JoiError(err));
-  }
+
+  await validator.sales.isValidSchemaJoi(sales);
+  await validator.sales.productIds(sales);
+  await validator.sales.productStock(sales);
+
   const response = await Sale.insertMany(sales);
   productUpdateStock(sales);
 
@@ -45,16 +45,16 @@ const saleDeleteById = rescue(async (req, res) => {
 const saleUpdateById = rescue(async (req, res) => {
   const { id } = req.params;
   const { quantity } = req.body;
-  try {
-    await schemaJoi.sales.validateAsync({ quantity });
-  } catch (err) {
-    return res.status(400).json(JoiError(err));
-  }
+
+  await schemaJoi.sales.validateAsync({ quantity });
 
   const response = await Sale.updateById(id, quantity);
 
   if (!response.matchedCount) {
-    return res.status(404).json({ message: 'Venda não encontrada' });
+    return Promise.reject({ error: {
+      message: 'Venda não encontrada',
+      code: 'not_found' },
+    });
   }
 
   return res.status(200).json({ message: 'Venda atualizada com sucesso!' });
