@@ -75,10 +75,7 @@ async function remove(id) {
 
     if (!sale) return;
 
-    const newBody = sale.products.map((product) => {
-      product.quantity = -product.quantity;
-      return product;
-    });
+    const newBody = sale.products.map((product) => ({ ...product, quantity: -product.quantity }));
 
     await consumeProducts(newBody);
 
@@ -98,10 +95,10 @@ async function update({ id, body }) {
 
     const newSale = await find(id);
 
-    const newBody = body.map((product, index) => {
-      product.quantity = newSale.products[index].quantity - oldSale.products[index].quantity;
-      return product;
-    });
+    const newBody = body.map((product, index) => ({
+      ...product,
+      quantity: newSale.products[index].quantity - oldSale.products[index].quantity,
+    }));
 
     await consumeProducts(newBody);
 
