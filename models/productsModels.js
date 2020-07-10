@@ -17,8 +17,20 @@ async function list() {
   return connection().then((db) => db.collection('products').find().toArray());
 }
 
+async function remove(id) {
+  return connection().then((db) => db.collection('products').remove({ _id: ObjectId(id) }));
+}
+
+async function update({ id, product: { name, quantity } }) {
+  return connection().then((db) =>
+    db.collection('products').updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } }),
+  );
+}
+
 module.exports = {
   create,
   find,
   list,
+  remove,
+  update,
 };

@@ -38,20 +38,6 @@ Além disso, a API deve ser RESTful.
 
 - Retorne os códigos de status corretos (recurso criado, erro de validação, autorização, etc).
 
-### 4 - Crie um endpoint para deletar um produto
-
-- O endpoint deve ser acessível através do caminho (`/products/:id`);
-
-- Apenas o produto com o `id` presente na URL deve ser deletado;
-
-### 5 - Crie um endpoint para atualizar um produto
-
-- O endpoint deve ser acessível através do caminho (`/products/:id`);
-
-- O corpo da requisição deve seguir a mesma estrutura do método responsável por adicionar um produto;
-
-- Apenas o produto com o `id` presente na URL deve ser atualizado;
-
 ### 6 - Crie um endpoint para cadastrar vendas
 
 - O endpoint deve ser acessível através do caminho (`/sales`);

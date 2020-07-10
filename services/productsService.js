@@ -45,7 +45,33 @@ async function find(id) {
   }
 }
 
+async function update({ id, body }) {
+  try {
+    const { error, value: product } = joinSchemas.productsSchema.validate(body, {
+      abortEarly: false,
+    });
+
+    if (error) {
+      throw Boom.badRequest(
+        'Dados inválidos',
+        error.details.map(({ message }) => message),
+      );
+    }
+
+    await find(id);
+
+    await productsModel.update({ id, product });
+
+    const newProduct = await find(id);
+
+    return newProduct;
+  } catch (err) {
+    throw err;
+  }
+}
+
 module.exports = {
   create,
   find,
+  update,
 };
