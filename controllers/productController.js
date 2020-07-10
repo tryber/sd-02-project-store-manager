@@ -6,7 +6,7 @@ async function create(req, res) {
 
     res.send(201).json({ product });
   } catch (err) {
-    throw new Error(err.message);
+    throw err;
   }
 }
 

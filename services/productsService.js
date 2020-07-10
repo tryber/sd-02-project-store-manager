@@ -1,5 +1,7 @@
 const joinSchemas = require('./joinSchemas');
 
+const Boom = require('@hapi/boom');
+
 function isFieldsValid(body) {
   const HEADERS_FIELDS = JSON.parse(process.env.HEADERS_FIELDS);
 
@@ -12,10 +14,16 @@ function isValid(body) {
 }
 
 async function create(body) {
-  const { error, value } = await joinSchemas.productsSchema.validate(body);
-  console.log(error.details, value);
-  Boom.boomify(error, { statusCode: 404 });
-  throw new Error('Bad Request');
+  const { error, value } = await joinSchemas.productsSchema.validate(body, { abortEarly: false });
+
+  if (error) {
+    throw Boom.badRequest(
+      error.name,
+      error.details.map(({ message }) => message),
+    );
+  }
+
+  throw new Error('all ok');
 }
 
 // async function erro1(bool) {
