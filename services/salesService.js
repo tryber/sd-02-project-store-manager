@@ -5,28 +5,32 @@ const Boom = require('@hapi/boom');
 const salesModel = require('../models/salesModel');
 const productsModel = require('../models/productsModel');
 
+async function check(body) {
+  return Promise.all(
+    body.map(async (eachSale) => {
+      const { error, value: sale } = joinSchemas.salesSchema.validate(eachSale, {
+        abortEarly: false,
+      });
+
+      if (error) {
+        throw Boom.badRequest(
+          'Dados inválidos',
+          error.details.map(({ message }) => message),
+        );
+      }
+
+      const productDb = await productsModel.find({ key: 'id', value: sale.productId });
+
+      if (!productDb) {
+        throw Boom.badRequest('Produto não existe');
+      }
+    }),
+  );
+}
+
 async function create(body) {
   try {
-    await Promise.all(
-      body.map(async (eachSale) => {
-        const { error, value: sale } = joinSchemas.salesSchema.validate(eachSale, {
-          abortEarly: false,
-        });
-
-        if (error) {
-          throw Boom.badRequest(
-            'Dados inválidos',
-            error.details.map(({ message }) => message),
-          );
-        }
-
-        const productDb = await productsModel.find({ key: 'id', value: sale.productId });
-
-        if (!productDb) {
-          throw Boom.badRequest('Produto não existe');
-        }
-      }),
-    );
+    await check(body);
 
     const newProduct = await salesModel.create(body);
 
@@ -52,26 +56,7 @@ async function find(id) {
 
 async function update({ id, body }) {
   try {
-    await Promise.all(
-      body.map(async (eachSale) => {
-        const { error, value: sale } = joinSchemas.salesSchema.validate(eachSale, {
-          abortEarly: false,
-        });
-
-        if (error) {
-          throw Boom.badRequest(
-            'Dados inválidos',
-            error.details.map(({ message }) => message),
-          );
-        }
-
-        const productDb = await productsModel.find({ key: 'id', value: sale.productId });
-
-        if (!productDb) {
-          throw Boom.badRequest('Produto não existe');
-        }
-      }),
-    );
+    await await check(body);
 
     await find(id);
 
