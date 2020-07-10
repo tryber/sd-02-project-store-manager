@@ -33,14 +33,6 @@ async function update({ id, product: { name, quantity } }) {
   );
 }
 
-function updateStatistics(update) {
-  return update.map(async ({ collection, name }) =>
-    connection().then((db) =>
-      db.collection(collection).updateOne({ name }, { $inc: { quantity: 1 } }),
-    ),
-  );
-}
-
 module.exports = {
   consume,
   create,
