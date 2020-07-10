@@ -6,13 +6,17 @@ function errorBoom(err, res) {
     data,
   } = err;
 
+  const response = res.status(statusCode);
+
   if (statusCode === 400) {
-    return res
-      .status(statusCode)
-      .json({ error: { message: 'Dados Inválidos', erros: data, code: message } });
+    return response.json({ error: { message: 'Dados Inválidos', erros: data, code: message } });
   }
 
-  return res.status(statusCode).json({ error: { message: data, code: message } });
+  if (statusCode === 404) {
+    return response.json({ error: { message: `${data} não encontrado` } });
+  }
+
+  return response.json({ error: { message: data, code: message } });
 }
 
 function errorMiddleware(err, req, res, next) {

@@ -2,28 +2,36 @@ const joinSchemas = require('./joinSchemas');
 
 const Boom = require('@hapi/boom');
 
-function isFieldsValid(body) {
-  const HEADERS_FIELDS = JSON.parse(process.env.HEADERS_FIELDS);
-
-  return Object.entries(body).every(([key]) => HEADERS_FIELDS.includes(key));
-}
-
-function isValid(body) {
-  if (!isFieldsValid(body)) return false;
-  return true;
-}
+const productsModel = require('../models/productsModels');
 
 async function create(body) {
-  const { error, value } = await joinSchemas.productsSchema.validate(body, { abortEarly: false });
+  try {
+    const { error, value: product } = joinSchemas.productsSchema.validate(body, {
+      abortEarly: false,
+    });
 
-  if (error) {
-    throw Boom.badRequest(
-      error.name,
-      error.details.map(({ message }) => message),
-    );
+    if (error) {
+      throw Boom.badRequest(
+        error.name,
+        error.details.map(({ message }) => message),
+      );
+    }
+
+    const productDb = await productsModel.find({ name: product.name, field: 'name' });
+
+    if (!productDb) {
+      throw Boom.notFound(
+        'NotFound',
+        error.details.map(({ message }) => message),
+      );
+    }
+
+    const newProduct = await productsModel.create(product);
+
+    return newProduct;
+  } catch (err) {
+    throw err;
   }
-
-  throw new Error('all ok');
 }
 
 // async function erro1(bool) {
