@@ -6,6 +6,7 @@ const {
   productDeleteById,
   productUpdateById,
 } = require('../controllers/productController');
+
 const router = express.Router();
 
 router
