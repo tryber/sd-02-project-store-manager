@@ -1,5 +1,4 @@
 const connection = require('./connection');
-const { ObjectId } = require('mongodb');
 
 const findByName = async (nameProduct) => {
   const productData = await connection()
@@ -15,16 +14,19 @@ const findByName = async (nameProduct) => {
 const validateData = async (data) => {
   const { name, quantity } = data;
 
-  if (typeof name !== 'string' || name.length <= 5)
+  if (typeof name !== 'string' || name.length <= 5) {
     return { dataIsValid: false, data: 'name' };
+  }
 
-  if (typeof quantity !== 'number' || !Number.isInteger(quantity) || quantity <= 0)
+  if (typeof quantity !== 'number' || !Number.isInteger(quantity) || quantity <= 0) {
     return { dataIsValid: false, data: 'quantity' };
+  }
 
   const nameAlreadyExists = await findByName(name);
 
-  if (nameAlreadyExists)
+  if (nameAlreadyExists) {
     return { dataIsValid: false, data: 'name' };
+  }
 
   return { dataIsValid: true };
 };
@@ -32,7 +34,7 @@ const validateData = async (data) => {
 const create = async (name, quantity) => (
   connection()
     .then((db) => db.collection('products').insertOne({ name, quantity }))
-    .then(result => ({ id: result.insertedId, name, quantity }))
+    .then((result) => ({ id: result.insertedId, name, quantity }))
 );
 
 module.exports = {

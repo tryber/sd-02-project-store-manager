@@ -3,12 +3,10 @@ const productsModel = require('../Models/productsModel');
 
 const router = express.Router();
 
-//router.get('/', (req, res) => res.send('Oláa'))
-
-router.post('/', async (req, res, next) => {
+router.post('/', async (req, res) => {
   const { dataIsValid, data } = await productsModel.validateData(req.body);
 
-  if (!dataIsValid)
+  if (!dataIsValid) {
     return res.status(422).send({
       error: {
         message: 'Dados inválidos',
@@ -16,7 +14,8 @@ router.post('/', async (req, res, next) => {
         data,
       },
     });
-
+  }
+        
   const { name, quantity } = req.body;
   const newProduct = await productsModel.create(name, quantity);
 
