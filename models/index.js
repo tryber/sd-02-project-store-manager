@@ -3,6 +3,7 @@ const getOneProduct = require('./getOneProduct');
 const postProduct = require('./postProduct');
 const getProductFromParam = require('./getProductFromParam');
 const deleteProduct = require('./deleteProduct');
+const updateProduct = require('./updateProduct');
 
 module.exports = {
   getAllProducts,
@@ -10,4 +11,5 @@ module.exports = {
   postProduct,
   getProductFromParam,
   deleteProduct,
+  updateProduct,
 };
