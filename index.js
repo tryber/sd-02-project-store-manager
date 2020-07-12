@@ -23,6 +23,7 @@ app.get('/sales', salesController.getAll);
 app.post('/sales', salesController.createOne);
 
 app.get('/sales/:id', salesController.getById);
+app.delete('/sales/:id', salesController.deleteById);
 
 app.use(errorController);
 

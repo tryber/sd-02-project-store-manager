@@ -38,8 +38,16 @@ const getSaleById = async (id) => {
   return result;
 };
 
+const deleteSaleById = async (id) => {
+  const result = await salesModel.deleteSaleById(id).catch((fail) => (
+    { error: true, message: `${fail.message}`, code: 'internal_error' }
+  ));
+  return result;
+};
+
 module.exports = {
   getAllSales,
   listOfExistProducts,
   getSaleById,
+  deleteSaleById,
 };

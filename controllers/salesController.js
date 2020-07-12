@@ -32,11 +32,19 @@ const getById = async (req, res, next) => {
   const { id } = req.params;
   const serviceAnswer = await salesService.getSaleById(id);
   if (serviceAnswer.error) return next(serviceAnswer);
-  return res.status(200).json(serviceAnswer);
+  res.status(200).json(serviceAnswer);
+};
+
+const deleteById = async (req, res, next) => {
+  const { id } = req.params;
+  const serviceAnswer = await salesService.deleteSaleById(id);
+  if (serviceAnswer.error) return next(serviceAnswer);
+  res.status(204).end();
 };
 
 module.exports = {
   getAll,
   createOne,
   getById,
+  deleteById,
 };
