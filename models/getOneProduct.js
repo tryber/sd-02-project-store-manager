@@ -3,7 +3,6 @@ const { stockConnection } = require('../connections');
 
 const getOneProduct = async (id) =>
   stockConnection()
-    .then((db) => db.collection('products').find({ _id: ObjectId(id) }).toArray())
-    .then((results) => results);
+    .then((db) => db.collection('products').findOne({ _id: ObjectId(id) }).toArray());
 
 module.exports = getOneProduct;

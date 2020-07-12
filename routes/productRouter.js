@@ -1,10 +1,11 @@
 const express = require('express');
-const { listProducts, listOneProduct } = require('../controller');
+const { listProducts, listOneProduct, newProduct } = require('../controller');
 
 const router = express.Router();
 
 router.route('/')
-  .get(listProducts);
+  .get(listProducts)
+  .post(newProduct);
 
 router.route('/:id')
   .get(listOneProduct);
