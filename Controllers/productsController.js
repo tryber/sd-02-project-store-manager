@@ -4,7 +4,7 @@ const productsModel = require('../Models/productsModel');
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-  const { dataIsValid, data } = await productsModel.validateData(req.body);
+  const { dataIsValid, data } = await productsModel.validateData(req.body, true);
 
   if (!dataIsValid) {
     return res.status(422).send({
@@ -74,6 +74,41 @@ router.delete('/:id', async (req, res) => {
   return res.status(200).send({
     message: 'Produto deletado com sucesso!',
     deletedProduct: product,
+  });
+});
+
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  const product = await productsModel.findById(id);
+
+  if (!product) {
+    return res.status(404).send({
+      error: {
+        message: 'Produto não encontrado',
+        code: 'not_found',
+      },
+    });
+  }
+
+  const { dataIsValid, data } = await productsModel.validateData(req.body);
+
+  if (!dataIsValid) {
+    return res.status(422).send({
+      error: {
+        message: 'Dados inválidos',
+        code: 'invalid_data',
+        data,
+      },
+    });
+  }
+
+  const { name, quantity } = req.body;
+  const updatedProduct = await productsModel.update(id, name, quantity);
+
+  res.status(200).send({
+    message: 'Produto atualizado com sucesso!',
+    updatedProduct,
   });
 });
 

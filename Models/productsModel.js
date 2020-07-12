@@ -25,7 +25,7 @@ const findById = async (id) => {
   return { id: _id, name, quantity };
 };
 
-const validateData = async (data) => {
+const validateData = async (data, uniqueName = false) => {
   const { name, quantity } = data;
 
   if (typeof name !== 'string' || name.length <= 5) {
@@ -35,6 +35,8 @@ const validateData = async (data) => {
   if (typeof quantity !== 'number' || !Number.isInteger(quantity) || quantity <= 0) {
     return { dataIsValid: false, data: 'quantity' };
   }
+
+  if (!uniqueName) return { dataIsValid: true };
 
   const nameAlreadyExists = await findByName(name);
 
@@ -66,10 +68,20 @@ const remove = async (id) => (
     .then((db) => db.collection('products').removeOne({ _id: ObjectId(id) }))
 );
 
+const update = async (id, name, quantity) => (
+  connection()
+    .then((db) => db.collection('products').updateOne(
+      { _id: ObjectId(id) },
+      { $set: { name, quantity } },
+    ))
+    .then(() => ({ id, name, quantity }))
+);
+
 module.exports = {
   create,
   validateData,
   getAll,
   findById,
   remove,
+  update,
 };
