@@ -3,3 +3,12 @@ db.products.insertMany([
   { name: 'whisky', quantity: 20 },
   { name: 'cachaça da brava', quantity: 30 },
 ]);
+
+db.sales.insertMany([
+  {
+    productId: "5f0b70bac3d16e344fe8643f", quantity: 3,
+  },
+  {
+    productId: "5f0b70bac3d16e344fe8643e", quantity: 5,
+  }
+]);

@@ -36,8 +36,6 @@ const updateAndValidProduct = async ({ id, name: testerName, quantity: testerQua
       name: testerName,
       quantity: testerQuantity,
     });
-    const exist = await getProductFromParam(name);
-    if (exist) return { error: { message: 'name already registered', code: 'invalid_data' } };
     return updateProduct(id, name, quantity)
       .catch((err) => ({ error: { message: err.message, code: 'internal_error' } }));
   } catch (err) {
