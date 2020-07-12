@@ -1,5 +1,5 @@
 const Joi = require('@hapi/joi');
-const { getOneProduct, postProduct, getProductFromParam } = require('../models');
+const { getOneProduct, postProduct, getProductFromParam, deleteProduct } = require('../models');
 
 const schema = Joi.object({
   name: Joi.string().min(5).required(),
@@ -7,7 +7,8 @@ const schema = Joi.object({
 });
 
 const validateId = async ({ id }) =>
-  getOneProduct(id).then((products) => ({ products }))
+  getOneProduct(id)
+    .then((products) => ({ products }))
     .catch((error) => ({ error }));
 
 const validProduct = async ({ name: testerName, quantity: testerQuantity }) => {
@@ -26,4 +27,8 @@ const validProduct = async ({ name: testerName, quantity: testerQuantity }) => {
   }
 };
 
-module.exports = { validateId, validProduct };
+const deleteFromId = async ({ id }) =>
+  deleteProduct(id).then((products) => ({ products }))
+    .catch((error) => ({ error }));
+
+module.exports = { validateId, validProduct, deleteFromId };

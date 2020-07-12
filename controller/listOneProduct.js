@@ -3,7 +3,7 @@ const { product } = require('../services');
 const listOneProduct = async (req, res, next) => {
   const { products, error } = await product.validateId(req.params);
   if (error) return next({ message: error.message, code: 'internal_error' });
-  if (products.length === 0) return next({ message: 'Page not found', code: 'not_found' });
+  if (!products) return next({ message: 'Page not found', code: 'not_found' });
   return res.status(200).json({ products });
 };
 
