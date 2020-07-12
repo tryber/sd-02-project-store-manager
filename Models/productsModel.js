@@ -57,8 +57,13 @@ const getAll = async () => (
     .then((products) => products.map(({ _id, name, quantity }) => ({
       id: _id,
       name,
-      quantity
+      quantity,
     })))
+);
+
+const remove = async (id) => (
+  connection()
+    .then((db) => db.collection('products').removeOne({ _id: ObjectId(id) }))
 );
 
 module.exports = {
@@ -66,4 +71,5 @@ module.exports = {
   validateData,
   getAll,
   findById,
+  remove,
 };

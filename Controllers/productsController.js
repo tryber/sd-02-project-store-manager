@@ -1,6 +1,5 @@
 const express = require('express');
 const productsModel = require('../Models/productsModel');
-const { ObjectId } = require('mongodb');
 
 const router = express.Router();
 
@@ -22,7 +21,7 @@ router.post('/', async (req, res) => {
 
   res.status(201).send({
     message: 'Produto criado com sucesso!',
-    newProduct,
+    createdProduct: newProduct,
   });
 });
 
@@ -45,15 +44,37 @@ router.get('/:id', async (req, res) => {
   const product = await productsModel.findById(id);
 
   if (!product) {
-    res.status(404).send({
+    return res.status(404).send({
       error: {
         message: 'Produto não encontrado',
-        code: 'not_found'
+        code: 'not_found',
       },
     });
   }
 
   return res.status(200).send({ product });
+});
+
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  const product = await productsModel.findById(id);
+
+  if (!product) {
+    return res.status(404).send({
+      error: {
+        message: 'Produto não encontrado',
+        code: 'not_found',
+      },
+    });
+  }
+
+  await productsModel.remove(id);
+
+  return res.status(200).send({
+    message: 'Produto deletado com sucesso!',
+    deletedProduct: product,
+  });
 });
 
 module.exports = router;
