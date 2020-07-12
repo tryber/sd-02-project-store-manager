@@ -22,6 +22,8 @@ app.put('/products/:id', productController.updateById);
 app.get('/sales', salesController.getAll);
 app.post('/sales', salesController.createOne);
 
+app.get('/sales/:id', salesController.getById);
+
 app.use(errorController);
 
 app.all('*', endpointController.endpointNotFound);

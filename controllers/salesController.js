@@ -7,14 +7,9 @@ const validateJoi = async (reqInfo) =>
   schemasJoi.addSale.validateAsync(reqInfo).catch((fail) => errorJoi(fail));
 
 const getAll = async (_req, res, next) => {
-  try {
-    const sales = await salesService.getAllSales();
-    res.status(200).json(sales);
-  } catch (fail) {
-    next(
-      { error: true, message: `${fail.message}`, code: 'internal_error' },
-    );
-  }
+  const serviceAnswer = await salesService.getAllSales();
+  if (serviceAnswer.error) next(serviceAnswer);
+  res.status(200).json(serviceAnswer);
 };
 
 const createOne = async (req, res, next) => {
@@ -33,7 +28,15 @@ const createOne = async (req, res, next) => {
   res.status(201).json(serviceAnswer.ops);
 };
 
+const getById = async (req, res, next) => {
+  const { id } = req.params;
+  const serviceAnswer = await salesService.getSaleById(id);
+  if (serviceAnswer.error) return next(serviceAnswer);
+  return res.status(200).json(serviceAnswer);
+};
+
 module.exports = {
   getAll,
   createOne,
+  getById,
 };

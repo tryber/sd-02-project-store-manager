@@ -1,7 +1,12 @@
 const salesModel = require('../models/salesModel');
 const productModel = require('../models/productModel');
 
-const getAllSales = async () => salesModel.getAllSales();
+const getAllSales = async () => {
+  const result = await salesModel.getAllSales().catch((fail) => (
+    { error: true, message: `${fail.message}`, code: 'internal_error' }
+  ));
+  return result;
+};
 
 const isProductExists = async (ids) => {
   const results = Promise.all(ids.map(async (id) => {
@@ -19,7 +24,22 @@ const listOfExistProducts = async (ids) => {
   return result;
 };
 
+const getSaleById = async (id) => {
+  const result = await salesModel.getSaleById(id).catch((fail) => (
+    { error: true, message: `${fail.message}`, code: 'internal_error' }
+  ));
+  if (result === null) {
+    return {
+      error: true,
+      message: 'No sale was found with the ID provided',
+      code: 'not_found',
+    };
+  }
+  return result;
+};
+
 module.exports = {
   getAllSales,
   listOfExistProducts,
+  getSaleById,
 };

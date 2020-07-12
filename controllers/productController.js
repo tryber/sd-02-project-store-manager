@@ -18,23 +18,17 @@ const getAll = async (_req, res, next) => {
 
 const createOne = async (req, res, next) => {
   const isValid = await validateJoi(req.body);
-  if (isValid.error) {
-    return next(isValid);
-  }
+  if (isValid.error) return next(isValid);
   const { name, quantity } = req.body;
   const serviceAnswer = await productService.createOne(name, quantity);
-  if (serviceAnswer.error) {
-    return next(serviceAnswer);
-  }
+  if (serviceAnswer.error) return next(serviceAnswer);
   res.status(201).json(serviceAnswer);
 };
 
 const getById = async (req, res, next) => {
   const { id } = req.params;
   const serviceAnswer = await productService.getProductById(id);
-  if (serviceAnswer.error) {
-    return next(serviceAnswer);
-  }
+  if (serviceAnswer.error) return next(serviceAnswer);
   res.status(200).json(serviceAnswer);
 };
 
@@ -52,15 +46,11 @@ const deleteById = async (req, res, next) => {
 
 const updateById = async (req, res, next) => {
   const isValid = validateJoi(req.body);
-  if (isValid.error) {
-    return next(isValid);
-  }
+  if (isValid.error) return next(isValid);
   const { name, quantity } = req.body;
   const { id } = req.params;
   const serviceAnswer = await productService.updateProduct(id, name, quantity);
-  if (serviceAnswer.error) {
-    return next(serviceAnswer);
-  }
+  if (serviceAnswer.error) return next(serviceAnswer);
   return res.status(200).json(serviceAnswer);
 };
 
