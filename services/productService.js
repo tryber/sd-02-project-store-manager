@@ -1,4 +1,4 @@
-const productModel = require('../controllers/productModel');
+const productModel = require('../models/productModel');
 
 const getAllProducts = async () => productModel.getAllProducts();
 
@@ -41,13 +41,13 @@ const updateProduct = async (id, name, quantity) => {
       code: 'exists_with_another_id',
     };
   }
-  const result = await productModel.updateProductById(id, name, quantity).catch((fail) => (
-    { error: true, message: `${fail.message}`, code: 'internal_error' }
-  ));
+  const result = await productModel.updateProductById(id, name, quantity)
+    .catch((fail) => (
+      { error: true, message: `${fail.message}`, code: 'internal_error' }
+    ));
   if (result === null) {
-    return {
-      error: true,
-      message: 'No product was found with the ID provided',
+    return { error: true,
+      message: 'No product was found with the Id provided',
       code: 'not_found',
     };
   }

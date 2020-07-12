@@ -2,7 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const endpointController = require('./controllers/endpointController');
 const productController = require('./controllers/productController');
+const salesController = require('./controllers/salesController');
 const { errorController } = require('./controllers/errorController');
 
 const app = express();
@@ -17,6 +19,11 @@ app.get('/products/:id', productController.getById);
 app.delete('/products/:id', productController.deleteById);
 app.put('/products/:id', productController.updateById);
 
+app.get('/sales', salesController.getAll);
+app.post('/sales', salesController.createOne);
+
 app.use(errorController);
+
+app.all('*', endpointController.endpointNotFound);
 
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
