@@ -10,6 +10,11 @@ connection().then(() => {
   console.log('Conectado ao MongoDB');
 });
 
-app.get('/', controllers.productsController.getProducts);
+app.use(express.json());
+
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.get('/products', controllers.productsController.getProducts);
+app.post('/products', controllers.productsController.insertProduct);
 
 app.listen(3000, () => console.log('Listening on 3000'));

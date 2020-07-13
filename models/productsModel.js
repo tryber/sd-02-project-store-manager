@@ -11,6 +11,17 @@ const getAll = async () => (
       })))
 );
 
+const createProducts = async (product) => {
+  try {
+    connection()
+      .then(((db) => db.collection('products').insertOne(product)));
+    return 'Produto Criado';
+  } catch (err) {
+    return err;
+  }
+};
+
 module.exports = {
   getAll,
+  createProducts,
 };
