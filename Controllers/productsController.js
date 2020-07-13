@@ -21,7 +21,7 @@ router.post('/', productValidator, async (req, res, next) => {
   });
 });
 
-router.get('/', async (req, res, next) => {
+router.get('/', async (req, res, _next) => {
   const products = await productsModel.getAll();
 
   if (products.length === 0) {
@@ -71,18 +71,6 @@ router.put('/:id', productValidator, async (req, res, next) => {
   if (!product) {
     return next(boom.notFound('Recurso não encontrado'));
   }
-
-//   const { dataIsValid, data } = await productsModel.validateData(req.body);
-
-//   if (!dataIsValid) {
-//     return res.status(422).send({
-//       error: {
-//         message: 'Dados inválidos',
-//         code: 'invalid_data',
-//         data,
-//       },
-//     });
-//   }
 
   const { name, quantity } = req.body;
   const nameAlreadyExists = await productsModel.findByName(name, id);

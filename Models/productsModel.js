@@ -28,28 +28,6 @@ const findById = async (id) => {
   return { id: _id, name, quantity };
 };
 
-// const validateData = async (data, uniqueName = false) => {
-//   const { name, quantity } = data;
-
-//   if (typeof name !== 'string' || name.length <= 5) {
-//     return { dataIsValid: false, data: 'name' };
-//   }
-
-//   if (typeof quantity !== 'number' || !Number.isInteger(quantity) || quantity <= 0) {
-//     return { dataIsValid: false, data: 'quantity' };
-//   }
-
-//   if (!uniqueName) return { dataIsValid: true };
-
-//   const nameAlreadyExists = await findByName(name);
-
-//   if (nameAlreadyExists) {
-//     return { dataIsValid: false, data: 'name' };
-//   }
-
-//   return { dataIsValid: true };
-// };
-
 const create = async (name, quantity) => (
   connection()
     .then((db) => db.collection('products').insertOne({ name, quantity }))
@@ -82,7 +60,6 @@ const update = async (id, name, quantity) => (
 
 module.exports = {
   create,
-  //validateData,
   getAll,
   findById,
   findByName,
