@@ -7,6 +7,7 @@ const updateProduct = require('./updateProduct');
 const getAllSales = require('./getAllSales');
 const getOneSale = require('./getOneSale');
 const postSales = require('./postSales');
+const deleteSale = require('./deleteSale');
 
 module.exports = {
   getAllProducts,
@@ -18,4 +19,5 @@ module.exports = {
   getAllSales,
   getOneSale,
   postSales,
+  deleteSale,
 };

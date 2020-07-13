@@ -1,4 +1,4 @@
-const { getOneSale, postSales } = require('../models');
+const { getOneSale, postSales, deleteSale } = require('../models');
 const { validateId } = require('./product');
 
 const validateIdSale = async ({ id }) =>
@@ -16,4 +16,7 @@ const validProduct = async (sales) => {
     .catch((err) => ({ error: { message: err.message, code: 'internal_error' } }));
 };
 
-module.exports = { validateIdSale, validProduct };
+const deleteFromId = async ({ id }) =>
+  deleteSale(id).catch((error) => ({ error }));
+
+module.exports = { validateIdSale, validProduct, deleteFromId };

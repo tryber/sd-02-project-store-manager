@@ -1,5 +1,5 @@
 const express = require('express');
-const { listSales, listOneSale, newSale, deleteOneProduct, updateOneProduct } = require('../controller');
+const { listSales, listOneSale, newSale, deleteSale, updateOneProduct } = require('../controller');
 
 const router = express.Router();
 
@@ -9,6 +9,6 @@ router.route('/')
 
 router.route('/:id')
   .get(listOneSale)
-  .delete(deleteOneProduct)
+  .delete(deleteSale)
   .put(updateOneProduct);
 module.exports = router;
