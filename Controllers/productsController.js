@@ -10,7 +10,7 @@ router.post('/', productValidator, async (req, res, next) => {
 
   const nameAlreadyExists = await productsModel.findByName(name);
   if (nameAlreadyExists) {
-    return next(boom.conflict('Recurso já existe', 'name'));
+    return next(boom.conflict('Produto já existe', 'name'));
   }
 
   const newProduct = await productsModel.create(name, quantity);
@@ -40,7 +40,7 @@ router.get('/:id', async (req, res, next) => {
   const product = await productsModel.findById(id);
 
   if (!product) {
-    return next(boom.notFound('Recurso não encontrado'));
+    return next(boom.notFound('Produto não encontrado'));
   }
 
   return res.status(200).send({ product });
@@ -52,7 +52,7 @@ router.delete('/:id', async (req, res, next) => {
   const product = await productsModel.findById(id);
 
   if (!product) {
-    return next(boom.notFound('Recurso não encontrado'));
+    return next(boom.notFound('Produto não encontrado'));
   }
 
   await productsModel.remove(id);
@@ -69,14 +69,14 @@ router.put('/:id', productValidator, async (req, res, next) => {
   const product = await productsModel.findById(id);
 
   if (!product) {
-    return next(boom.notFound('Recurso não encontrado'));
+    return next(boom.notFound('Produto não encontrado'));
   }
 
   const { name, quantity } = req.body;
   const nameAlreadyExists = await productsModel.findByName(name, id);
 
   if (nameAlreadyExists) {
-    return next(boom.conflict('Recurso já existe', 'name'));
+    return next(boom.conflict('Produto já existe', 'name'));
   }
 
   const updatedProduct = await productsModel.update(id, name, quantity);

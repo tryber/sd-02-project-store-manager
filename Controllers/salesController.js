@@ -16,30 +16,30 @@ router.post('/', saleValidator, async (req, res, next) => {
   });
 });
 
-// router.get('/', async (req, res, _next) => {
-//   const sales = await salesModel.getAll();
+router.get('/', async (req, res, _next) => {
+  const sales = await salesModel.getAll();
 
-//   if (sales.length === 0) {
-//     res.status(200).send({
-//       message: 'Não há produtos cadastrados ainda',
-//       sales,
-//     });
-//   }
+  if (sales.length === 0) {
+    res.status(200).send({
+      message: 'Não há vendas cadastradas ainda',
+      sales,
+    });
+  }
 
-//   return res.status(200).send({ sales });
-// });
+  return res.status(200).send({ sales });
+});
 
-// router.get('/:id', async (req, res, next) => {
-//   const { id } = req.params;
+router.get('/:id', async (req, res, next) => {
+  const { id } = req.params;
 
-//   const product = await salesModel.findById(id);
+  const sale = await salesModel.findById(id);
 
-//   if (!product) {
-//     return next(boom.notFound('Recurso não encontrado'));
-//   }
+  if (!sale) {
+    return next(boom.notFound('Venda não encontrada'));
+  }
 
-//   return res.status(200).send({ product });
-// });
+  return res.status(200).send({ sale });
+});
 
 // router.delete('/:id', async (req, res, next) => {
 //   const { id } = req.params;

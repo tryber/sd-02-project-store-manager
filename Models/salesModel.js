@@ -15,18 +15,18 @@ const { ObjectId } = require('mongodb');
 //   return { id: _id, name, quantity };
 // };
 
-// const findById = async (id) => {
-//   if (!ObjectId.isValid(id)) return null;
+const findById = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
 
-//   const productData = await connection()
-//     .then((db) => db.collection('products').findOne(ObjectId(id)));
+  const saleData = await connection()
+    .then((db) => db.collection('sales').findOne(ObjectId(id)));
 
-//   if (!productData) return null;
+  if (!saleData) return null;
 
-//   const { _id, name, quantity } = productData;
+  const { _id, productId, quantity } = saleData;
 
-//   return { id: _id, name, quantity };
-// };
+  return { id: _id, productId, quantity };
+};
 
 const create = async (salesData) => (
   connection()
@@ -40,15 +40,15 @@ const create = async (salesData) => (
     ))
 );
 
-// const getAll = async () => (
-//   connection()
-//     .then((db) => db.collection('products').find().toArray())
-//     .then((products) => products.map(({ _id, name, quantity }) => ({
-//       id: _id,
-//       name,
-//       quantity,
-//     })))
-// );
+const getAll = async () => (
+  connection()
+    .then((db) => db.collection('sales').find().toArray())
+    .then((sales) => sales.map(({ _id, productId, quantity }) => ({
+      id: _id,
+      productId,
+      quantity,
+    })))
+);
 
 // const remove = async (id) => (
 //   connection()
@@ -66,8 +66,8 @@ const create = async (salesData) => (
 
 module.exports = {
   create,
-//   getAll,
-//   findById,
+  getAll,
+  findById,
 //   findByName,
 //   remove,
 //   update,

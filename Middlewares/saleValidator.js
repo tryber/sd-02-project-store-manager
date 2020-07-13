@@ -42,7 +42,6 @@ const saleValidator = async (req, res, next) => {
   // });
 
 
-
   // if (!productIdsAreValid) return next(boom.badData('Dados inválidos', 'productId'));
 
   // const quantityIsValid = req.body.every(({ quantity }) => (
