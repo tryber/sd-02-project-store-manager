@@ -39,7 +39,7 @@ const updateProductById = async (id, name, quantity) => {
       { $set: { name, quantity } },
       { returnOriginal: false },
     );
-  return product.value;
+  return product;
 };
 
 module.exports = {

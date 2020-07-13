@@ -24,6 +24,7 @@ app.post('/sales', salesController.createOne);
 
 app.get('/sales/:id', salesController.getById);
 app.delete('/sales/:id', salesController.deleteById);
+app.put('/sales/:id', salesController.updateById);
 
 app.use(errorController);
 

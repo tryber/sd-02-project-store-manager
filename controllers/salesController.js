@@ -42,9 +42,20 @@ const deleteById = async (req, res, next) => {
   res.status(204).end();
 };
 
+const updateById = async (req, res, next) => {
+  const isValid = await validateJoi(req.body);
+  if (isValid.error) return next(isValid);
+  const { id } = req.params;
+  const [{ productId, quantity }] = req.body;
+  const serviceAnswer = await salesService.updateSaleById(id, productId, quantity);
+  if (serviceAnswer.error) return next(serviceAnswer);
+  res.status(200).json(serviceAnswer);
+};
+
 module.exports = {
   getAll,
   createOne,
   getById,
   deleteById,
+  updateById,
 };

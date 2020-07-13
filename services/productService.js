@@ -51,7 +51,7 @@ const updateProduct = async (id, name, quantity) => {
       code: 'not_found',
     };
   }
-  return result;
+  return result.value;
 };
 
 module.exports = {

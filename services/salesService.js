@@ -1,5 +1,6 @@
 const salesModel = require('../models/salesModel');
 const productModel = require('../models/productModel');
+const productService = require('./productService');
 
 const getAllSales = async () => {
   const result = await salesModel.getAllSales().catch((fail) => (
@@ -45,9 +46,20 @@ const deleteSaleById = async (id) => {
   return result;
 };
 
+const updateSaleById = async (id, productId, quantity) => {
+  console.log('prod', productId);
+  const isSaleExists = await getSaleById(id);
+  if (isSaleExists.error) return isSaleExists;
+  const isProductInDatabase = await productService.getProductById(productId);
+  if (isProductInDatabase.error) return isProductInDatabase;
+  const result = await salesModel.updateSaleById(id, productId, quantity);
+  return result.value;
+};
+
 module.exports = {
   getAllSales,
   listOfExistProducts,
   getSaleById,
   deleteSaleById,
+  updateSaleById,
 };
