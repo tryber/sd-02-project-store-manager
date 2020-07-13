@@ -49,7 +49,6 @@ const deleteSaleById = async (id) => {
 };
 
 const updateSaleById = async (id, productId, quantity) => {
-  console.log('prod', productId);
   const isSaleExists = await getSaleById(id);
   if (isSaleExists.error) return isSaleExists;
   const isProductInDatabase = await productService.getProductById(productId);
