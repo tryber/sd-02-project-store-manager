@@ -5,7 +5,7 @@ const boom = require('boom');
 
 const router = express.Router();
 
-router.post('/', salesValidator, async (req, res, next) => {
+router.post('/', salesValidator, async (req, res, _next) => {
   const salesData = Array.isArray(req.body)
     ? req.body.map(({ productId, quantity }) => ({ productId, quantity }))
     : [{ productId: req.body.productId, quantity: req.body.quantity }];
@@ -70,11 +70,6 @@ router.put('/:id', salesValidator, async (req, res, next) => {
   }
 
   const { productId, quantity } = req.body;
-  // const nameAlreadyExists = await salesModel.findByName(name, id);
-
-  // if (nameAlreadyExists) {
-  //   return next(boom.conflict('Recurso já existe', 'name'));
-  // }
 
   const updatedSale = await salesModel.update(id, productId, quantity);
 
