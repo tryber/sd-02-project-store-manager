@@ -8,6 +8,7 @@ const getAllSales = require('./getAllSales');
 const getOneSale = require('./getOneSale');
 const postSales = require('./postSales');
 const deleteSale = require('./deleteSale');
+const updateSale = require('./updateSale');
 
 module.exports = {
   getAllProducts,
@@ -20,4 +21,5 @@ module.exports = {
   getOneSale,
   postSales,
   deleteSale,
+  updateSale,
 };

@@ -7,6 +7,7 @@ const listSales = require('./listSales');
 const listOneSale = require('./listOneSale');
 const newSale = require('./newSale');
 const deleteSale = require('./deleteSale');
+const updateOneSale = require('./updateOneSale');
 
 module.exports = {
   listProducts,
@@ -18,4 +19,5 @@ module.exports = {
   listOneSale,
   newSale,
   deleteSale,
+  updateOneSale,
 };
