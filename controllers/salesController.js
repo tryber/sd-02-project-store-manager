@@ -1,5 +1,4 @@
 const salesService = require('../services/salesService');
-const salesModel = require('../models/salesModel');
 const schemasJoi = require('./schemasJoi');
 const errorJoi = require('./errorJoi');
 
