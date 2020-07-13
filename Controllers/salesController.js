@@ -1,17 +1,19 @@
 const express = require('express');
 const salesModel = require('../Models/salesModel');
-const saleValidator = require('../Middlewares/saleValidator');
+const salesValidator = require('../Middlewares/salesValidator');
 const boom = require('boom');
 
 const router = express.Router();
 
-router.post('/', saleValidator, async (req, res, next) => {
-  const salesData = req.body.map(({ productId, quantity }) => ({ productId, quantity }));
+router.post('/', salesValidator, async (req, res, next) => {
+  const salesData = Array.isArray(req.body)
+    ? req.body.map(({ productId, quantity }) => ({ productId, quantity }))
+    : [{ productId: req.body.productId, quantity: req.body.quantity }];
 
   const newSales = await salesModel.create(salesData);
 
   res.status(201).send({
-    message: 'Vendas criadas com sucesso!',
+    message: 'Venda(s) criada(s) com sucesso!',
     createdSales: newSales,
   });
 });
@@ -58,28 +60,28 @@ router.delete('/:id', async (req, res, next) => {
   });
 });
 
-// router.put('/:id', productValidator, async (req, res, next) => {
-//   const { id } = req.params;
+router.put('/:id', salesValidator, async (req, res, next) => {
+  const { id } = req.params;
 
-//   const product = await salesModel.findById(id);
+  const sale = await salesModel.findById(id);
 
-//   if (!product) {
-//     return next(boom.notFound('Recurso não encontrado'));
-//   }
+  if (!sale) {
+    return next(boom.notFound('Venda não encontrada'));
+  }
 
-//   const { name, quantity } = req.body;
-//   const nameAlreadyExists = await salesModel.findByName(name, id);
+  const { productId, quantity } = req.body;
+  // const nameAlreadyExists = await salesModel.findByName(name, id);
 
-//   if (nameAlreadyExists) {
-//     return next(boom.conflict('Recurso já existe', 'name'));
-//   }
+  // if (nameAlreadyExists) {
+  //   return next(boom.conflict('Recurso já existe', 'name'));
+  // }
 
-//   const updatedSale = await salesModel.update(id, name, quantity);
+  const updatedSale = await salesModel.update(id, productId, quantity);
 
-//   res.status(200).send({
-//     message: 'Produto atualizado com sucesso!',
-//     updatedSale,
-//   });
-// });
+  res.status(200).send({
+    message: 'Venda atualizada com sucesso!',
+    updatedSale,
+  });
+});
 
 module.exports = router;

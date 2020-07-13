@@ -55,20 +55,19 @@ const remove = async (id) => (
     .then((db) => db.collection('sales').removeOne({ _id: ObjectId(id) }))
 );
 
-// const update = async (id, name, quantity) => (
-//   connection()
-//     .then((db) => db.collection('products').updateOne(
-//       { _id: ObjectId(id) },
-//       { $set: { name, quantity } },
-//     ))
-//     .then(() => ({ id, name, quantity }))
-// );
+const update = async (id, productId, quantity) => (
+  connection()
+    .then((db) => db.collection('sales').updateOne(
+      { _id: ObjectId(id) },
+      { $set: { productId, quantity } },
+    ))
+    .then(() => ({ id, productId, quantity }))
+);
 
 module.exports = {
   create,
   getAll,
   findById,
-//   findByName,
   remove,
-//   update,
+  update,
 };
