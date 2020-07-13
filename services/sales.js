@@ -1,6 +1,5 @@
 const { getOneSale, postSales, deleteSale, updateSale } = require('../models');
 const { validateId } = require('./product');
-const { product } = require('.');
 
 const validateIdSale = async ({ id }) =>
   getOneSale(id)
