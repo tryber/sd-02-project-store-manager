@@ -50,10 +50,10 @@ const getAll = async () => (
     })))
 );
 
-// const remove = async (id) => (
-//   connection()
-//     .then((db) => db.collection('products').removeOne({ _id: ObjectId(id) }))
-// );
+const remove = async (id) => (
+  connection()
+    .then((db) => db.collection('sales').removeOne({ _id: ObjectId(id) }))
+);
 
 // const update = async (id, name, quantity) => (
 //   connection()
@@ -69,6 +69,6 @@ module.exports = {
   getAll,
   findById,
 //   findByName,
-//   remove,
+  remove,
 //   update,
 };

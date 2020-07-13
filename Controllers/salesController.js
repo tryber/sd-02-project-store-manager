@@ -41,22 +41,22 @@ router.get('/:id', async (req, res, next) => {
   return res.status(200).send({ sale });
 });
 
-// router.delete('/:id', async (req, res, next) => {
-//   const { id } = req.params;
+router.delete('/:id', async (req, res, next) => {
+  const { id } = req.params;
 
-//   const product = await salesModel.findById(id);
+  const sale = await salesModel.findById(id);
 
-//   if (!product) {
-//     return next(boom.notFound('Recurso não encontrado'));
-//   }
+  if (!sale) {
+    return next(boom.notFound('Venda não encontrada'));
+  }
 
-//   await salesModel.remove(id);
+  await salesModel.remove(id);
 
-//   return res.status(200).send({
-//     message: 'Produto deletado com sucesso!',
-//     deletedSale: product,
-//   });
-// });
+  return res.status(200).send({
+    message: 'Venda deletada com sucesso!',
+    deletedSale: sale,
+  });
+});
 
 // router.put('/:id', productValidator, async (req, res, next) => {
 //   const { id } = req.params;
