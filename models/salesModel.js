@@ -7,9 +7,9 @@ const getAllSales = async () => {
   return allSales;
 };
 
-const createOne = async (info) => {
+const createMany = async (products) => {
   const db = await connection();
-  const createSales = await db.collection('sales').insertMany(info);
+  const createSales = await db.collection('sales').insertMany(products);
   return createSales;
 };
 
@@ -38,7 +38,7 @@ const updateSaleById = async (id, productId, quantity) => {
 
 module.exports = {
   getAllSales,
-  createOne,
+  createMany,
   getSaleById,
   deleteSaleById,
   updateSaleById,

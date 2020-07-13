@@ -12,7 +12,7 @@ const getAll = async (_req, res, next) => {
   res.status(200).json(serviceAnswer);
 };
 
-const createOne = async (req, res, next) => {
+const createMany = async (req, res, next) => {
   const isValid = await validateJoi(req.body);
   if (isValid.error) return next(isValid);
   const idMapped = req.body.map(({ productId }) => productId);
@@ -24,7 +24,7 @@ const createOne = async (req, res, next) => {
       code: 'invalid_data',
     });
   }
-  const serviceAnswer = await salesModel.createOne(req.body);
+  const serviceAnswer = await salesService.createMany(req.body);
   res.status(201).json(serviceAnswer.ops);
 };
 
@@ -54,7 +54,7 @@ const updateById = async (req, res, next) => {
 
 module.exports = {
   getAll,
-  createOne,
+  createMany,
   getById,
   deleteById,
   updateById,

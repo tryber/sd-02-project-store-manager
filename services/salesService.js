@@ -25,6 +25,8 @@ const listOfExistProducts = async (ids) => {
   return result;
 };
 
+const createMany = async (products) => salesModel.createMany(products);
+
 const getSaleById = async (id) => {
   const result = await salesModel.getSaleById(id).catch((fail) => (
     { error: true, message: `${fail.message}`, code: 'internal_error' }
@@ -59,6 +61,7 @@ const updateSaleById = async (id, productId, quantity) => {
 module.exports = {
   getAllSales,
   listOfExistProducts,
+  createMany,
   getSaleById,
   deleteSaleById,
   updateSaleById,
