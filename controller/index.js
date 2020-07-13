@@ -5,6 +5,7 @@ const deleteOneProduct = require('./deleteOneProduct');
 const updateOneProduct = require('./updateOneProduct');
 const listSales = require('./listSales');
 const listOneSale = require('./listOneSale');
+const newSale = require('./newSale');
 
 module.exports = {
   listProducts,
@@ -14,4 +15,5 @@ module.exports = {
   updateOneProduct,
   listSales,
   listOneSale,
+  newSale,
 };

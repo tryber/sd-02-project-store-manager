@@ -1,11 +1,11 @@
 const express = require('express');
-const { listSales, listOneSale, newProduct, deleteOneProduct, updateOneProduct } = require('../controller');
+const { listSales, listOneSale, newSale, deleteOneProduct, updateOneProduct } = require('../controller');
 
 const router = express.Router();
 
 router.route('/')
   .get(listSales)
-  .post(newProduct);
+  .post(newSale);
 
 router.route('/:id')
   .get(listOneSale)
