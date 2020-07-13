@@ -18,7 +18,7 @@ router.post('/', salesValidator, async (req, res, _next) => {
   });
 });
 
-router.get('/', async (req, res, _next) => {
+router.get('/', async (_req, res, _next) => {
   const sales = await salesModel.getAll();
 
   if (sales.length === 0) {
