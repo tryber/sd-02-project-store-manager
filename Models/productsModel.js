@@ -1,9 +1,12 @@
 const connection = require('./connection');
 const { ObjectId } = require('mongodb');
 
-const findByName = async (nameProduct) => {
+const findByName = async (productName, productId = null) => {
   const productData = await connection()
-    .then((db) => db.collection('products').findOne({ name: nameProduct }));
+    .then((db) => db.collection('products').findOne({
+      name: productName,
+      _id: { $ne: ObjectId(productId) },
+    }));
 
   if (!productData) return null;
 
@@ -25,27 +28,27 @@ const findById = async (id) => {
   return { id: _id, name, quantity };
 };
 
-const validateData = async (data, uniqueName = false) => {
-  const { name, quantity } = data;
+// const validateData = async (data, uniqueName = false) => {
+//   const { name, quantity } = data;
 
-  if (typeof name !== 'string' || name.length <= 5) {
-    return { dataIsValid: false, data: 'name' };
-  }
+//   if (typeof name !== 'string' || name.length <= 5) {
+//     return { dataIsValid: false, data: 'name' };
+//   }
 
-  if (typeof quantity !== 'number' || !Number.isInteger(quantity) || quantity <= 0) {
-    return { dataIsValid: false, data: 'quantity' };
-  }
+//   if (typeof quantity !== 'number' || !Number.isInteger(quantity) || quantity <= 0) {
+//     return { dataIsValid: false, data: 'quantity' };
+//   }
 
-  if (!uniqueName) return { dataIsValid: true };
+//   if (!uniqueName) return { dataIsValid: true };
 
-  const nameAlreadyExists = await findByName(name);
+//   const nameAlreadyExists = await findByName(name);
 
-  if (nameAlreadyExists) {
-    return { dataIsValid: false, data: 'name' };
-  }
+//   if (nameAlreadyExists) {
+//     return { dataIsValid: false, data: 'name' };
+//   }
 
-  return { dataIsValid: true };
-};
+//   return { dataIsValid: true };
+// };
 
 const create = async (name, quantity) => (
   connection()
@@ -79,9 +82,10 @@ const update = async (id, name, quantity) => (
 
 module.exports = {
   create,
-  validateData,
+  //validateData,
   getAll,
   findById,
+  findByName,
   remove,
   update,
 };

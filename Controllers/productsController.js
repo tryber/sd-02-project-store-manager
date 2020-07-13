@@ -1,22 +1,18 @@
 const express = require('express');
 const productsModel = require('../Models/productsModel');
+const productValidator = require('../Middlewares/productValidator');
+const boom = require('boom');
 
 const router = express.Router();
 
-router.post('/', async (req, res) => {
-  const { dataIsValid, data } = await productsModel.validateData(req.body, true);
+router.post('/', productValidator, async (req, res, next) => {
+  const { name, quantity } = req.body;
 
-  if (!dataIsValid) {
-    return res.status(422).send({
-      error: {
-        message: 'Dados inválidos',
-        code: 'invalid_data',
-        data,
-      },
-    });
+  const nameAlreadyExists = await productsModel.findByName(name);
+  if (nameAlreadyExists) {
+    return next(boom.conflict('Recurso já existe', 'name'));
   }
 
-  const { name, quantity } = req.body;
   const newProduct = await productsModel.create(name, quantity);
 
   res.status(201).send({
@@ -25,7 +21,7 @@ router.post('/', async (req, res) => {
   });
 });
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
   const products = await productsModel.getAll();
 
   if (products.length === 0) {
@@ -38,35 +34,25 @@ router.get('/', async (req, res) => {
   return res.status(200).send({ products });
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
   const { id } = req.params;
 
   const product = await productsModel.findById(id);
 
   if (!product) {
-    return res.status(404).send({
-      error: {
-        message: 'Produto não encontrado',
-        code: 'not_found',
-      },
-    });
+    return next(boom.notFound('Recurso não encontrado'));
   }
 
   return res.status(200).send({ product });
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, next) => {
   const { id } = req.params;
 
   const product = await productsModel.findById(id);
 
   if (!product) {
-    return res.status(404).send({
-      error: {
-        message: 'Produto não encontrado',
-        code: 'not_found',
-      },
-    });
+    return next(boom.notFound('Recurso não encontrado'));
   }
 
   await productsModel.remove(id);
@@ -77,33 +63,34 @@ router.delete('/:id', async (req, res) => {
   });
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', productValidator, async (req, res, next) => {
   const { id } = req.params;
 
   const product = await productsModel.findById(id);
 
   if (!product) {
-    return res.status(404).send({
-      error: {
-        message: 'Produto não encontrado',
-        code: 'not_found',
-      },
-    });
+    return next(boom.notFound('Recurso não encontrado'));
   }
 
-  const { dataIsValid, data } = await productsModel.validateData(req.body);
+//   const { dataIsValid, data } = await productsModel.validateData(req.body);
 
-  if (!dataIsValid) {
-    return res.status(422).send({
-      error: {
-        message: 'Dados inválidos',
-        code: 'invalid_data',
-        data,
-      },
-    });
-  }
+//   if (!dataIsValid) {
+//     return res.status(422).send({
+//       error: {
+//         message: 'Dados inválidos',
+//         code: 'invalid_data',
+//         data,
+//       },
+//     });
+//   }
 
   const { name, quantity } = req.body;
+  const nameAlreadyExists = await productsModel.findByName(name, id);
+
+  if (nameAlreadyExists) {
+    return next(boom.conflict('Recurso já existe', 'name'));
+  }
+
   const updatedProduct = await productsModel.update(id, name, quantity);
 
   res.status(200).send({
