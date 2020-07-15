@@ -1,8 +1,11 @@
 const productModel = require('../models/productModel');
 
 const newProduct = async (name, quantity) => {
-  const existProduct = await productModel.findByName(name);
-  if (existProduct.length > 0) {
+  const existProduct = await productModel.findByName(name).catch((error) => {
+    const { message } = error;
+    return { error: { message, code: 404 } };
+  });
+  if (existProduct !== null) {
     return { error: { message: 'Item already exists', code: 409 } };
   }
   const createdProduct = await productModel.createProduct({ name, quantity });
@@ -10,7 +13,10 @@ const newProduct = async (name, quantity) => {
 };
 
 const findAll = async () => {
-  const getAll = await productModel.getAll();
+  const getAll = await productModel.getAll().catch((error) => {
+    const { message } = error;
+    return { error: { message, code: 404 } };
+  });;
   return getAll;
 };
 
@@ -46,6 +52,7 @@ const updateById = async (id, name, quantity) => {
   if (productExist === null) {
     return { error: { message: 'Item not Found', code: 404 } };
   }
+  if (productExist.error) return productExist;
   const updatedProduct = await productModel.updateById(id, name, quantity);
   return updatedProduct.value;
 };

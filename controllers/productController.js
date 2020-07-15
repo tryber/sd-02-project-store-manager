@@ -10,8 +10,9 @@ const newProduct = async (req, res, next) => {
   return res.status(201).json(serviceProduct);
 };
 
-const findAllProducts = async (req, res) => {
+const findAllProducts = async (req, res, next) => {
   const products = await productService.findAll();
+  if (products.error) return next(products);
   return res.status(200).json(products);
 };
 
