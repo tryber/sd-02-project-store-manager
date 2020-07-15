@@ -48,7 +48,7 @@ const updateById = async (id, name, quantity) => {
   }
   const updatedProduct = await productModel.updateById(id, name, quantity);
   return updatedProduct.value;
-}
+};
 
 module.exports = {
   newProduct,
