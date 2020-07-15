@@ -1,5 +1,4 @@
 const Product = require('../models/Product');
-const schemasJoi = require('./schemasJoi');
 
 const product = {
   hasName: async (name) => {
