@@ -29,9 +29,20 @@ const deleteById = async (req, res, next) => {
   return res.status(200).end();
 };
 
+const updateById = async (req, res, next) => {
+  const { id } = req.params;
+  const { name, quantity } = req.body;
+  const isValid = await validateNewProduct.validate({ name, quantity });
+  if (isValid.error) return next(isValid);
+  const product = await productService.updateById(id, name, quantity);
+  if (product.error) return next(product);
+  return res.status(200).json(product);
+};
+
 module.exports = {
   newProduct,
   findAllProducts,
   findById,
   deleteById,
+  updateById,
 };

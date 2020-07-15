@@ -12,8 +12,8 @@ app.use(bodyParser.json());
 app.post('/products', indexController.productController.newProduct);
 app.get('/products', indexController.productController.findAllProducts);
 app.get('/products/:id', indexController.productController.findById);
-
 app.delete('/products/:id', indexController.productController.deleteById);
+app.put('/products/:id', indexController.productController.updateById);
 
 app.use(indexController.errorController);
 

@@ -32,10 +32,22 @@ const deleteById = async (id) => {
   return product;
 };
 
+const updateById = async (id, name, quantity) => {
+  const db = await connection();
+  const product = await db.collection('products')
+    .findOneAndUpdate({
+      _id: ObjectId(id) },
+      { $set: { name, quantity } },
+      { returnOriginal: false },
+    );
+  return product;
+};
+
 module.exports = {
   getAll,
   findByName,
   createProduct,
   findById,
   deleteById,
+  updateById,
 };
