@@ -13,13 +13,17 @@ const product = Joi.object({
     .required(),
 });
 
-const sales = Joi.object({
+const sales =  Joi.array().items({
+  productId: Joi
+    .string()
+    .required(),
   quantity: Joi
     .number()
     .integer()
     .min(1)
     .required(),
 });
+
 
 module.exports = {
   product,

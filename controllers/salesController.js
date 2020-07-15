@@ -2,7 +2,7 @@ const Sale = require('../models/Sale');
 const rescue = require('express-rescue');
 const schemaJoi = require('../services/schemasJoi');
 const validator = require('../services/validator');
-const { productUpdateStock } = require('../services/productQuantity');
+
 
 const listSales = rescue(async (_req, res) => {
   const sales = await Sale.getAll();
@@ -22,17 +22,18 @@ const saleById = rescue(async (req, res) => {
   return res.status(200).json(sale);
 });
 
-const saleInsertMany = rescue(async (req, res) => {
-  const sales = req.body;
+const saleInsert = rescue(async (req, res) => {
+  const sale = req.body;
 
-  await validator.sales.isValidSchemaJoi(sales);
-  await validator.sales.productIds(sales);
-  await validator.sales.productStock(sales);
+  await schemaJoi.sales.validateAsync(sale);
 
-  const response = await Sale.insertMany(sales);
-  productUpdateStock(sales);
+  await validator.sales.productIds(sale);
+  await validator.sales.productStock(sale);
 
-  return res.status(201).json(response.ops);
+  const newSale = new Sale(sale);
+  const result = await newSale.add();
+
+  return res.status(201).json(result.ops[0]);
 });
 
 const saleDeleteById = rescue(async (req, res) => {
@@ -44,11 +45,13 @@ const saleDeleteById = rescue(async (req, res) => {
 
 const saleUpdateById = rescue(async (req, res) => {
   const { id } = req.params;
-  const { quantity } = req.body;
+  const sale = req.body;
 
-  await schemaJoi.sales.validateAsync({ quantity });
+  await schemaJoi.sales.validateAsync(sale);
 
-  const response = await Sale.updateById(id, quantity);
+  const newSale = new Sale(sale);
+
+  const response = await newSale.updateById(id);
 
   if (!response.matchedCount) {
     return Promise.reject({ error: {
@@ -63,7 +66,7 @@ const saleUpdateById = rescue(async (req, res) => {
 module.exports = {
   listSales,
   saleById,
-  saleInsertMany,
+  saleInsert,
   saleDeleteById,
   saleUpdateById,
 };

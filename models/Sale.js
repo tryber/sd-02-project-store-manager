@@ -3,9 +3,8 @@ const mongodb = require('mongodb');
 const { ObjectId } = require('mongodb');
 
 class Sale {
-  constructor(quantity, productId) {
-    this.quantity = quantity;
-    this.productId = productId;
+  constructor(array) {
+    this.array = array;
   }
 
   static async getAll() {
@@ -18,9 +17,9 @@ class Sale {
     );
   }
 
-  static async insertMany(sales) {
+  async add() {
     return connection().then((db) =>
-      db.collection('sales').insertMany(sales),
+      db.collection('sales').insertOne(this),
     );
   }
 
@@ -30,9 +29,9 @@ class Sale {
     );
   }
 
-  static async updateById(id, quantity) {
+  async updateById(id) {
     return connection().then((db) =>
-      db.collection('sales').updateOne({ _id: new mongodb.ObjectID(id) }, { $set: { quantity } }),
+      db.collection('sales').updateOne({ _id: new mongodb.ObjectID(id) }, { $set: this }),
     );
   }
 }

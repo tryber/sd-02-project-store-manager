@@ -7,6 +7,7 @@ const objError = {
 };
 
 const errorController = async (err, _req, res, _next) => {
+  console.log('err', err);
   const statusCode = objError[joiError(err).error.code] || 500;
   return res.status(statusCode).json(joiError(err));
 };

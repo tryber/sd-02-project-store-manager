@@ -1,7 +1,7 @@
 const express = require('express');
 const {
   listSales,
-  saleInsertMany,
+  saleInsert,
   saleById,
   saleDeleteById,
   saleUpdateById,
@@ -12,7 +12,7 @@ const router = express.Router();
 router
   .route('/')
   .get(listSales)
-  .post(saleInsertMany);
+  .post(saleInsert);
 
 router
   .route('/:id')
