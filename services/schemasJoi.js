@@ -13,7 +13,7 @@ const product = Joi.object({
     .required(),
 });
 
-const sales =  Joi.array().items({
+const sales = Joi.array().items({
   productId: Joi
     .string()
     .required(),

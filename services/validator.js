@@ -23,15 +23,6 @@ const sales = {
     }
     return Promise.all(promises);
   },
-  isValidSchemaJoi: async (sale) => {
-    const { array } = sale;
-    const promises = [];
-    for (let i = 0; i < array.length; i += 1) {
-      const { quantity } = array[i];
-      promises.push(schemasJoi.sales.validateAsync({ quantity }));
-    }
-    return Promise.all(promises);
-  },
   productStock: async (sale) => {
     const promises = [];
     for (let i = 0; i < sale.length; i += 1) {
@@ -41,7 +32,7 @@ const sales = {
         if (qProduct - qSale > 0) {
           const newProduct = new Product(name, qProduct - qSale);
           await newProduct.updateById(productId);
-            return resolve(true);
+          return resolve(true);
         }
         return reject({ error: { message: `Produto "${name}" não tem estoque o suficiente`, code: 'invalid_data' } });
       });
