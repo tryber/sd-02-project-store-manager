@@ -1,7 +1,9 @@
-const newProductController = require('./productController');
+const productController = require('./productController');
+const endPointError = require('./endPointError');
 const errorController = require('./errorController');
 
 module.exports = {
-  newProductController,
+  productController,
+  endPointError,
   errorController,
 };

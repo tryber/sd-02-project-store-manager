@@ -9,15 +9,15 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-app.post('/products', indexController.newProductController.newProduct);
-app.get('/products', indexController.newProductController.findAllProducts);
-app.get('/products/:id', indexController.newProductController.findById);
+app.post('/products', indexController.productController.newProduct);
+app.get('/products', indexController.productController.findAllProducts);
+app.get('/products/:id', indexController.productController.findById);
+
+app.delete('/products/:id', indexController.productController.deleteById);
 
 app.use(indexController.errorController);
 
-app.all('*', (req, res) => {
-  return res.status(404).json({ error: { message: 'Endpoint not found', code: 404 } });
-});
+app.all('*', indexController.endPointError.endPointError);
 
 app.listen(port, () => {
   console.log(`Ouvindo a porta ${port}`);

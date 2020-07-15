@@ -7,7 +7,7 @@ const newProduct = async (req, res, next) => {
   if (isValid.error) return next(isValid);
   const serviceProduct = await productService.newProduct(name, quantity);
   if (serviceProduct.error) return next(serviceProduct);
-  return res.status(201).end();
+  return res.status(201).json(serviceProduct);
 };
 
 const findAllProducts = async (req, res) => {
@@ -22,8 +22,16 @@ const findById = async (req, res, next) => {
   return res.status(200).json(product);
 };
 
+const deleteById = async (req, res, next) => {
+  const { id } = req.params;
+  const product = await productService.deleteById(id);
+  if (product.error) return next(product);
+  return res.status(200).end();
+};
+
 module.exports = {
   newProduct,
   findAllProducts,
   findById,
+  deleteById,
 };

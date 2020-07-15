@@ -22,8 +22,14 @@ const findByName = async (name) => {
 
 const findById = async (id) => {
   const db = await connection();
-  const products = await db.collection('products').findOne({ _id: ObjectId(id) });
-  return products;
+  const product = await db.collection('products').findOne({ _id: ObjectId(id) });
+  return product;
+};
+
+const deleteById = async (id) => {
+  const db = await connection();
+  const product = await db.collection('products').findOneAndDelete({ _id: ObjectId(id) });
+  return product;
 };
 
 module.exports = {
@@ -31,4 +37,5 @@ module.exports = {
   findByName,
   createProduct,
   findById,
+  deleteById,
 };

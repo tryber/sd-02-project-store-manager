@@ -23,10 +23,24 @@ const findById = async (id) => {
     return { error: { message: 'Item not Found', code: 404 } };
   }
   return product;
-}
+};
+
+// Perguntar sobre o status 204, 404 e 406 para Not Found
+
+const deleteById = async (id) => {
+  const product = await productModel.deleteById(id).catch((error) => {
+    const { message } = error;
+    return { error: { message, code: 404 } };
+  });
+  if (product.value === null) {
+    return { error: { message: 'Item not found', code: 404 } };
+  }
+  return product;
+};
 
 module.exports = {
   newProduct,
   findAll,
   findById,
+  deleteById,
 };
