@@ -19,7 +19,7 @@ const findById = async (req, res, next) => {
   const { id } = req.params;
   const product = await productService.findById(id);
   if (product.error) return next(product);
-  return res.json(product);
+  return res.status(200).json(product);
 };
 
 module.exports = {
