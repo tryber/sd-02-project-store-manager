@@ -1,5 +1,4 @@
 const express = require('express');
-const { getAllProducts, validateProducts } = require('../services/productsService');
 const productsService = require('../services/productsService');
 
 const router = express.Router();
@@ -29,7 +28,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   const { name, quantity } = req.body;
 
-  const isValid = await validateProducts(name, quantity);
+  const isValid = await productsService.validateProducts(name, quantity);
   if (isValid.error) {
     return res.status(422).json({ message: isValid.error, code: isValid.code });
   }
