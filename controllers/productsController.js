@@ -14,7 +14,16 @@ router.get('/', async (_req, res) => {
 
 router.get('/:id', async (req, res) => {
   const product = await productsService.getProductById(`${req.params.id}`);
-  console.log(product);
+
+  if (!product) {
+    return res.status(500).json({ message: 'Erro de conexão com o banco de dados', code: 'db_connection_error' });
+  }
+
+  if (product.length === 0) {
+    return res.status(404).json({ message: 'Produto não encontrado', code: 'not_found' });
+  }
+
+  return res.status(200).json({ message: 'Produto Encontrado', product: [product] });
 });
 
 router.post('/', async (req, res) => {
@@ -38,5 +47,18 @@ router.post('/', async (req, res) => {
   return res.status(201).json({ message: 'Produto criado com sucesso' });
 });
 
+router.delete('/:id', async (req, res) => {
+  const isProductExist = await productsService.getProductById(`${req.params.id}`);
+
+  if (isProductExist.length === 0) return res.status(400).json({ message: 'Produto não encontrado', code: 'not_found' });
+
+  const isRemoved = await productsService.deleteProductById(`${req.params.id}`);
+
+  if (!isRemoved) {
+    return res.status(500).json({ message: 'Erro de conexão com o banco de dados', code: 'db_connection_error' });
+  }
+
+  return res.status(200).json({ message: 'Produto removido', code: 'removed_product' });
+});
 
 module.exports = router;

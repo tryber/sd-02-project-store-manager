@@ -13,11 +13,10 @@ const getAll = async () => (
 );
 
 const getProductById = async (id) => {
-  if (!ObjectId.isValid(id)) return false;
   try {
     const product = await connection()
       .then((db) => db.collection('products').findOne({ _id: ObjectId(id) }));
-    return product;
+    return product || [];
   } catch (err) {
     console.error(err);
     return false;
@@ -35,8 +34,20 @@ const createProducts = async (product) => {
   }
 };
 
+const deleteProduct = async (id) => {
+  try {
+    const { result } = await connection()
+      .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id) }));
+    return result;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+};
+
 module.exports = {
   getAll,
   createProducts,
   getProductById,
+  deleteProduct,
 };
