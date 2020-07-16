@@ -1,24 +1,42 @@
+const express = require('express');
 const { getAllProducts, validateProducts } = require('../services/productsService');
+const productsService = require('../services/productsService');
 
-const getProducts = async (req, res) => {
-  const products = await getAllProducts;
+const router = express.Router();
+
+router.get('/', async (_req, res) => {
+  const products = await productsService.getAllProducts;
   res.status(200).json({
     message: 'Produtos retornados',
     products,
   });
-};
+});
 
-const insertProduct = async (req, res) => {
+router.get('/:id', async (req, res) => {
+  const product = await productsService.getProductById(`${req.params.id}`);
+  console.log(product);
+});
+
+router.post('/', async (req, res) => {
   const { name, quantity } = req.body;
 
   const isValid = await validateProducts(name, quantity);
   if (isValid.error) {
     return res.status(422).json({ message: isValid.error, code: isValid.code });
   }
-  return res.status(201).json({ message: 'Produto criado com sucesso' });
-};
 
-module.exports = {
-  getProducts,
-  insertProduct,
-};
+  const isProductExists = await productsService.existProduct(name);
+
+  if (isProductExists) return res.status(400).json({ message: 'Produto já existe', code: 'duplicated_product' });
+
+  const isProductCreated = await productsService.createProducts({ name, quantity });
+
+  if (!isProductCreated) {
+    return res.status(500).json({ message: 'Erro de conexão com o banco de dados', code: 'db_connection_error' });
+  }
+
+  return res.status(201).json({ message: 'Produto criado com sucesso' });
+});
+
+
+module.exports = router;
