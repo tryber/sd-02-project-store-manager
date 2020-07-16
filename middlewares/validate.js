@@ -16,7 +16,7 @@ const validate = async (obj) => {
     const val = await schemaNewProduct.validateAsync(obj);
     if (val) return true;
   } catch (err) {
-    return { error: { message: err.details[0].message, code: 422 } };
+    return { error: { message: err.details[0].message, code: 'Invalid_data' } };
   }
 };
 

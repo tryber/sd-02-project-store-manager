@@ -20,15 +20,16 @@ const findByName = async (name) => {
 };
 
 const findById = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
   const db = await connection();
   const product = await db.collection('products').findOne({ _id: ObjectId(id) });
   return product;
 };
 
 const deleteById = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
   const db = await connection();
-  const product = await db.collection('products').findOneAndDelete({ _id: ObjectId(id) });
-  return product;
+  await db.collection('products').deleteOne({ _id: ObjectId(id) });
 };
 
 const updateById = async (id, name, quantity) => {
