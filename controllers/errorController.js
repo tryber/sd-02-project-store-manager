@@ -1,7 +1,7 @@
 const statusByCode = {
-  'Not_found': 404,
-  'Already_exists': 409,
-  'Invalid_data': 422,
+  Not_found: 404,
+  Already_exists: 409,
+  Invalid_data: 422,
   'entity.parse.failed': 400,
 };
 

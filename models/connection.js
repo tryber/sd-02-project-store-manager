@@ -7,6 +7,6 @@ const connection = () =>
       useUnifiedTopology: true,
       serverSelectionTimeoutMS: 1000,
     })
-    .then((conn) => conn.db(process.env.DB))
+    .then((conn) => conn.db(process.env.DB));
 
 module.exports = connection;
