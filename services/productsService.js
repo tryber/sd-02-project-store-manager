@@ -8,6 +8,8 @@ const getProductById = (id) => productsModel.getProductById(id);
 
 const deleteProductById = (id) => productsModel.deleteProduct(id);
 
+const updateProductById = (id, updatedProduct) => productsModel.updateProduct(id, updatedProduct);
+
 const validateProducts = (name, quantity) => {
   if (typeof name !== 'string' || name.length < 5) {
     return { error: 'Nome ou Quantidade inválidos', code: 'invalid_data' };
@@ -32,4 +34,5 @@ module.exports = {
   existProduct,
   getProductById,
   deleteProductById,
+  updateProductById,
 };

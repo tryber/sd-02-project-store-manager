@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
 
   const isProductExists = await productsService.existProduct(name);
 
-  if (isProductExists) return res.status(400).json({ message: 'Produto já existe', code: 'duplicated_product' });
+  if (isProductExists) return res.status(400).json({ message: 'Produto já existe', code: 'duplicated' });
 
   const isProductCreated = await productsService.createProducts({ name, quantity });
 
@@ -57,7 +57,28 @@ router.delete('/:id', async (req, res) => {
     return res.status(500).json({ message: 'Erro de conexão com o banco de dados', code: 'db_connection_error' });
   }
 
-  return res.status(200).json({ message: 'Produto removido', code: 'removed_product' });
+  return res.status(200).json({ message: 'Produto removido', code: 'removed_success' });
+});
+
+router.put('/:id', async (req, res) => {
+  const { name, quantity } = req.body;
+  const isProductExist = await productsService.getProductById(`${req.params.id}`);
+
+  const isValid = await productsService.validateProducts(name, quantity);
+
+  if (isValid.error) {
+    return res.status(422).json({ message: isValid.error, code: isValid.code });
+  }
+
+  if (isProductExist.length === 0) return res.status(400).json({ message: 'Produto não encontrado', code: 'not_found' });
+
+  const updatedProduct = await productsService.updateProductById(req.params.id, { name, quantity });
+
+  if (!updatedProduct) {
+    return res.status(500).json({ message: 'Erro de conexão com o banco de dados', code: 'db_connection_error' });
+  }
+
+  return res.status(200).json({ message: 'Produto Atualizado', code: 'updated_success' });
 });
 
 module.exports = router;
