@@ -56,10 +56,22 @@ const updateProduct = async (id, updatedProduct) => {
   }
 };
 
+const repeatedIds = async (arrayIds) => {
+  try {
+    const arrayOfMatchIds = await connection()
+      .then((db) => db.collection('products').find({ _id: { $in: arrayIds } }).toArray());
+    return arrayOfMatchIds;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+};
+
 module.exports = {
   getAll,
   createProducts,
   getProductById,
   deleteProduct,
   updateProduct,
+  repeatedIds,
 };
