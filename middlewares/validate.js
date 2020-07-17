@@ -32,9 +32,9 @@ const validate = async (obj) => {
 };
 
 const validateSales = async (obj) => {
-  const val = await schemaSales.validateAsync(obj).catch((err) => {
-    return { error: { message: err.details[0].message, code: 'Invalid_data' } };
-  });
+  const val = await schemaSales.validateAsync(obj).catch((err) => (
+    { error: { message: err.details[0].message, code: 'Invalid_data' } }
+  ));
   return val;
 };
 
