@@ -9,10 +9,6 @@ const connection = () => (
       useUnifiedTopology: true,
     })
     .then((conn) => conn.db('storeManager'))
-    .catch((err) => {
-      console.error(err);
-      process.exit(1);
-    })
 );
 
 module.exports = connection;

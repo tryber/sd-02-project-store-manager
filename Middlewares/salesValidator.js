@@ -1,7 +1,8 @@
 const boom = require('boom');
+const rescue = require('express-rescue');
 const productsModel = require('../Models/productsModel');
 
-const salesValidator = async (req, res, next) => {
+const salesValidator = rescue(async (req, _res, next) => {
   const salesData = Array.isArray(req.body) ? req.body : [req.body];
   // if (!Array.isArray(req.body)) {
   //   return next(boom.badData('Dados inválidos'));
@@ -19,6 +20,6 @@ const salesValidator = async (req, res, next) => {
   ));
 
   return quantitiesAreValid ? next() : next(boom.badData('Dados inválidos', 'quantity'));
-};
+});
 
 module.exports = salesValidator;

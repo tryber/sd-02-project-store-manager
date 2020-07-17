@@ -1,37 +1,38 @@
 const express = require('express');
+const rescue = require('express-rescue');
 const salesModel = require('../Models/salesModel');
 const salesValidator = require('../Middlewares/salesValidator');
 const boom = require('boom');
 
 const router = express.Router();
 
-router.post('/', salesValidator, async (req, res, _next) => {
+router.post('/', salesValidator, rescue(async (req, res, next) => {
   const salesData = Array.isArray(req.body)
     ? req.body.map(({ productId, quantity }) => ({ productId, quantity }))
     : [{ productId: req.body.productId, quantity: req.body.quantity }];
 
   const newSales = await salesModel.create(salesData);
 
-  res.status(201).send({
+  return res.status(201).json({
     message: 'Venda(s) criada(s) com sucesso!',
     createdSales: newSales,
   });
-});
+}));
 
-router.get('/', async (_req, res, _next) => {
+router.get('/', rescue(async (_req, res, next) => {
   const sales = await salesModel.getAll();
 
   if (sales.length === 0) {
-    res.status(200).send({
+    return res.status(200).json({
       message: 'Não há vendas cadastradas ainda',
       sales,
     });
   }
 
-  return res.status(200).send({ sales });
-});
+  return res.status(200).json({ sales });
+}));
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', rescue(async (req, res, next) => {
   const { id } = req.params;
 
   const sale = await salesModel.findById(id);
@@ -40,10 +41,10 @@ router.get('/:id', async (req, res, next) => {
     return next(boom.notFound('Venda não encontrada'));
   }
 
-  return res.status(200).send({ sale });
-});
+  return res.status(200).json({ sale });
+}));
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', rescue(async (req, res, next) => {
   const { id } = req.params;
 
   const sale = await salesModel.findById(id);
@@ -54,13 +55,13 @@ router.delete('/:id', async (req, res, next) => {
 
   await salesModel.remove(id);
 
-  return res.status(200).send({
+  return res.status(200).json({
     message: 'Venda deletada com sucesso!',
     deletedSale: sale,
   });
-});
+}));
 
-router.put('/:id', salesValidator, async (req, res, next) => {
+router.put('/:id', salesValidator, rescue(async (req, res, next) => {
   const { id } = req.params;
 
   const sale = await salesModel.findById(id);
@@ -73,10 +74,10 @@ router.put('/:id', salesValidator, async (req, res, next) => {
 
   const updatedSale = await salesModel.update(id, productId, quantity);
 
-  res.status(200).send({
+  return res.status(200).json({
     message: 'Venda atualizada com sucesso!',
     updatedSale,
   });
-});
+}));
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const boom = require('boom');
 
-const productValidator = async (req, res, next) => {
+const productValidator = async (req, _res, next) => {
   const { name, quantity } = req.body;
 
   if (typeof name !== 'string' || name.length <= 5) {

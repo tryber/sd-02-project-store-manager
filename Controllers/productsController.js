@@ -1,11 +1,12 @@
 const express = require('express');
+const rescue = require('express-rescue');
 const productsModel = require('../Models/productsModel');
 const productValidator = require('../Middlewares/productValidator');
 const boom = require('boom');
 
 const router = express.Router();
 
-router.post('/', productValidator, async (req, res, next) => {
+router.post('/', productValidator, rescue(async (req, res, next) => {
   const { name, quantity } = req.body;
 
   const nameAlreadyExists = await productsModel.findByName(name);
@@ -15,26 +16,26 @@ router.post('/', productValidator, async (req, res, next) => {
 
   const newProduct = await productsModel.create(name, quantity);
 
-  res.status(201).send({
+  return res.status(201).json({
     message: 'Produto criado com sucesso!',
     createdProduct: newProduct,
   });
-});
+}));
 
-router.get('/', async (req, res, _next) => {
+router.get('/', rescue(async (_req, res, next) => {
   const products = await productsModel.getAll();
 
   if (products.length === 0) {
-    res.status(200).send({
+    return res.status(200).json({
       message: 'Não há produtos cadastrados ainda',
       products,
     });
   }
 
-  return res.status(200).send({ products });
-});
+  return res.status(200).json({ products });
+}));
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', rescue(async (req, res, next) => {
   const { id } = req.params;
 
   const product = await productsModel.findById(id);
@@ -43,10 +44,10 @@ router.get('/:id', async (req, res, next) => {
     return next(boom.notFound('Produto não encontrado'));
   }
 
-  return res.status(200).send({ product });
-});
+  return res.status(200).json({ product });
+}));
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', rescue(async (req, res, next) => {
   const { id } = req.params;
 
   const product = await productsModel.findById(id);
@@ -57,13 +58,13 @@ router.delete('/:id', async (req, res, next) => {
 
   await productsModel.remove(id);
 
-  return res.status(200).send({
+  return res.status(200).json({
     message: 'Produto deletado com sucesso!',
     deletedProduct: product,
   });
-});
+}));
 
-router.put('/:id', productValidator, async (req, res, next) => {
+router.put('/:id', productValidator, rescue(async (req, res, next) => {
   const { id } = req.params;
 
   const product = await productsModel.findById(id);
@@ -81,10 +82,10 @@ router.put('/:id', productValidator, async (req, res, next) => {
 
   const updatedProduct = await productsModel.update(id, name, quantity);
 
-  res.status(200).send({
+  return res.status(200).json({
     message: 'Produto atualizado com sucesso!',
     updatedProduct,
   });
-});
+}));
 
 module.exports = router;
