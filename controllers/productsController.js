@@ -29,6 +29,7 @@ router.post('/', async (req, res) => {
   const { name, quantity } = req.body;
 
   const isValid = await productsService.validateProducts(name, quantity);
+
   if (isValid.error) {
     return res.status(422).json({ message: isValid.error, code: isValid.code });
   }
