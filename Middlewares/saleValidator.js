@@ -2,24 +2,25 @@ const boom = require('boom');
 const rescue = require('express-rescue');
 const productsModel = require('../Models/productsModel');
 
-const salesValidator = rescue(async (req, _res, next) => {
-  const salesData = Array.isArray(req.body) ? req.body : [req.body];
-  // if (!Array.isArray(req.body)) {
-  //   return next(boom.badData('Dados inválidos'));
-  // }
+const saleValidator = rescue(async (req, _res, next) => {
+  if (!Array.isArray(req.body)) {
+    return next(boom.badData('Dados inválidos'));
+  }
 
-  const productIds = salesData.map(({ productId }) => productId);
+  //const salesData = Array.isArray(req.body) ? req.body : [req.body];
+  
+  const productIds = req.body.map(({ productId }) => productId);
 
   const products = await Promise.all(productIds.map((id) => productsModel.findById(id)));
 
   const productIdsAreValid = products.every((product) => product);
   if (!productIdsAreValid) return next(boom.badData('Dados inválidos', 'productId'));
 
-  const quantitiesAreValid = salesData.every(({ quantity }) => (
+  const quantitiesAreValid = req.body.every(({ quantity }) => (
     typeof quantity === 'number' && Number.isInteger(quantity) && quantity > 0
   ));
 
   return quantitiesAreValid ? next() : next(boom.badData('Dados inválidos', 'quantity'));
 });
 
-module.exports = salesValidator;
+module.exports = saleValidator;

@@ -1,11 +1,11 @@
 const productValidator = require('./productValidator');
-const salesValidator = require('./salesValidator');
+const saleValidator = require('./saleValidator');
 const boomErrorHandler = require('./boomErrorHandler');
 const otherErrorsHandler = require('./otherErrorsHandler');
 
 module.exports = {
   productValidator,
-  salesValidator,
+  saleValidator,
   boomErrorHandler,
   otherErrorsHandler,
 };

@@ -1,21 +1,19 @@
 const express = require('express');
 const rescue = require('express-rescue');
 const salesModel = require('../Models/salesModel');
-const salesValidator = require('../Middlewares/salesValidator');
+const saleValidator = require('../Middlewares/saleValidator');
 const boom = require('boom');
 
 const router = express.Router();
 
-router.post('/', salesValidator, rescue(async (req, res, next) => {
-  const salesData = Array.isArray(req.body)
-    ? req.body.map(({ productId, quantity }) => ({ productId, quantity }))
-    : [{ productId: req.body.productId, quantity: req.body.quantity }];
+router.post('/', saleValidator, rescue(async (req, res, next) => {
+  const saleData = req.body.map(({ productId, quantity }) => ({ productId, quantity }));
 
-  const newSales = await salesModel.create(salesData);
+  const newSale = await salesModel.create(saleData);
 
   return res.status(201).json({
-    message: 'Venda(s) criada(s) com sucesso!',
-    createdSales: newSales,
+    message: 'Venda criada com sucesso!',
+    createdSale: newSale,
   });
 }));
 
@@ -61,7 +59,7 @@ router.delete('/:id', rescue(async (req, res, next) => {
   });
 }));
 
-router.put('/:id', salesValidator, rescue(async (req, res, next) => {
+router.put('/:id', saleValidator, rescue(async (req, res, next) => {
   const { id } = req.params;
 
   const sale = await salesModel.findById(id);
@@ -70,9 +68,11 @@ router.put('/:id', salesValidator, rescue(async (req, res, next) => {
     return next(boom.notFound('Venda não encontrada'));
   }
 
-  const { productId, quantity } = req.body;
+  // const { productId, quantity } = req.body;
 
-  const updatedSale = await salesModel.update(id, productId, quantity);
+  const saleData = req.body.map(({ productId, quantity }) => ({ productId, quantity }));
+
+  const updatedSale = await salesModel.update(id, saleData);
 
   return res.status(200).json({
     message: 'Venda atualizada com sucesso!',

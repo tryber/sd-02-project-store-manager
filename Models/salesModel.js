@@ -18,36 +18,41 @@ const { ObjectId } = require('mongodb');
 const findById = async (id) => {
   if (!ObjectId.isValid(id)) return null;
 
-  const saleData = await connection()
+  const sale = await connection()
     .then((db) => db.collection('sales').findOne(ObjectId(id)));
 
-  if (!saleData) return null;
+  return sale ? { id: sale._id, products: sale.products } : null;
 
-  const { _id, productId, quantity } = saleData;
+  // const { _id, productId, quantity } = saleData;
 
-  return { id: _id, productId, quantity };
+  // return { id: _id, productId, quantity };
 };
 
-const create = async (salesData) => (
+const create = async (saleData) => (
   connection()
-    .then((db) => db.collection('sales').insertMany(salesData))
-    .then((result) => (
-      salesData.map(({ productId, quantity }, index) => ({
-        id: result.insertedIds[index],
-        productId,
-        quantity,
-      }))
-    ))
+    .then((db) => db.collection('sales').insertOne({ products: saleData }))
+    .then((result) => ({ id: result.insertedId, products }))
+    // .then((result) => (
+    //   salesData.map(({ productId, quantity }, index) => ({
+    //     id: result.insertedIds[index],
+    //     productId,
+    //     quantity,
+    //   }))
+    // ))
 );
 
 const getAll = async () => (
   connection()
     .then((db) => db.collection('sales').find().toArray())
-    .then((sales) => sales.map(({ _id, productId, quantity }) => ({
-      id: _id,
-      productId,
-      quantity,
+    .then((sales) => sales.map(({ _id, products }) => ({
+      id : _id,
+      products,
     })))
+    // .then((sales) => sales.map(({ _id, productId, quantity }) => ({
+    //   id: _id,
+    //   productId,
+    //   quantity,
+    // })))
 );
 
 const remove = async (id) => (
@@ -55,13 +60,13 @@ const remove = async (id) => (
     .then((db) => db.collection('sales').removeOne({ _id: ObjectId(id) }))
 );
 
-const update = async (id, productId, quantity) => (
+const update = async (id, saleData) => (
   connection()
     .then((db) => db.collection('sales').updateOne(
       { _id: ObjectId(id) },
-      { $set: { productId, quantity } },
+      { $set: { products: saleData } },
     ))
-    .then(() => ({ id, productId, quantity }))
+    .then(() => ({ id, products: saleData }))
 );
 
 module.exports = {
