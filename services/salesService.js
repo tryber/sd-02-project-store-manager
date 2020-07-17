@@ -25,10 +25,13 @@ const findSaleById = (id) => salesModel.findSaleById(id);
 
 const deleteSaleById = (id) => salesModel.deleteSaleById(id);
 
+const updateSale = (id, updatedSale) => salesModel.updateSale(id, updatedSale);
+
 module.exports = {
   createSales,
   validateSales,
   getAllSales,
   findSaleById,
   deleteSaleById,
+  updateSale,
 };

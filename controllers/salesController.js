@@ -63,4 +63,24 @@ router.delete('/:id', async (req, res) => {
   return res.status(200).json({ message: 'Venda removida', code: 'removed_success' });
 });
 
+router.put('/:id', async (req, res) => {
+  const isSaleExist = await salesService.findSaleById(`${req.params.id}`);
+
+  const isValid = await salesService.validateSales(req.body);
+
+  if (isValid.error) {
+    return res.status(422).json({ message: isValid.error, code: isValid.code });
+  }
+
+  if (isSaleExist.length === 0) return res.status(400).json({ message: 'Venda não encontrada', code: 'not_found' });
+
+  const updatedSale = await salesService.updateSale(req.params.id, { sale: req.body });
+
+  if (!updatedSale) {
+    return res.status(500).json({ message: 'Erro de conexão com o banco de dados', code: 'db_connection_error' });
+  }
+
+  return res.status(200).json({ message: 'Venda Atualizada', code: 'updated_success' });
+});
+
 module.exports = router;
