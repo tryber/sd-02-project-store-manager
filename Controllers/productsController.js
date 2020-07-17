@@ -22,7 +22,7 @@ router.post('/', productValidator, rescue(async (req, res, next) => {
   });
 }));
 
-router.get('/', rescue(async (_req, res, next) => {
+router.get('/', rescue(async (_req, res, _next) => {
   const products = await productsModel.getAll();
 
   if (products.length === 0) {

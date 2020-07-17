@@ -4,11 +4,9 @@ const productsModel = require('../Models/productsModel');
 
 const saleValidator = rescue(async (req, _res, next) => {
   if (!Array.isArray(req.body)) {
-    return next(boom.badData('Dados inválidos'));
+    return next(boom.badData('Dados inválidos', 'productId'));
   }
 
-  //const salesData = Array.isArray(req.body) ? req.body : [req.body];
-  
   const productIds = req.body.map(({ productId }) => productId);
 
   const products = await Promise.all(productIds.map((id) => productsModel.findById(id)));

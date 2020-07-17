@@ -1,58 +1,31 @@
 const connection = require('./connection');
 const { ObjectId } = require('mongodb');
 
-// const findByName = async (productName, productId = null) => {
-//   const productData = await connection()
-//     .then((db) => db.collection('products').findOne({
-//       name: productName,
-//       _id: { $ne: ObjectId(productId) },
-//     }));
-
-//   if (!productData) return null;
-
-//   const { _id, name, quantity } = productData;
-
-//   return { id: _id, name, quantity };
-// };
-
-const findById = async (id) => {
-  if (!ObjectId.isValid(id)) return null;
+const findById = async (saleId) => {
+  if (!ObjectId.isValid(saleId)) return null;
 
   const sale = await connection()
-    .then((db) => db.collection('sales').findOne(ObjectId(id)));
+    .then((db) => db.collection('sales').findOne(ObjectId(saleId)));
 
-  return sale ? { id: sale._id, products: sale.products } : null;
+  if (!sale) return null;
 
-  // const { _id, productId, quantity } = saleData;
-
-  // return { id: _id, productId, quantity };
+  const { _id: id, products } = sale;
+  return { id, products };
 };
 
 const create = async (saleData) => (
   connection()
     .then((db) => db.collection('sales').insertOne({ products: saleData }))
-    .then((result) => ({ id: result.insertedId, products }))
-    // .then((result) => (
-    //   salesData.map(({ productId, quantity }, index) => ({
-    //     id: result.insertedIds[index],
-    //     productId,
-    //     quantity,
-    //   }))
-    // ))
+    .then((result) => ({ id: result.insertedId, products: saleData }))
 );
 
 const getAll = async () => (
   connection()
     .then((db) => db.collection('sales').find().toArray())
     .then((sales) => sales.map(({ _id, products }) => ({
-      id : _id,
+      id: _id,
       products,
     })))
-    // .then((sales) => sales.map(({ _id, productId, quantity }) => ({
-    //   id: _id,
-    //   productId,
-    //   quantity,
-    // })))
 );
 
 const remove = async (id) => (

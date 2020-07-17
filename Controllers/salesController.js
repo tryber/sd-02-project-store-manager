@@ -6,7 +6,7 @@ const boom = require('boom');
 
 const router = express.Router();
 
-router.post('/', saleValidator, rescue(async (req, res, next) => {
+router.post('/', saleValidator, rescue(async (req, res, _next) => {
   const saleData = req.body.map(({ productId, quantity }) => ({ productId, quantity }));
 
   const newSale = await salesModel.create(saleData);
@@ -17,7 +17,7 @@ router.post('/', saleValidator, rescue(async (req, res, next) => {
   });
 }));
 
-router.get('/', rescue(async (_req, res, next) => {
+router.get('/', rescue(async (_req, res, _next) => {
   const sales = await salesModel.getAll();
 
   if (sales.length === 0) {
@@ -67,8 +67,6 @@ router.put('/:id', saleValidator, rescue(async (req, res, next) => {
   if (!sale) {
     return next(boom.notFound('Venda não encontrada'));
   }
-
-  // const { productId, quantity } = req.body;
 
   const saleData = req.body.map(({ productId, quantity }) => ({ productId, quantity }));
 
