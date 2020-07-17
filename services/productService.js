@@ -3,9 +3,9 @@ const productModel = require('../models/productModel');
 const createProduct = async (name, quantity) => {
   const alreadyExists = await productModel.findProductByName(name);
   if (alreadyExists) {
-    throw {error: { message: 'produto já cadastrado', code: 'product_exists'}}
+    throw {error: { message: 'produto já cadastrado', code: 'already_exists'}}
   }
-  await productModel.createProduct({name, quantity})
+  return await productModel.createProduct({name, quantity})
 };
 
 module.exports = { createProduct };
