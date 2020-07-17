@@ -1,5 +1,4 @@
 const Joi = require('@hapi/joi');
-Joi.objectId = require('joi-objectid')(Joi);
 
 const schemaNewProduct = Joi.object({
   name: Joi.string()
@@ -13,7 +12,7 @@ const schemaNewProduct = Joi.object({
 });
 
 const schemaNewSale = Joi.object({
-  produtId: Joi.objectId().max(100).required(),
+  productId: Joi.string().max(100).required(),
   quantity: Joi.number()
   .integer()
   .min(1)
