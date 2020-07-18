@@ -19,7 +19,7 @@ app.get('/sales', indexController.salesController.getAllSales);
 app.get('/sales/:id', indexController.salesController.getSaleById);
 app.post('/sales', indexController.salesController.newSale);
 app.delete('/sales/:id', indexController.salesController.deleteSaleById);
-// app.put('/sales/:id',)
+app.put('/sales/:id', indexController.salesController.updateSaleById);
 
 app.use(indexController.errorController);
 

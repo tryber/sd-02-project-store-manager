@@ -2,11 +2,10 @@ const rescue = require('express-rescue');
 const salesService = require('../services/salesService');
 const validateNewProduct = require('../middlewares/validate');
 
-const newSale = rescue(async (req, res, next) => {
+const newSale = rescue(async (req, res) => {
   const saleBody = req.body;
   await validateNewProduct.validateSales(saleBody);
   const serviceSale = await salesService.newSale(saleBody);
-  if (serviceSale.error) next(serviceSale);
   return res.status(201).json(serviceSale);
 });
 
@@ -27,9 +26,18 @@ const deleteSaleById = rescue(async (req, res) => {
   return res.status(204).end();
 });
 
+const updateSaleById = rescue(async (req, res) => {
+  const { id } = req.params;
+  const saleBody = req.body;
+  await validateNewProduct.validateSales(saleBody);
+  const updatedService = await salesService.updateSaleById(id, saleBody);
+  return res.status(200).json(updatedService);
+});
+
 module.exports = {
   newSale,
   getAllSales,
   getSaleById,
   deleteSaleById,
+  updateSaleById,
 };
