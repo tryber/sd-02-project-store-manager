@@ -25,7 +25,7 @@ const findByIds = async (ids) => {
   const db = await connection();
   const products = await db.collection('products').find({ _id: { $in: objectIds } }).toArray();
   return products;
-}
+};
 
 const findById = async (id) => {
   if (!ObjectId.isValid(id)) return null;

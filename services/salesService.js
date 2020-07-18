@@ -5,12 +5,12 @@ const newSale = async (sale) => {
   const mapId = sale.map((id) => id.productId);
   const existingProducts = await productModel.findByIds(mapId);
   const missingProducts = mapId.filter((id) => {
-    const product = existingProducts.find(({ _id }) => _id.equals(id))
+    const product = existingProducts.find(({ _id }) => _id.equals(id));
     return !product;
   });
 
   if (missingProducts.length) {
-    const messageProducts = missingProducts.join(', ')
+    const messageProducts = missingProducts.join(', ');
     const err = {
       error: { message: `Items ${messageProducts} not found`, code: 'Invalid_data' } };
     throw err;
