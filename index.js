@@ -15,6 +15,7 @@ app.get('/products/:id', indexController.productController.findById);
 app.delete('/products/:id', indexController.productController.deleteById);
 app.put('/products/:id', indexController.productController.updateById);
 
+app.get('/sales', indexController.salesController.getAllSales);
 app.post('/sales', indexController.salesController.newSale);
 
 app.use(indexController.errorController);

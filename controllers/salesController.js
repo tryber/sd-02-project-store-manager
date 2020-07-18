@@ -11,6 +11,13 @@ const newSale = rescue(async (req, res, next) => {
   return res.status(201).json(serviceSale);
 });
 
+const getAllSales = rescue(async (req, res, next) => {
+  const sales = await salesService.getAllSales();
+  if (sales.error) return next(sales);
+  return res.status(200).json(sales);
+});
+
 module.exports = {
   newSale,
+  getAllSales,
 };

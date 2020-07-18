@@ -19,6 +19,14 @@ const findByName = async (name) => {
   return products;
 };
 
+const findByIds = async (ids) => {
+  const objectIds = ids.filter(ObjectId.isValid).map(ObjectId);
+  if (!objectIds.length) return [];
+  const db = await connection();
+  const products = await db.collection('products').find({ _id: { $in: objectIds } }).toArray();
+  return products;
+}
+
 const findById = async (id) => {
   if (!ObjectId.isValid(id)) return null;
   const db = await connection();
@@ -50,4 +58,5 @@ module.exports = {
   findById,
   deleteById,
   updateById,
+  findByIds,
 };

@@ -3,25 +3,29 @@ const productModel = require('../models/productModel');
 
 const newSale = async (sale) => {
   const mapId = sale.map((id) => id.productId);
-  const productExist = Promise.all(mapId.map(async (map) => {
-    const product = await productModel.findById(map);
-    if (product === null) {
-      return { message: `Sorry, the productId ${map} does not exist` };
-    }
-    return product;
-  }));
-  const [...inside] = await productExist;
-  const includesProducts = inside.map((ins) => {
-    if (ins.message) {
-      const err = { error: { message: inside, code: 'Invalid_data' } };
-      throw err;
-    }
-    return ins;
+  const existingProducts = await productModel.findByIds(mapId);
+  const missingProducts = mapId.filter((id) => {
+    const product = existingProducts.find(({ _id }) => _id.equals(id))
+    return !product;
   });
-  const createdSale = await salesModel.createSale(includesProducts);
+
+  if (missingProducts.length) {
+    const messageProducts = missingProducts.join(', ')
+    const err = {
+      error: { message: `The items ${messageProducts} not found`, code: 'Invalid_data' } };
+    throw err;
+  }
+
+  const createdSale = await salesModel.createSale(sale);
   return createdSale.ops;
+};
+
+const getAllSales = async () => {
+  const all = await salesModel.getAllSales();
+  return all;
 };
 
 module.exports = {
   newSale,
+  getAllSales,
 };
