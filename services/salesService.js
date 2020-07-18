@@ -3,9 +3,9 @@ const productModel = require('../models/productModel');
 
 const existingProducts = async (sale) => {
   const mappedId = sale.map((id) => id.productId);
-  const existingProducts = await productModel.findByIds(mappedId);
+  const existingIds = await productModel.findByIds(mappedId);
   const missingProducts = mappedId.filter((id) => {
-    const product = existingProducts.find(({ _id }) => _id.equals(id));
+    const product = existingIds.find(({ _id }) => _id.equals(id));
     return !product;
   });
   return missingProducts;

@@ -35,7 +35,7 @@ const updateSaleById = async (id, sale) => {
       { returnOriginal: false },
     );
   return updatesSale;
-}
+};
 
 module.exports = {
   createSale,
