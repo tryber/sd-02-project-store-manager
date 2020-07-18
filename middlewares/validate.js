@@ -27,15 +27,17 @@ const validate = async (obj) => {
     const val = await schemaNewProduct.validateAsync(obj);
     if (val) return true;
   } catch (err) {
-    return { error: { message: err.details[0].message, code: 'Invalid_data' } };
+    throw { error: { message: err.details[0].message, code: 'Invalid_data' } };
   }
 };
 
 const validateSales = async (obj) => {
-  const val = await schemaSales.validateAsync(obj).catch((err) => (
-    { error: { message: err.details[0].message, code: 'Invalid_data' } }
-  ));
-  return val;
+  try {
+    const val = await schemaSales.validateAsync(obj);
+    if (val) return true;
+  } catch (err) {
+    throw { error: { message: err.details[0].message, code: 'Invalid_data' } };
+  }
 };
 
 module.exports = {

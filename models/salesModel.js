@@ -20,8 +20,15 @@ const findSaleById = async (id) => {
   return sale;
 };
 
+const deleteSaleById = async (id) => {
+  if (!ObjectId.isValid(id)) return null;
+  const db = await connection();
+  await db.collection('sales').deleteOne({ _id: ObjectId(id) });
+}
+
 module.exports = {
   createSale,
   getAllSales,
   findSaleById,
+  deleteSaleById,
 };

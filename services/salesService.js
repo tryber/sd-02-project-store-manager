@@ -12,7 +12,7 @@ const newSale = async (sale) => {
   if (missingProducts.length) {
     const messageProducts = missingProducts.join(', ')
     const err = {
-      error: { message: `The items ${messageProducts} not found`, code: 'Invalid_data' } };
+      error: { message: `Items ${messageProducts} not found`, code: 'Invalid_data' } };
     throw err;
   }
 
@@ -25,7 +25,20 @@ const getAllSales = async () => {
   return all;
 };
 
+const getSaleById = async (id) => {
+  const sale = await salesModel.findSaleById(id);
+  if (sale === null) {
+    const err = { error: { message: 'Sale not found', code: 'Not_found' } };
+    throw err;
+  }
+  return sale;
+};
+
+const deleteSaleById = async (id) => salesModel.deleteSaleById(id);
+
 module.exports = {
   newSale,
   getAllSales,
+  getSaleById,
+  deleteSaleById,
 };

@@ -6,6 +6,7 @@ const statusByCode = {
 };
 
 const errorController = async (err, req, res, _next) => {
+  console.log(err);
   if (err.error) return res.status(statusByCode[err.error.code] || 500).json(err);
   if (err.type && statusByCode[err.type]) {
     return res.status(err.statusCode)
