@@ -46,6 +46,13 @@ const updateProduct = async ({ name, quantity, id }) =>
     .then((db) => db.collection('products')
       .updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } }));
 
+const checkSalesAndId = async (productsIds) => {
+  const validArray = productsIds.filter(ObjectId.isValid).map(ObjectId);
+  if (!validArray.length) return [];
+  return connection()
+    .then((db) => db.collection('products').find({ _id: { $in: validArray } }).toArray());
+};
+
 module.exports = {
   createProduct,
   findProductByName,
@@ -54,4 +61,5 @@ module.exports = {
   showOneProduct,
   deleteProduct,
   updateProduct,
+  checkSalesAndId,
 };

@@ -28,8 +28,8 @@ router.put('/:id', rescue(async (req, res, _next) => {
   const { name, quantity } = req.body;
   const { id } = req.params;
   if (typeof name !== 'string' || name.length <= 5 || typeof quantity !== 'number' || !Number.isInteger(quantity) || quantity <= 0 ) {
-    throw { message: 'dados inválidos', code: 'bad_data' }
-  } // lembrar de retirar isso daqui para criar uma função autônoma. Ver express-rescue ou outra biblioteca de validação
+    throw { message: 'Dados inválidos', code: 'bad_data' }
+  }
   await productService.updateProduct(name, quantity, id);
   return res.status(204).json();
 }));
@@ -37,8 +37,8 @@ router.put('/:id', rescue(async (req, res, _next) => {
 router.post('/', rescue(async (req, res, _next) => {
   const { name, quantity } = req.body;
   if (typeof name !== 'string' || name.length <= 5 || typeof quantity !== 'number' || !Number.isInteger(quantity) || quantity <= 0 ) {
-    throw { message: 'dados inválidos', code: 'bad_data' }
-  } // lembrar de retirar isso daqui para criar uma função autônoma. Ver express-rescue ou outra biblioteca de validação
+    throw { message: 'Dados inválidos', code: 'bad_data' }
+  }
   const newProduct = await productService.createProduct(name, quantity);
   return res.status(201).json(newProduct);
 }));
