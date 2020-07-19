@@ -9,12 +9,14 @@ const createProduct = async (name, quantity) => {
 };
 
 const updateProduct = async (name, quantity, id) => {
+  const idExists = await productModel.findProductById(id);
+  if (idExists === null) { throw { message: 'produto não encontrado', code: 'not_found'} };
+  
   const alreadyExists = await productModel.findProductByName(name, id);
   if (alreadyExists) {
     throw { message: 'produto já cadastrado', code: 'already_exists'}
   }
-  const idExists = await productModel.updateProduct({name, quantity, id});
-  if (idExists === null) { throw { message: 'produto não encontrado', code: 'not_found'} };
+  await productModel.updateProduct({name, quantity, id});
 };
 
 const listProduct = async () => {
