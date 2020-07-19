@@ -21,8 +21,18 @@ router.delete('/:id', rescue(async(req, res) => {
   const { id } = req.params;
   const deleteProduct = await productService.deleteProduct(id);
   if (deleteProduct === null) { throw { message: 'não encontrado', code: 'not_found' }}
-  return res.status(204).json(deleteProduct);
+  return res.status(204);
 }));
+
+router.put('/:id', async (req, res, _next) => {
+  const { name, quantity } = req.body;
+  const { id } = req.params;
+  if (typeof name !== 'string' || name.length <= 5 || typeof quantity !== 'number' || !Number.isInteger(quantity) || quantity <= 0 ) {
+    throw { message: 'dados inválidos', code: 'bad_data' }
+  } // lembrar de retirar isso daqui para criar uma função autônoma. Ver express-rescue ou outra biblioteca de validação
+  await productService.updateProduct(name, quantity, id);
+  return res.status(204);
+});
 
 router.post('/', rescue(async (req, res, _next) => {
   const { name, quantity } = req.body;

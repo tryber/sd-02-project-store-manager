@@ -8,6 +8,15 @@ const createProduct = async (name, quantity) => {
   return await productModel.createProduct({name, quantity})
 };
 
+const updateProduct = async (name, quantity, id) => {
+  const alreadyExists = await productModel.findProductByName(name, id);
+  if (alreadyExists) {
+    throw { message: 'produto já cadastrado', code: 'already_exists'}
+  }
+  const idExists = await productModel.updateProduct({name, quantity, id});
+  if (idExists === null) { throw { message: 'produto não encontrado', code: 'not_found'} };
+};
+
 const listProduct = async () => {
   return await productModel.findProducts()
 };
@@ -20,5 +29,10 @@ const deleteProduct = async (id) => {
   return await productModel.deleteProduct(id)
 };
 
-
-module.exports = { createProduct, listProduct, showOneProduct, deleteProduct };
+module.exports = {
+  createProduct,
+  listProduct,
+  showOneProduct,
+  deleteProduct,
+  updateProduct,
+};

@@ -6,8 +6,9 @@ const createProduct = async ({ name, quantity }) =>
     .then((db) => db.collection('products').insertOne({ name, quantity }))
     .then(({ insertedId }) => ({ id: insertedId, name, quantity }));
 
-const findProductByName = async (name) =>
-  connection().then((db) => db.collection('products').findOne({ name }));
+const findProductByName = async (name, id = null) =>
+  connection().then((db) => db.collection('products')
+    .findOne({ name: name, _id: { $ne: ObjectId(id) } }));
 
 const findProductById = async (id) => {
   if (!ObjectId.isValid(id)) { return null };
@@ -38,6 +39,24 @@ const deleteProduct = async (id) => {
   await connection()
     .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id) }));
   return { ok: true };
-}
+};
 
-module.exports = { createProduct, findProductByName, findProducts, showOneProduct, deleteProduct };
+const updateProduct = async ({ name, quantity, id }) => {
+  const searchId = await findProductById(id);
+  if (searchId === null) {
+    return null
+  };
+  await connection()
+    .then((db) => db.collection('products')
+      .updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } }));
+  return { ok: true };
+};
+
+module.exports = {
+  createProduct,
+  findProductByName,
+  findProducts,
+  showOneProduct,
+  deleteProduct,
+  updateProduct,
+};
