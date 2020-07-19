@@ -9,6 +9,7 @@ const errorcodes = {
 }
 
 const errorHandler = (error, _req, res, _next) => {
+  console.log(error);
   return res.status(errorcodes[error.code] || 500).json({error});
 }
 

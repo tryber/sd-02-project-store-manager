@@ -10,11 +10,12 @@ router.get('/', async(_req, res) => {
   return res.status(200).json(products);
 });
 
-router.get('/:id', async(req, res) => {
+router.get('/:id', rescue(async(req, res) => {
   const { id } = req.params;
   const singleProduct = await productService.showOneProduct(id);
+  if (singleProduct === null) { throw { message: 'não encontrado', code: 'not_found' }}
   return res.status(200).json(singleProduct);
-});
+}));
 
 router.post('/', rescue(async (req, res, _next) => {
   const { name, quantity } = req.body;

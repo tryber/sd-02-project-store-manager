@@ -15,9 +15,17 @@ const findProducts = async () =>
     .then((db) => db.collection('products').find().toArray())
     .then((products) => products.map(({ _id, name, quantity }) => ({ id: _id, name, quantity })));
 
-const showOneProduct = async (id) =>
-  connection()
-    .then((db) => db.collection('products').findOne(ObjectId(id)))
-    .then(({ _id, name, quantity }) => ({ id: _id, name, quantity }));
+const showOneProduct = async (id) => {
+  if (!ObjectId.isValid(id)) { return null };
+  
+  const queryProduct = await connection()
+    .then((db) => db.collection('products').findOne(ObjectId(id)));
+
+  if (queryProduct === null) {
+    return null
+  }
+  const { _id, name, quantity } = queryProduct;
+  return { id: _id, name, quantity };
+};
 
 module.exports = { createProduct, findProductByName, findProducts, showOneProduct };
