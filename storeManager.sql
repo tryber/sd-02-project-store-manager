@@ -6,9 +6,15 @@ db.products.insertMany([
 
 db.sales.insertMany([
   {
-    productId: "5f0b70bac3d16e344fe8643f", quantity: 3,
+    itens:[
+     { productId: "5f0b70bac3d16e344fe8643f", quantity: 3 },
+     { productId: "5f0b70bac3d16e344fe8643e", quantity: 5 },
+    ]
   },
-  {
-    productId: "5f0b70bac3d16e344fe8643e", quantity: 5,
-  }
+{
+    itens:[
+     { productId: "5f0b70bac3d16e344fe8643f", quantity: 1 },
+     { productId: "5f0b70bac3d16e344fe8643e", quantity: 2 },
+    ]
+  },
 ]);
