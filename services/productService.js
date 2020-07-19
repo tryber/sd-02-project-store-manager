@@ -16,5 +16,9 @@ const showOneProduct = async (id) => {
   return await productModel.showOneProduct(id)
 };
 
+const deleteProduct = async (id) => {
+  return await productModel.deleteProduct(id)
+};
 
-module.exports = { createProduct, listProduct, showOneProduct };
+
+module.exports = { createProduct, listProduct, showOneProduct, deleteProduct };

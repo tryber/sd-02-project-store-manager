@@ -5,16 +5,23 @@ const router = express.Router();
 
 // instalar express rescue
 
-router.get('/', async(_req, res) => {
+router.get('/', rescue(async(_req, res) => {
   const products = await productService.listProduct();
   return res.status(200).json(products);
-});
+}));
 
 router.get('/:id', rescue(async(req, res) => {
   const { id } = req.params;
   const singleProduct = await productService.showOneProduct(id);
   if (singleProduct === null) { throw { message: 'não encontrado', code: 'not_found' }}
   return res.status(200).json(singleProduct);
+}));
+
+router.delete('/:id', rescue(async(req, res) => {
+  const { id } = req.params;
+  const deleteProduct = await productService.deleteProduct(id);
+  if (deleteProduct === null) { throw { message: 'não encontrado', code: 'not_found' }}
+  return res.status(204).json(deleteProduct);
 }));
 
 router.post('/', rescue(async (req, res, _next) => {

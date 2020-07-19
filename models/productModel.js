@@ -1,6 +1,5 @@
 const { ObjectId } = require('mongodb');
 const connection = require('./connection');
-const productService = require('../services/productService');
 
 const createProduct = async ({ name, quantity }) =>
   connection()
@@ -10,22 +9,35 @@ const createProduct = async ({ name, quantity }) =>
 const findProductByName = async (name) =>
   connection().then((db) => db.collection('products').findOne({ name }));
 
+const findProductById = async (id) => {
+  if (!ObjectId.isValid(id)) { return null };
+  return connection()
+    .then((db) => db.collection('products').findOne(ObjectId(id)));
+}
+
 const findProducts = async () =>
   connection()
     .then((db) => db.collection('products').find().toArray())
     .then((products) => products.map(({ _id, name, quantity }) => ({ id: _id, name, quantity })));
 
 const showOneProduct = async (id) => {
-  if (!ObjectId.isValid(id)) { return null };
-  
-  const queryProduct = await connection()
-    .then((db) => db.collection('products').findOne(ObjectId(id)));
+  const searchId = await findProductById(id);
 
-  if (queryProduct === null) {
+  if (searchId === null) {
     return null
-  }
-  const { _id, name, quantity } = queryProduct;
+  };
+  const { _id, name, quantity } = searchId;
   return { id: _id, name, quantity };
 };
 
-module.exports = { createProduct, findProductByName, findProducts, showOneProduct };
+const deleteProduct = async (id) => {
+  const searchId = await findProductById(id);
+  if (searchId === null) {
+    return null
+  };
+  await connection()
+    .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id) }));
+  return { ok: true };
+}
+
+module.exports = { createProduct, findProductByName, findProducts, showOneProduct, deleteProduct };
