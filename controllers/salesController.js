@@ -48,7 +48,7 @@ router.put('/:id', rescue(async (req, res, _next) => {
   if (!checkIntegrity(req)) { throw badData; }
   const { id } = req.params;
   const updateSale = await salesService.updateSale(id, salesData);
-  if (!updateSale) { throw notFound; }
+  if (updateSale === 404) { throw notFound; }
   return res.status(201).json(updateSale);
 }));
 
