@@ -5,12 +5,19 @@ const { notFound, badData } = require('../middlewares/error');
 
 const router = express.Router();
 
-router.post('/', rescue(async (req, res, _next) => {
+const checkIntegrity = (req) => {
   const salesData = req.body.map(({ productId, quantity }) => ({ productId, quantity }));
 
   if (!Array.isArray(req.body) || salesData.some(({ productId, quantity }) => typeof productId !== 'string' || typeof quantity !== 'number' || !Number.isInteger(quantity) || quantity <= 0)) {
-    throw badData;
+    return false;
   }
+  return true;
+};
+
+router.post('/', rescue(async (req, res, _next) => {
+  const salesData = req.body.map(({ productId, quantity }) => ({ productId, quantity }));
+
+  if (!checkIntegrity(req)) { throw badData; }
 
   const newSale = await salesService.insertSales(salesData);
   if (newSale === 404) { throw notFound; }
@@ -38,13 +45,8 @@ router.delete('/:id', rescue(async (req, res) => {
 
 router.put('/:id', rescue(async (req, res, _next) => {
   const salesData = req.body.map(({ productId, quantity }) => ({ productId, quantity }));
-
-  if (!Array.isArray(req.body) || salesData.some(({ productId, quantity }) => typeof productId !== 'string' || typeof quantity !== 'number' || !Number.isInteger(quantity) || quantity <= 0)) {
-    throw badData;
-  }
-
+  if (!checkIntegrity(req)) { throw badData; }
   const { id } = req.params;
-
   const updateSale = await salesService.updateSale(id, salesData);
   if (!updateSale) { throw badData; }
   return res.status(201).json(updateSale);
