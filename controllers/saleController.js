@@ -4,6 +4,13 @@ const errorMessage = require('./errorMessages');
 
 const router = express.Router();
 
+function checkSalesData(salesData) {
+  const validData = Array.isArray(salesData) && salesData
+    .reduce((acc, cur) => acc && cur.quantity && cur.quantity > 0 && cur.productId, true);
+  if (!validData) return false;
+  return true;
+}
+
 router.get('/', async (_req, res) => {
   const sales = await saleService.listAllSales();
 
@@ -13,8 +20,7 @@ router.get('/', async (_req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const validData = Array.isArray(req.body) && req.body
-    .reduce((acc, cur) => acc && cur.quantity && cur.quantity > 0 && cur.productId, true);
+  const validData = checkSalesData(req.body);
 
   if (!validData) return res.status(422).json(errorMessage.invalidSaleDataError);
 
@@ -56,8 +62,7 @@ router.delete('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
 
-  const validData = Array.isArray(req.body) && req.body
-    .reduce((acc, cur) => acc && cur.quantity && cur.quantity > 0 && cur.productId, true);
+  const validData = checkSalesData(req.body);
 
   if (!validData) {
     return res.status(422).json(errorMessage.invalidSaleDataError);
