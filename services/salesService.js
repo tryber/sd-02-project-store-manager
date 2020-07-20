@@ -1,6 +1,5 @@
 const salesModel = require('../models/salesModel');
 const productModel = require('../models/productModel');
-const productService = require('./productService');
 
 const getAllSales = async () => {
   const result = await salesModel.getAllSales().catch((fail) => (
