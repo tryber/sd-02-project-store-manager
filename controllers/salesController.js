@@ -27,7 +27,7 @@ const createOne = rescue(async (req, res, next) => {
     });
   }
   const serviceAnswer = await salesService.createOne(salesBody);
-  res.status(201).json(serviceAnswer.ops);
+  res.status(201).json(serviceAnswer);
 });
 
 const getById = async (req, res, next) => {

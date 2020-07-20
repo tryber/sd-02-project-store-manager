@@ -10,7 +10,7 @@ const getAllSales = async () => {
 const createOne = async (sales) => {
   const db = await connection();
   const createSales = await db.collection('sales').insertOne({ sales });
-  return createSales;
+  return createSales.ops[0];
 };
 
 const getSaleById = async (id) => {
