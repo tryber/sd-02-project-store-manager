@@ -11,7 +11,6 @@ const insertSales = async (saleData) => {
 const listSales = async () => salesModel.findSales();
 
 const showOneSale = async (id) => {
-  console.log('id: ', id)
   const showFromModel = await salesModel.showOneSale(id);
   if (showFromModel === null) { return 404; };
   return showFromModel;
