@@ -12,7 +12,7 @@ const listSales = async () => salesModel.findSales();
 
 const showOneSale = async (id) => {
   const showFromModel = await salesModel.showOneSale(id);
-  if (showFromModel === null) { return 404; };
+  if (showFromModel === null) { return 404; }
   return showFromModel;
 };
 
