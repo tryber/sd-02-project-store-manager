@@ -8,6 +8,16 @@ const insertSales = async (saleData) => {
   return await salesModel.insertNewSales(saleData);
 };
 
+const listSales = async () => {
+  return await salesModel.findSales()
+};
+
+const showOneSale = async (id) => {
+  return await salesModel.showOneSale(id)
+};
+
 module.exports = {
   insertSales,
+  listSales,
+  showOneSale,
 }
