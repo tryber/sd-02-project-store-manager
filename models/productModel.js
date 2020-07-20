@@ -23,7 +23,7 @@ const getProductByName = async (name) => {
 const addProduct = async (productData) => {
   const db = await connection();
   const newProduct = await db.collection('products').insertOne(productData);
-  return newProduct;
+  return newProduct.ops[0];
 };
 
 const deleteProduct = async (id) => {

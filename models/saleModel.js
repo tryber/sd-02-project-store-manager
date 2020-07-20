@@ -17,7 +17,7 @@ const getSaleById = async (id) => {
 const insertNewSales = async (salesData) => {
   const db = await connection();
   const sales = await db.collection('sales').insertMany(salesData);
-  return sales;
+  return sales.ops;
 };
 
 const getSaleByProductId = async (productId) => {
