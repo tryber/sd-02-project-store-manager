@@ -1,3 +1,4 @@
+const rescue = require('express-rescue');
 const salesService = require('../services/salesService');
 const schemasJoi = require('./schemasJoi');
 const errorJoi = require('./errorJoi');
@@ -11,21 +12,23 @@ const getAll = async (_req, res, next) => {
   res.status(200).json(serviceAnswer);
 };
 
-const createMany = async (req, res, next) => {
+const createOne = rescue(async (req, res, next) => {
   const isValid = await validateJoi(req.body);
   if (isValid.error) return next(isValid);
+  const salesBody = req.body;
+  console.log(salesBody);
   const idMapped = req.body.map(({ productId }) => productId);
   const isProductExists = await salesService.listOfExistProducts(idMapped);
   if (isProductExists.length) {
     return next({
       error: true,
-      message: `The items: ${isProductExists} were not found. Inserting of all sales was aborted.`,
+      message: `The items: ${isProductExists} were not found. Sale insert was aborted.`,
       code: 'invalid_data',
     });
   }
-  const serviceAnswer = await salesService.createMany(req.body);
+  const serviceAnswer = await salesService.createOne(salesBody);
   res.status(201).json(serviceAnswer.ops);
-};
+});
 
 const getById = async (req, res, next) => {
   const { id } = req.params;
@@ -41,19 +44,28 @@ const deleteById = async (req, res, next) => {
   res.status(204).end();
 };
 
-const updateById = async (req, res, next) => {
+const updateById = rescue(async (req, res, next) => {
   const isValid = await validateJoi(req.body);
   if (isValid.error) return next(isValid);
   const { id } = req.params;
-  const [{ productId, quantity }] = req.body;
-  const serviceAnswer = await salesService.updateSaleById(id, productId, quantity);
+  const salesBody = req.body;
+  const idMapped = req.body.map(({ productId }) => productId);
+  const isProductExists = await salesService.listOfExistProducts(idMapped);
+  if (isProductExists.length) {
+    return next({
+      error: true,
+      message: `The items: ${isProductExists} were not found. Sale update was aborted.`,
+      code: 'invalid_data',
+    });
+  }
+  const serviceAnswer = await salesService.updateSaleById(id, salesBody);
   if (serviceAnswer.error) return next(serviceAnswer);
   res.status(200).json(serviceAnswer);
-};
+});
 
 module.exports = {
   getAll,
-  createMany,
+  createOne,
   getById,
   deleteById,
   updateById,

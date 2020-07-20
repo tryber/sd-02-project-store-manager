@@ -25,7 +25,7 @@ const listOfExistProducts = async (ids) => {
   return result;
 };
 
-const createMany = async (products) => salesModel.createMany(products);
+const createOne = async (products) => salesModel.createOne(products);
 
 const getSaleById = async (id) => {
   const result = await salesModel.getSaleById(id).catch((fail) => (
@@ -48,19 +48,17 @@ const deleteSaleById = async (id) => {
   return result;
 };
 
-const updateSaleById = async (id, productId, quantity) => {
+const updateSaleById = async (id, updatedSale) => {
   const isSaleExists = await getSaleById(id);
   if (isSaleExists.error) return isSaleExists;
-  const isProductInDatabase = await productService.getProductById(productId);
-  if (isProductInDatabase.error) return isProductInDatabase;
-  const result = await salesModel.updateSaleById(id, productId, quantity);
+  const result = await salesModel.updateSaleById(id, updatedSale);
   return result.value;
 };
 
 module.exports = {
   getAllSales,
   listOfExistProducts,
-  createMany,
+  createOne,
   getSaleById,
   deleteSaleById,
   updateSaleById,

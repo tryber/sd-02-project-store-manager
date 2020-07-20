@@ -7,9 +7,9 @@ const getAllSales = async () => {
   return allSales;
 };
 
-const createMany = async (products) => {
+const createOne = async (sales) => {
   const db = await connection();
-  const createSales = await db.collection('sales').insertMany(products);
+  const createSales = await db.collection('sales').insertOne({ sales });
   return createSales;
 };
 
@@ -25,12 +25,12 @@ const deleteSaleById = async (id) => {
   return deleteSale;
 };
 
-const updateSaleById = async (id, productId, quantity) => {
+const updateSaleById = async (id, sales) => {
   const db = await connection();
   const updateSale = await db.collection('sales')
     .findOneAndUpdate(
       { _id: ObjectId(id) },
-      { $set: { productId, quantity } },
+      { $set: { sales } },
       { returnOriginal: false },
     );
   return updateSale;
@@ -38,7 +38,7 @@ const updateSaleById = async (id, productId, quantity) => {
 
 module.exports = {
   getAllSales,
-  createMany,
+  createOne,
   getSaleById,
   deleteSaleById,
   updateSaleById,

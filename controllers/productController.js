@@ -35,7 +35,7 @@ const getById = async (req, res, next) => {
 const deleteById = async (req, res, next) => {
   const { id } = req.params;
   try {
-    await productService.deleteProduct(id);
+    await productService.deleteProductById(id);
     res.status(204).end();
   } catch (fail) {
     return next(
@@ -45,7 +45,7 @@ const deleteById = async (req, res, next) => {
 };
 
 const updateById = async (req, res, next) => {
-  const isValid = validateJoi(req.body);
+  const isValid = await validateJoi(req.body);
   if (isValid.error) return next(isValid);
   const { name, quantity } = req.body;
   const { id } = req.params;

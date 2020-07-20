@@ -8,7 +8,7 @@ const objError = {
 const errorController = async (err, _req, res, _next) => {
   const statusCode = objError[err.code] || 500;
   return res.status(statusCode).json({
-    error: { error: true, message: err.message, code: err.code },
+    error: { error: true, message: err.message, code: err.code || 'internal_error' },
   });
 };
 
