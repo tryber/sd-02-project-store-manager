@@ -23,7 +23,7 @@ const deleteSale = async (id) => {
 
 const updateSale = async (id, salesData) => {
   const idExists = await salesModel.findSaleById(id);
-  if (!idExists) { return null; }
+  if (!idExists) { return 404; }
   return salesModel.updateSale(id, salesData);
 };
 
