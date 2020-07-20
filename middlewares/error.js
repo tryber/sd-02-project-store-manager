@@ -1,7 +1,6 @@
 const notFound = { message: 'Não encontrado', code: 'not_found' };
 const badData = { message: 'Dados inválidos', code: 'bad_data' };
 const exists = { message: 'Já cadastrado', code: 'already_exists' };
-
 const errorcodes = {
   not_found: 404,
   forbidden: 403,
