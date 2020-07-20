@@ -17,7 +17,8 @@ const saleNotFoundError = {
   error: {
     message: 'Sale or product not found.',
     code: 'not_found',
-    data: 'Field productId must be a valid and registered _id from products database and endpoint sales/id must be a valid registered _id in sales database.',
+    data: `Field "productId" must be a valid and registered "_id" from products database.
+    Endpoint "sales/id" must be a valid registered "_id" in sales database.`,
   },
 };
 

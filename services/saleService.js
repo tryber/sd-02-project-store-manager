@@ -18,10 +18,10 @@ const deleteSale = async (id) =>
   saleModel.deleteSale(id);
 
 const updateSale = async (id, saleData) => {
-  const { productId } = saleData;
+  const productsIds = saleData.map(({ productId }) => productId);
   const validSale = await saleModel.getSaleById(id);
-  const validProduct = await productService.getProductById(productId);
-  if (!validSale || !validProduct) return null;
+  const products = await productService.getProductsById(productsIds);
+  if (!validSale || !products || saleData.length !== products.length) return null;
   return saleModel.updateSale(id, saleData);
 };
 

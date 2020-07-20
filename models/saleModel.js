@@ -16,8 +16,8 @@ const getSaleById = async (id) => {
 
 const insertNewSales = async (salesData) => {
   const db = await connection();
-  const sales = await db.collection('sales').insertMany(salesData);
-  return sales.ops;
+  const sales = await db.collection('sales').insertOne({ products: salesData });
+  return sales.ops[0];
 };
 
 const getSaleByProductId = async (productId) => {
@@ -36,8 +36,12 @@ const deleteSale = async (id) => {
 const updateSale = async (id, saleData) => {
   const db = await connection();
   if (!ObjectId.isValid(id)) return null;
-  const sale = await db.collection('sales').updateOne({ _id: ObjectId(id) }, { $set: saleData });
-  return sale;
+  const sale = await db.collection('sales').findOneAndUpdate(
+    { _id: ObjectId(id) },
+    { $set: { products: saleData } },
+    { returnOriginal: false },
+  );
+  return sale.value;
 };
 
 module.exports = {

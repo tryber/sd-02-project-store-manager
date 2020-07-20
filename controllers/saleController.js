@@ -4,11 +4,6 @@ const errorMessage = require('./errorMessages');
 
 const router = express.Router();
 
-const isDataValid = (productId, quantity) => {
-  if (!productId || quantity < 0 || !Number.isInteger(quantity)) return false;
-  return true;
-};
-
 router.get('/', async (_req, res) => {
   const sales = await saleService.listAllSales();
 
@@ -59,17 +54,17 @@ router.delete('/:id', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-  const { productId, quantity } = req.body;
   const { id } = req.params;
 
-  const validData = isDataValid(productId, quantity);
+  const validData = Array.isArray(req.body) && req.body
+    .reduce((acc, cur) => acc && cur.quantity && cur.quantity > 0 && cur.productId, true);
 
   if (!validData) {
     return res.status(422).json(errorMessage.invalidSaleDataError);
   }
 
   try {
-    const updatedSale = await saleService.updateSale(id, { productId, quantity });
+    const updatedSale = await saleService.updateSale(id, req.body);
 
     if (!updatedSale) {
       return res.status(404).json(errorMessage.saleNotFoundError);
