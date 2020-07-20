@@ -5,7 +5,13 @@ const router = express.Router();
 
 router.get('/', async (_req, res) => {
   const products = await productsService.getAllProducts;
-  res.status(200).json({
+  if (!products) {
+    return res.status(500).json({
+      message: 'Erro de conexão com o banco de dados',
+      code: 'db_connection_error',
+    });
+  }
+  return res.status(200).json({
     message: 'Produtos retornados',
     products,
   });
@@ -18,7 +24,7 @@ router.get('/:id', async (req, res) => {
     return res.status(500).json({ message: 'Erro de conexão com o banco de dados', code: 'db_connection_error' });
   }
 
-  if (product.length === 0) {
+  if (product.length === 0 || product === 'not_found') {
     return res.status(404).json({ message: 'Produto não encontrado', code: 'not_found' });
   }
 
@@ -40,17 +46,21 @@ router.post('/', async (req, res) => {
 
   const isProductCreated = await productsService.createProducts({ name, quantity });
 
-  if (!isProductCreated) {
+  const product = await productsService.getProductByName(name);
+
+  if (!isProductCreated || !product) {
     return res.status(500).json({ message: 'Erro de conexão com o banco de dados', code: 'db_connection_error' });
   }
 
-  return res.status(201).json({ message: 'Produto criado com sucesso' });
+  return res.status(201).json({ message: 'Produto criado com sucesso', product: [product] });
 });
 
 router.delete('/:id', async (req, res) => {
   const isProductExist = await productsService.getProductById(`${req.params.id}`);
 
-  if (isProductExist.length === 0) return res.status(400).json({ message: 'Produto não encontrado', code: 'not_found' });
+  if (isProductExist.length === 0 || isProductExist === 'not_found') {
+    return res.status(400).json({ message: 'Produto não encontrado', code: 'not_found' });
+  }
 
   const isRemoved = await productsService.deleteProductById(`${req.params.id}`);
 
@@ -71,7 +81,9 @@ router.put('/:id', async (req, res) => {
     return res.status(422).json({ message: isValid.error, code: isValid.code });
   }
 
-  if (isProductExist.length === 0) return res.status(400).json({ message: 'Produto não encontrado', code: 'not_found' });
+  if (isProductExist.length === 0 || isProductExist === 'not_found') {
+    return res.status(400).json({ message: 'Produto não encontrado', code: 'not_found' });
+  }
 
   const updatedProduct = await productsService.updateProductById(req.params.id, { name, quantity });
 

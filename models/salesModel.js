@@ -28,7 +28,7 @@ const getAllSales = async () => {
 };
 
 const findSaleById = async (id) => {
-  console.log(id);
+  if (!ObjectId.isValid(id)) return 'not_found';
   try {
     const saleById = await connection()
       .then((db) => db.collection('sales').find({ _id: ObjectId(id) }).toArray());
@@ -40,6 +40,7 @@ const findSaleById = async (id) => {
 };
 
 const deleteSaleById = async (id) => {
+  if (!ObjectId.isValid(id)) return 'not_found';
   try {
     const { result } = await connection()
       .then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id) }));
@@ -51,6 +52,7 @@ const deleteSaleById = async (id) => {
 };
 
 const updateSale = async (id, updatedSale) => {
+  if (!ObjectId.isValid(id)) return 'not_found';
   try {
     const { result } = await connection()
       .then((db) => db.collection('sales').updateOne({ _id: ObjectId(id) }, { $set: updatedSale }));

@@ -22,7 +22,7 @@ router.get('/:id', async (req, res) => {
     return res.status(500).json({ message: 'Erro de conexão com o banco de dados', code: 'db_connection_error' });
   }
 
-  if (saleById.length === 0) {
+  if (saleById.length === 0 || saleById === 'not_found') {
     return res.status(404).json({ message: 'Venda não encontrada', code: 'not_found' });
   }
   return res.status(200).json({ message: 'Venda Encontrada', saleById });
@@ -31,7 +31,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   const isValid = await salesService.validateSales(req.body);
   if (isValid.error) {
-    return res.status(422).json({
+    return res.status(isValid.status).json({
       message: isValid.message,
       error: isValid.error,
     });
@@ -46,13 +46,16 @@ router.post('/', async (req, res) => {
   }
   return res.status(200).json({
     message: 'Vendas criadas com Sucesso',
+    sale: req.body,
   });
 });
 
 router.delete('/:id', async (req, res) => {
   const isProductExist = await salesService.findSaleById(`${req.params.id}`);
 
-  if (isProductExist.length === 0) return res.status(400).json({ message: 'Venda não encontrada', code: 'not_found' });
+  if (isProductExist.length === 0 || isProductExist === 'not_found') {
+    return res.status(400).json({ message: 'Venda não encontrada', code: 'not_found' });
+  }
 
   const isRemoved = await salesService.deleteSaleById(`${req.params.id}`);
 
@@ -68,11 +71,13 @@ router.put('/:id', async (req, res) => {
 
   const isValid = await salesService.validateSales(req.body);
 
-  if (isValid.error) {
-    return res.status(422).json({ message: isValid.error, code: isValid.code });
+  if (isSaleExist.length === 0 || isSaleExist === 'not_found') {
+    return res.status(400).json({ message: 'Venda não encontrada', code: 'not_found' });
   }
 
-  if (isSaleExist.length === 0) return res.status(400).json({ message: 'Venda não encontrada', code: 'not_found' });
+  if (isValid.error) {
+    return res.status(isValid.status).json({ message: isValid.error, code: isValid.code });
+  }
 
   const updatedSale = await salesService.updateSale(req.params.id, { sale: req.body });
 

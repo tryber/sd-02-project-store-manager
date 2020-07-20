@@ -2,9 +2,11 @@ const productsModel = require('../models/productsModel');
 
 const getAllProducts = productsModel.getAll();
 
-const createProducts = (products) => productsModel.createProducts(products);
+const createProducts = (product) => productsModel.createProducts(product);
 
 const getProductById = (id) => productsModel.getProductById(id);
+
+const getProductByName = (name) => productsModel.getProductByName(name);
 
 const deleteProductById = (id) => productsModel.deleteProduct(id);
 
@@ -16,7 +18,7 @@ const validateProducts = (name, quantity) => {
   if (typeof name !== 'string' || name.length < 5) {
     return { error: 'Nome ou Quantidade inválidos', code: 'invalid_data' };
   }
-  if (typeof quantity !== 'number' || quantity <= 0) {
+  if (!Number.isInteger(quantity) || quantity <= 0) {
     return { error: 'Nome ou Quantidade inválidos', code: 'invalid_data' };
   }
   return { error: false };
@@ -38,4 +40,5 @@ module.exports = {
   deleteProductById,
   updateProductById,
   repeatedIds,
+  getProductByName,
 };

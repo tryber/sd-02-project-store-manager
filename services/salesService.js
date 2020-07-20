@@ -1,17 +1,26 @@
-const { ObjectId } = require('mongodb');
 const salesModel = require('../models/salesModel');
 const productsService = require('./productsService');
 
 const validateSales = async (sale) => {
-  const arrayOfIds = sale.map(({ productId }) => ObjectId(productId));
+  const arrayOfIds = sale.map(({ productId }) => productId);
   const arrayOfRepeatedIds = await productsService.repeatedIds(arrayOfIds);
+
+  if (arrayOfRepeatedIds === 'not_found') {
+    return {
+      error: 'Produto não encontrado',
+      code: 'not_found',
+      status: 400,
+    };
+  }
+
   const isIdValid = (sale.length === arrayOfRepeatedIds.length);
 
   const isQuantityValid = sale.some(({ quantity }) => !Number.isInteger(quantity) || quantity <= 0);
   if (isQuantityValid || !isIdValid) {
     return {
-      error: 'Produto inválido ou Quantidade inválida',
+      error: 'Quantidade inválida',
       code: 'invalid_data',
+      status: 422,
     };
   }
   return { error: false };
