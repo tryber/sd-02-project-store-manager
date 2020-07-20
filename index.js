@@ -1,9 +1,10 @@
 const express = require('express');
-const app = express();
 const bodyParser = require('body-parser');
 const productController = require('./controllers/productController');
 const salesController = require('./controllers/salesController');
-const errorHandler = require('./middlewares/error')
+const { errorHandler } = require('./middlewares/error');
+
+const app = express();
 
 app.use(bodyParser.json());
 

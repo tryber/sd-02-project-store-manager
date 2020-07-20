@@ -1,15 +1,15 @@
-const boom = require('boom');
+const notFound = { message: 'não encontrado', code: 'not_found' };
+const badData = { message: 'Dados inválidos', code: 'bad_data' };
 
 const errorcodes = {
-  'not_found': 404,
-  'forbidden': 403,
-  'unauthorized': 401,
-  'bad_data': 422,
-  'already_exists': 409
-}
+  not_found: 404,
+  forbidden: 403,
+  unauthorized: 401,
+  bad_data: 422,
+  already_exists: 409,
+};
 
-const errorHandler = (error, _req, res, _next) => {
-  return res.status(errorcodes[error.code] || 500).json({error});
-}
+const errorHandler = (error, _req, res, _next) => res.status(errorcodes[error.code] || 500)
+  .json({ error });
 
-module.exports = errorHandler;
+module.exports = { errorHandler, notFound, badData };
