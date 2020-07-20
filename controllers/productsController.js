@@ -34,10 +34,10 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   const { name, quantity } = req.body;
 
-  const isValid = await productsService.validateProducts(name, quantity);
+  const isValidProduct = await productsService.validateProducts(name, quantity);
 
-  if (isValid.error) {
-    return res.status(422).json({ message: isValid.error, code: isValid.code });
+  if (isValidProduct.error) {
+    return res.status(422).json({ message: isValidProduct.error, code: isValidProduct.code });
   }
 
   const isProductExists = await productsService.existProduct(name);
