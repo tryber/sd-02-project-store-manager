@@ -37,6 +37,7 @@ const updateAndValidProduct = async ({ id, name: testerName, quantity: testerQua
       quantity: testerQuantity,
     });
     return updateProduct(id, name, quantity)
+      .then((results) => ({ results }))
       .catch((err) => ({ error: { message: err.message, code: 'internal_error' } }));
   } catch (err) {
     return { error: { message: err.message, code: 'invalid_data' } };

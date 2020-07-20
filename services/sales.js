@@ -27,6 +27,7 @@ const updateAndValidSale = async ({ id, productId, quantity }) => {
   const productBoolean = !products && productId;
   if (productBoolean || error) return { error: { message: 'invalid id', code: 'invalid_data' } };
   return updateSale(id, productId, quantity)
+    .then((results) => ({ results }))
     .catch((err) => ({ error: { message: err.message, code: 'internal_error' } }));
 };
 
