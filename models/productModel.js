@@ -8,13 +8,13 @@ const createProduct = async ({ name, quantity }) =>
 
 const findProductByName = async (name, id = null) =>
   connection().then((db) => db.collection('products')
-    .findOne({ name: name, _id: { $ne: ObjectId(id) } }));
+    .findOne({ name, _id: { $ne: ObjectId(id) } })).then(console.log);
 
 const findProductById = async (id) => {
-  if (!ObjectId.isValid(id)) { return null };
+  if (!ObjectId.isValid(id)) { return null; }
   return connection()
     .then((db) => db.collection('products').findOne(ObjectId(id)));
-}
+};
 
 const findProducts = async () =>
   connection()
@@ -23,10 +23,9 @@ const findProducts = async () =>
 
 const showOneProduct = async (id) => {
   const searchId = await findProductById(id);
-
   if (searchId === null) {
-    return null
-  };
+    return null;
+  }
   const { _id, name, quantity } = searchId;
   return { id: _id, name, quantity };
 };
@@ -34,8 +33,8 @@ const showOneProduct = async (id) => {
 const deleteProduct = async (id) => {
   const searchId = await findProductById(id);
   if (searchId === null) {
-    return null
-  };
+    return null;
+  }
   await connection()
     .then((db) => db.collection('products').deleteOne({ _id: ObjectId(id) }));
   return { ok: true };

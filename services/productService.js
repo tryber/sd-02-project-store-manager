@@ -1,34 +1,34 @@
 const productModel = require('../models/productModel');
 
+const existsCheck = async (name, id = null) => {
+  const modelCall = await productModel.findProductByName(name, id);
+  if (modelCall === null) { return true; }
+  console.log('passou do if');
+  return false;
+};
+
 const createProduct = async (name, quantity) => {
-  const alreadyExists = await productModel.findProductByName(name);
-  if (alreadyExists) {
-    throw { message: 'produto já cadastrado', code: 'already_exists'}
-  }
-  return await productModel.createProduct({name, quantity})
+  if (existsCheck(name)) { return 409; }
+  return productModel.createProduct({ name, quantity });
 };
 
 const updateProduct = async (name, quantity, id) => {
   const idExists = await productModel.findProductById(id);
-  if (idExists === null) { throw { message: 'produto não encontrado', code: 'not_found'} };
-  
-  const alreadyExists = await productModel.findProductByName(name, id);
-  if (alreadyExists) {
-    throw { message: 'produto já cadastrado', code: 'already_exists'}
-  }
-  await productModel.updateProduct({name, quantity, id});
+  if (!idExists) { return 404; }
+  if (existsCheck(name, id)) { return 409; }
+  await productModel.updateProduct({ name, quantity, id });
 };
 
-const listProduct = async () => {
-  return await productModel.findProducts()
-};
+const listProduct = async () => productModel.findProducts();
 
 const showOneProduct = async (id) => {
-  return await productModel.showOneProduct(id)
+  const showFromModel = await productModel.showOneProduct(id);
+  if (showFromModel === null) { return 404; }
 };
 
 const deleteProduct = async (id) => {
-  return await productModel.deleteProduct(id)
+  const deleteFromModel = await productModel.deleteProduct(id);
+  if (deleteFromModel === null) { return 404; }
 };
 
 module.exports = {

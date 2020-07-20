@@ -34,7 +34,7 @@ const deleteSale = async (id) => {
   const searchId = await findSaleById(id);
   if (searchId === null) {
     return null;
-  };
+  }
   const db = await connection();
   if (!ObjectId.isValid(id)) return null;
   const sale = await db.collection('sales').deleteOne({ _id: ObjectId(id) });

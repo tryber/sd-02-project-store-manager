@@ -5,24 +5,18 @@ const insertSales = async (saleData) => {
   const arrayId = saleData.map(({ productId }) => productId);
   const idFound = await productModel.checkSalesAndId(arrayId);
   if (!idFound || saleData.length !== idFound.length) return null;
-  return await salesModel.insertNewSales(saleData);
+  return salesModel.insertNewSales(saleData);
 };
 
-const listSales = async () => {
-  return await salesModel.findSales()
-};
+const listSales = async () => salesModel.findSales();
 
-const showOneSale = async (id) => {
-  return await salesModel.showOneSale(id)
-};
+const showOneSale = async (id) => salesModel.showOneSale(id);
 
-const deleteSale = async (id) => {
-  return await salesModel.deleteSale(id)
-};
+const deleteSale = async (id) => salesModel.deleteSale(id);
 
 const updateSale = async (id, salesData) => {
   const idExists = await salesModel.findSaleById(id);
-  if (idExists === null) { throw { message: 'Venda não encontrada', code: 'not_found' } };
+  if (!idExists) { return null; }
   return salesModel.updateSale(id, salesData);
 };
 
