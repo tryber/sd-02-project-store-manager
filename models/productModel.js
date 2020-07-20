@@ -8,7 +8,7 @@ const createProduct = async ({ name, quantity }) =>
 
 const findProductByName = async (name, id = null) =>
   connection().then((db) => db.collection('products')
-    .findOne({ name, _id: { $ne: ObjectId(id) } })).then(console.log);
+    .findOne({ name, _id: { $ne: ObjectId(id) } }));
 
 const findProductById = async (id) => {
   if (!ObjectId.isValid(id)) { return null; }

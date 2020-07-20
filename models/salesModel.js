@@ -8,9 +8,11 @@ const insertNewSales = async (salesData) =>
 
 const findSaleById = async (id) => {
   if (!ObjectId.isValid(id)) { return null; }
-  return connection()
-    .then((db) => db.collection('sales').findOne(ObjectId(id)))
-    .then(({ _id, sales }) => ({ id: _id, sales }));
+  const search = await connection()
+    .then((db) => db.collection('sales').findOne(ObjectId(id)));
+  if (!search) { return null; }
+  const { _id, sales } = search;
+  return { id: _id, sales };
 };
 
 const findSales = async () =>

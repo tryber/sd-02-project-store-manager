@@ -38,7 +38,7 @@ router.put('/:id', rescue(async (req, res, _next) => {
   const updateProduct = await productService.updateProduct(name, quantity, id);
   if (updateProduct === 404) { throw notFound; }
   if (updateProduct === 409) { throw exists; }
-  return res.status(204).json();
+  return res.status(204).json(updateProduct);
 }));
 
 router.post('/', rescue(async (req, res, _next) => {
