@@ -1,21 +1,62 @@
 const salesModel = require('../models/salesModel');
 const productsService = require('./productsService');
 
-const validateProductQuantity = async (arrayOfRepeatedIds, sale) => {
-  const isValid = sale.every(({ productId, quantity: saleQuantity }) =>
+const validateProductQuantityPut = (sale, oldSale) => {
+  if (sale.length < oldSale.length) {
+    const newSale = oldSale.reduce((acc, cur) => {
+      const existProduct = sale.filter(({ productId }) =>
+        JSON.stringify(productId) === JSON.stringify(cur.productId));
+      if (existProduct[0]) {
+        acc.push({
+          productId: existProduct[0].productId,
+          quantity: existProduct[0].quantity - cur.quantity,
+        });
+        return acc;
+      }
+      acc.push({
+        productId: cur.productId,
+        quantity: -cur.quantity,
+      });
+      return acc;
+    }, []);
+    return newSale;
+  }
+  const newSale = sale.reduce((acc, cur) => {
+    const existProduct = oldSale.filter(({ productId }) =>
+      JSON.stringify(productId) === JSON.stringify(cur.productId));
+    if (existProduct[0]) {
+      acc.push({
+        productId: existProduct[0].productId,
+        quantity: cur.quantity - existProduct[0].quantity,
+      });
+      return acc;
+    }
+    acc.push({
+      productId: cur.productId,
+      quantity: cur.quantity,
+    });
+    return acc;
+  }, []);
+  return newSale;
+};
+
+const validateProductQuantity = async (arrayOfRepeatedIds, sale, oldSale) => {
+  let newSale = sale;
+  if (oldSale) newSale = validateProductQuantityPut(sale, oldSale[0].sale);
+  const isValid = newSale.every(({ productId, quantity: saleQuantity }) =>
     arrayOfRepeatedIds.every(({ _id, quantity }) => {
       if (JSON.stringify(productId) === JSON.stringify(_id)) return (quantity - saleQuantity) > 0;
       return true;
     }));
   if (isValid) {
-    const updateAll = await Promise.all(sale.map(({ productId, quantity }) =>
+    const updateAll = await Promise.all(newSale.map(({ productId, quantity }) =>
       productsService.decrementQuantity(productId, -quantity)));
     return updateAll.every((isUpdated) => isUpdated);
   }
   return false;
 };
 
-const validateSales = async (sale) => {
+const validateSales = async (sale, oldSale) => {
   const arrayOfIds = sale.map(({ productId }) => productId);
   const arrayOfRepeatedIds = await productsService.repeatedIds(arrayOfIds);
 
@@ -27,7 +68,7 @@ const validateSales = async (sale) => {
     };
   }
 
-  const isValidProductQuantity = await validateProductQuantity(arrayOfRepeatedIds, sale);
+  const isValidProductQuantity = await validateProductQuantity(arrayOfRepeatedIds, sale, oldSale);
 
   const isIdValid = (sale.length === arrayOfRepeatedIds.length);
 

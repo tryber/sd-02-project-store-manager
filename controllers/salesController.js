@@ -69,7 +69,7 @@ router.delete('/:id', async (req, res) => {
 router.put('/:id', async (req, res) => {
   const isSaleExist = await salesService.findSaleById(`${req.params.id}`);
 
-  const isValid = await salesService.validateSales(req.body);
+  const isValid = await salesService.validateSales(req.body, isSaleExist);
 
   if (isSaleExist.length === 0 || isSaleExist === 'not_found') {
     return res.status(400).json({ message: 'Venda não encontrada', code: 'not_found' });
