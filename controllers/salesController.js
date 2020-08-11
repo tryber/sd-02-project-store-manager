@@ -57,6 +57,13 @@ router.delete('/:id', async (req, res) => {
     return res.status(400).json({ message: 'Venda não encontrada', code: 'not_found' });
   }
 
+  const isUpdateQuantity = await salesService.validateProductQuantityDelete(isProductExist[0].sale);
+
+  if (isUpdateQuantity.error) {
+    return res.status(isUpdateQuantity.status)
+      .json({ message: isUpdateQuantity.error, code: isUpdateQuantity.code });
+  }
+
   const isRemoved = await salesService.deleteSaleById(`${req.params.id}`);
 
   if (!isRemoved) {

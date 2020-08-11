@@ -45,15 +45,57 @@ const validateProductQuantity = async (arrayOfRepeatedIds, sale, oldSale) => {
   if (oldSale) newSale = validateProductQuantityPut(sale, oldSale[0].sale);
   const isValid = newSale.every(({ productId, quantity: saleQuantity }) =>
     arrayOfRepeatedIds.every(({ _id, quantity }) => {
-      if (JSON.stringify(productId) === JSON.stringify(_id)) return (quantity - saleQuantity) > 0;
+      if (JSON.stringify(productId) === JSON.stringify(_id)) return (quantity - saleQuantity) >= 0;
       return true;
     }));
   if (isValid) {
     const updateAll = await Promise.all(newSale.map(({ productId, quantity }) =>
       productsService.decrementQuantity(productId, -quantity)));
-    return updateAll.every((isUpdated) => isUpdated);
+    if (updateAll.every((isUpdated) => isUpdated)) return { error: false };
   }
-  return false;
+  return {
+    error: 'Quantidade de produto insuficiente',
+    code: 'invalid_data',
+    status: 422,
+  };
+};
+
+const validateProductQuantityDelete = async (oldSale) => {
+  const arrayOfIds = oldSale.map(({ productId }) => productId);
+  const arrayOfRepeatedIds = await productsService.repeatedIds(arrayOfIds);
+
+  if (arrayOfRepeatedIds === 'not_found') {
+    return {
+      error: 'Produto não encontrado',
+      code: 'not_found',
+      status: 400,
+    };
+  }
+  const updateAll = await Promise.all(oldSale.map(({ productId, quantity }) =>
+    productsService.decrementQuantity(productId, quantity)));
+  const isValidUpdate = updateAll.every((isUpdated) => isUpdated);
+  if (!isValidUpdate) {
+    return {
+      error: 'Dados Inválidos',
+      code: 'invalid_data',
+      status: 422,
+    };
+  }
+  return { error: false };
+};
+
+const isQuantityValid = (sale, arrayOfRepeatedIds) => {
+  const isIdValid = (sale.length === arrayOfRepeatedIds.length);
+  const isSaleQuantityIsValid = sale.some(({ quantity }) =>
+    !Number.isInteger(quantity) || quantity <= 0);
+  if (isSaleQuantityIsValid || !isIdValid) {
+    return {
+      error: 'Quantidade inválida',
+      code: 'invalid_data',
+      status: 422,
+    };
+  }
+  return { error: false };
 };
 
 const validateSales = async (sale, oldSale) => {
@@ -69,17 +111,11 @@ const validateSales = async (sale, oldSale) => {
   }
 
   const isValidProductQuantity = await validateProductQuantity(arrayOfRepeatedIds, sale, oldSale);
+  if (isValidProductQuantity.error) return isValidProductQuantity;
 
-  const isIdValid = (sale.length === arrayOfRepeatedIds.length);
+  const isValid = isQuantityValid(sale, arrayOfRepeatedIds);
+  if (isValid.error) return isValid;
 
-  const isQuantityValid = sale.some(({ quantity }) => !Number.isInteger(quantity) || quantity <= 0);
-  if (isQuantityValid || !isIdValid || !isValidProductQuantity) {
-    return {
-      error: 'Quantidade inválida',
-      code: 'invalid_data',
-      status: 422,
-    };
-  }
   return { error: false };
 };
 
@@ -100,4 +136,5 @@ module.exports = {
   findSaleById,
   deleteSaleById,
   updateSale,
+  validateProductQuantityDelete,
 };
