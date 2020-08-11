@@ -2,9 +2,11 @@ const salesModel = require('../models/salesModel');
 const productsService = require('./productsService');
 
 const validateProductQuantityPut = (sale, oldSale) => {
+  let newSale;
+  let existProduct;
   if (sale.length < oldSale.length) {
-    const newSale = oldSale.reduce((acc, cur) => {
-      const existProduct = sale.filter(({ productId }) =>
+    newSale = oldSale.reduce((acc, cur) => {
+      existProduct = sale.filter(({ productId }) =>
         JSON.stringify(productId) === JSON.stringify(cur.productId));
       if (existProduct[0]) {
         acc.push({
@@ -13,16 +15,13 @@ const validateProductQuantityPut = (sale, oldSale) => {
         });
         return acc;
       }
-      acc.push({
-        productId: cur.productId,
-        quantity: -cur.quantity,
-      });
+      acc.push({ productId: cur.productId, quantity: -cur.quantity });
       return acc;
     }, []);
     return newSale;
   }
-  const newSale = sale.reduce((acc, cur) => {
-    const existProduct = oldSale.filter(({ productId }) =>
+  newSale = sale.reduce((acc, cur) => {
+    existProduct = oldSale.filter(({ productId }) =>
       JSON.stringify(productId) === JSON.stringify(cur.productId));
     if (existProduct[0]) {
       acc.push({
@@ -31,10 +30,7 @@ const validateProductQuantityPut = (sale, oldSale) => {
       });
       return acc;
     }
-    acc.push({
-      productId: cur.productId,
-      quantity: cur.quantity,
-    });
+    acc.push({ productId: cur.productId, quantity: cur.quantity });
     return acc;
   }, []);
   return newSale;
