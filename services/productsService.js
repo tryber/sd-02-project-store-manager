@@ -1,6 +1,8 @@
 const productsModel = require('../models/productsModel');
 
-const getAllProducts = productsModel.getAll();
+const getAllProducts = productsModel.getAll;
+
+const decrementQuantity = (id, quantity) => productsModel.decQuantityProduct(id, quantity);
 
 const createProducts = (product) => productsModel.createProducts(product);
 
@@ -15,7 +17,7 @@ const updateProductById = (id, updatedProduct) => productsModel.updateProduct(id
 const repeatedIds = (arrayOfIds) => productsModel.repeatedIds(arrayOfIds);
 
 const validateProducts = (name, quantity) => {
-  if (typeof name !== 'string' || name.length < 5) {
+  if (typeof name !== 'string' || name.length <= 5) {
     return { error: 'Nome ou Quantidade inválidos', code: 'invalid_data' };
   }
   if (!Number.isInteger(quantity) || quantity <= 0) {
@@ -25,7 +27,7 @@ const validateProducts = (name, quantity) => {
 };
 
 const existProduct = async (name) => {
-  const products = await getAllProducts;
+  const products = await productsModel.getAll();
   const isProductExists = products.some((product) =>
     product.name.toLowerCase() === name.toLowerCase());
   return isProductExists;
@@ -41,4 +43,5 @@ module.exports = {
   updateProductById,
   repeatedIds,
   getProductByName,
+  decrementQuantity,
 };

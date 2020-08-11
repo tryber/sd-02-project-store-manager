@@ -4,7 +4,7 @@ const salesService = require('../services/salesService');
 const router = express.Router();
 
 router.get('/', async (_req, res) => {
-  const sales = await salesService.getAllSales;
+  const sales = await salesService.getSales();
 
   if (!sales) {
     return res.status(500).json({ message: 'Erro de conexão com o banco de dados', code: 'db_connection_error' });

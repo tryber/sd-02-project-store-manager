@@ -76,6 +76,18 @@ const updateProduct = async (id, updatedProduct) => {
   }
 };
 
+const decQuantityProduct = async (id, quantity) => {
+  if (!ObjectId.isValid(id)) return 'not_found';
+  try {
+    const { result } = await connection()
+      .then((db) => db.collection('products').updateOne({ _id: ObjectId(id) }, { $inc: { quantity } }));
+    return result;
+  } catch (err) {
+    console.error(err);
+    return false;
+  }
+};
+
 const repeatedIds = async (arrayIds) => {
   const isValidIds = arrayIds.every((id) => ObjectId.isValid(id));
   if (!isValidIds) return 'not_found';
@@ -98,4 +110,5 @@ module.exports = {
   updateProduct,
   repeatedIds,
   getProductByName,
+  decQuantityProduct,
 };

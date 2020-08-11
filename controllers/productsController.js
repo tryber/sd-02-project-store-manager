@@ -4,7 +4,7 @@ const productsService = require('../services/productsService');
 const router = express.Router();
 
 router.get('/', async (_req, res) => {
-  const products = await productsService.getAllProducts;
+  const products = await productsService.getAllProducts();
   if (!products) {
     return res.status(500).json({
       message: 'Erro de conexão com o banco de dados',
