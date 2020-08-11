@@ -1,4 +1,4 @@
-use storeManager;
+/* use storeManager;
 
 db.products.insertMany(
     [
@@ -6,4 +6,4 @@ db.products.insertMany(
         { "name": "Tesoura", "quantity": 5 },
         { "name": "Borracha", "quantity": 15 }
     ]
-);
+); */

@@ -28,18 +28,11 @@ const validateSales = async (sale) => {
   }
 
   const isValidProductQuantity = await validateProductQuantity(arrayOfRepeatedIds, sale);
-  if (!isValidProductQuantity) {
-    return {
-      error: 'Quantidade insuficiente',
-      code: 'invalid_data',
-      status: 422,
-    };
-  }
 
   const isIdValid = (sale.length === arrayOfRepeatedIds.length);
 
   const isQuantityValid = sale.some(({ quantity }) => !Number.isInteger(quantity) || quantity <= 0);
-  if (isQuantityValid || !isIdValid) {
+  if (isQuantityValid || !isIdValid || !isValidProductQuantity) {
     return {
       error: 'Quantidade inválida',
       code: 'invalid_data',
