@@ -3,9 +3,10 @@ const connection = require('./connections');
 
 const createSales = async (sale) => {
   try {
-    await connection()
-      .then(((db) => db.collection('sales').insertOne({ sale })));
-    return true;
+    const createdSale = await connection()
+      .then(((db) => db.collection('sales').insertOne({ sale })))
+      .then((response) => response.ops[0]);
+    return createdSale;
   } catch (err) {
     console.error(err);
     return false;

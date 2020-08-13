@@ -43,9 +43,10 @@ const getProductByName = async (name) => {
 
 const createProducts = async (product) => {
   try {
-    connection()
-      .then(((db) => db.collection('products').insertOne(product)));
-    return true;
+    const createdProduct = await connection()
+      .then(((db) => db.collection('products').insertOne(product)))
+      .then((response) => response.ops[0]);
+    return createdProduct;
   } catch (err) {
     console.error(err);
     return false;

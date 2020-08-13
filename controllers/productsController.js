@@ -12,7 +12,6 @@ router.get('/', async (_req, res) => {
     });
   }
   return res.status(200).json({
-    message: 'Produtos retornados',
     products,
   });
 });
@@ -46,13 +45,11 @@ router.post('/', async (req, res) => {
 
   const isProductCreated = await productsService.createProducts({ name, quantity });
 
-  const product = await productsService.getProductByName(name);
-
-  if (!isProductCreated || !product) {
+  if (!isProductCreated) {
     return res.status(500).json({ message: 'Erro de conexão com o banco de dados', code: 'db_connection_error' });
   }
 
-  return res.status(201).json({ message: 'Produto criado com sucesso', product: [product] });
+  return res.status(201).json({ data: isProductCreated });
 });
 
 router.delete('/:id', async (req, res) => {
