@@ -11,8 +11,8 @@ const connection = () =>
     .then((mongodb) => mongodb.db('storeManager'))
     .catch((err) => err);
 
-const dbConnection = (coll) => 
+const dbConnection = (coll) =>
     connection()
-    .then((db) => db.collection(coll))
+    .then((db) => db.collection(coll));
 
 module.exports = dbConnection;

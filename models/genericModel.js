@@ -12,7 +12,7 @@ const findBy = async (coll, data) =>
 
 const findAll = async (coll) =>
   dbConnection(coll)
-  .then((db) => db.find().toArray())
+  .then((db) => db.find().toArray());
 
 module.exports = {
   insert,
