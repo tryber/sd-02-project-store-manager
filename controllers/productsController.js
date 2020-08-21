@@ -1,7 +1,8 @@
 const express = require('express');
-const router = express.Router();
 const genericModel = require('../models/genericModel');
 const services = require('../services');
+
+const router = express.Router();
 
 router
   .get('/', async (_req, res) => {
@@ -14,8 +15,6 @@ router
 
 router
   .post('/', async (req, res) => {
-    // if (!Object.keys(req.body).length) return res.status(400).json({ error: 'Request body cannot be empty', code: 'bad_request' });
-
     const joiVerify = services.validateProduct(req.body);
     if (joiVerify) return res.status(422).json({ error: joiVerify, code: 'bad_data' });
 

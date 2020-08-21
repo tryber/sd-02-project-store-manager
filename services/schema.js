@@ -15,4 +15,4 @@ const product = Joi.object({
 
 module.exports = {
   product,
-}
+};
