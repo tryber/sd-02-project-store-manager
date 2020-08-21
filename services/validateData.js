@@ -1,13 +1,9 @@
 const schema = require('./schema');
 
-const validateProduct = ({ body: { name, quantity } }, res, next) => {
+const validateProduct = (data) => {
+  const { name, quantity } = data;
   const { error } = schema.product.validate({ name, quantity });
-  if (error) {
-    const message = error.details[0].message;
-    return res.status(422).json({ error: message, code: 'bad_data' });
-  }
-
-  return next();
+  return error ? error.details[0].message : null;
 };
 
 module.exports = {
