@@ -7,7 +7,7 @@ const validateProduct = ({ body: { name, quantity } }, res, next) => {
     return res.status(422).json({ error: message, code: 'bad_data' });
   }
 
-  next();
+  return next();
 }
 
 module.exports = {
