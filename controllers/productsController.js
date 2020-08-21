@@ -8,14 +8,14 @@ router
   .get('/', async (_req, res) => {
     const results = await genericModel.findAll('products');
     if (!results) {
-      return res.status(204).json({ error: `Don't have products in db`, message: 'no_content' });
+      return res.status(204).json({ error: "Don\'t have products in db", message: 'no_content' });
     }
     return res.status(200).json({ products: [...results] });
   });
 
 router
   .post('/', async (req, res) => {
-    const { name, quantity } = req.body
+    const { name, quantity } = req.body;
 
     if (!name || !quantity) return res.status(406).json({ error: 'Não há dados', code: 'bad_data' });
 
@@ -25,7 +25,7 @@ router
       return res.status(409)
         .json({
           error: `${value.name} exists in db`,
-          code: 'conflict'
+          code: 'conflict',
         });
     }
 
@@ -33,9 +33,9 @@ router
 
     return res.status(201).json({
       message: 'Successfully Inserted',
-      status: 'created'
+      status: 'created',
     });
-  })
+  });
 
 module.exports = {
   router,
