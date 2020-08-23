@@ -4,12 +4,14 @@ const models = require('../models');
 const schema = require('../services/joiValidation');
 
 const getProducts = rescue(async (req, res) => {
-  const products = await models.productModel.getProducts();
+  const { params: { id } } = req;
+  console.log(id);
+  const products = await models.productModel.getProducts(id);
   console.log(products);
 
   if (products.length === 0) throw new error.ProductNotFound();
 
-  res.status(200).send({ message: 'Produtos encontrados.', ...products });
+  res.status(200).send({ ...products });
 });
 
 const addProduct = rescue(async (req, res) => {

@@ -6,6 +6,7 @@ const { ProductNotFound, MongoError } = require('../middleware/errorObjects');
 
 const router = express.Router();
 
+router.get('/:id', (req, res, next) => controllers.productsController.getProducts(req, res, next));
 router.get('/', (req, res, next) => controllers.productsController.getProducts(req, res, next));
 
 router.post('/', (req, res, next) => controllers.productsController.addProduct(req, res, next));

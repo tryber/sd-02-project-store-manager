@@ -1,7 +1,16 @@
+const { ObjectId } = require('mongodb');
 const connection = require('./connection');
 const error = require('../middleware/errorObjects');
 
-const getProducts = async () => {
+const getProducts = async (id) => {
+  console.log(id);
+  if (id) {
+    const products = await connection().then((db) =>
+      db
+        .collection('products').findOne(ObjectId(id)));
+
+    return products;
+  }
   const products = await connection().then((db) =>
     db
       .collection('products').find().toArray());
