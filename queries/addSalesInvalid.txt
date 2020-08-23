@@ -1,0 +1,18 @@
+[
+    {
+        "productId": "5f429d3453df8045af81ef9b",
+        "quantity": 1
+    },
+    {
+        "productId": "5f429d3453df8045af81ef9c",
+        "quantity": 2
+    },
+    {
+        "productId": "5f429d49e42cf745fdcdafd6",
+        "quantity": 3
+    },
+    {
+        "productId": "5f429d49e42cf745fdcdafd7",
+        "quantity": 4
+    }
+]

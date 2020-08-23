@@ -8,12 +8,13 @@ const app = express();
 const bodyParser = require('body-parser');
 const { MongoError, ProductNotFound } = require('./middleware/errorObjects');
 
-const productRouter = require('./routers/productRouter');
+const routers = require('./routers');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use('/products', productRouter);
+app.use('/products', routers.productRouter);
+app.use('/sales', routers.salesRouter);
 
 app.use(rescue.from(ProductNotFound, (err, req, res, _next) => {
   const { message, status } = err;

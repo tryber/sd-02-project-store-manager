@@ -1,7 +1,7 @@
 const rescue = require('express-rescue');
 const error = require('../middleware/errorObjects');
 const models = require('../models');
-const schema = require('../services/joiValidation');
+const { productValidation } = require('../services/joiValidation');
 
 const get = rescue(async (req, res) => {
   const { params: { id } } = req;
@@ -15,7 +15,7 @@ const get = rescue(async (req, res) => {
 
 const add = rescue(async (req, res) => {
   const { body: { name, quantity } } = req;
-  await schema.validateAsync({ name, quantity });
+  await productValidation.validateAsync({ name, quantity });
 
   const products = await models.productModel.add({ name, quantity });
 
@@ -33,7 +33,7 @@ const remove = rescue(async (req, res) => {
 
 const update = rescue(async (req, res) => {
   const { params: { id }, body: { name, quantity } } = req;
-  await schema.validateAsync({ name, quantity });
+  await productValidation.validateAsync({ name, quantity });
 
   const products = await models.productModel.update({ id, name, quantity });
 
