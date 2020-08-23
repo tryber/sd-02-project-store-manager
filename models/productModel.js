@@ -3,7 +3,6 @@ const connection = require('./connection');
 const error = require('../middleware/errorObjects');
 
 const getProducts = async (id) => {
-  console.log(id);
   if (id) {
     const products = await connection().then((db) =>
       db
@@ -35,7 +34,15 @@ const addProduct = async ({ name, quantity }) => {
   return true;
 };
 
+const removeProduct = async (id) => connection().then((db) =>
+  db
+    .collection('products').deleteOne({ _id: ObjectId(id) }))
+  .catch((err) => {
+    throw new error.MongoError(err.message);
+  });
+
 module.exports = {
   getProducts,
   addProduct,
+  removeProduct,
 };

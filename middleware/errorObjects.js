@@ -1,5 +1,5 @@
-function ProductNotFound(message) {
-  this.message = message || 'Nenhum produto foi encontrado.';
+function ProductNotFound(message = '') {
+  this.message = `Produto ${message} não foi encontrado.`;
   this.status = 404;
 }
 

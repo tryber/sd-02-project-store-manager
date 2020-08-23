@@ -5,10 +5,9 @@ const schema = require('../services/joiValidation');
 
 const getProducts = rescue(async (req, res) => {
   const { params: { id } } = req;
-  console.log(id);
   const products = await models.productModel.getProducts(id);
-  console.log(products);
 
+  if (!products) throw new error.ProductNotFound(id);
   if (products.length === 0) throw new error.ProductNotFound();
 
   res.status(200).send({ ...products });
@@ -24,7 +23,16 @@ const addProduct = rescue(async (req, res) => {
   throw new Error();
 });
 
+const removeProduct = rescue(async (req, res) => {
+  const { params: { id } } = req;
+  const product = await models.productModel.removeProduct(id);
+  if (product.deletedCount === 0) throw new error.ProductNotFound(id);
+
+  res.status(200).send({ message: `Produto ${id} removido com sucesso.` });
+});
+
 module.exports = {
   getProducts,
   addProduct,
+  removeProduct,
 };
