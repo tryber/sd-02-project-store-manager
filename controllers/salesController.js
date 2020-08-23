@@ -13,7 +13,7 @@ const create = rescue(async (req, res) => {
     .then(async () => {
       const products = await models.salesModel.create(body);
 
-      if (products) return res.status(201);
+      if (products.insertedCount === 1) return res.status(201).send({ ...body });
     })
     .catch((err) => {
       throw new Error(err.message);
