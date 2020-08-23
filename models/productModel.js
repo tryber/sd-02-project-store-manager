@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb');
 const connection = require('./connection');
 const error = require('../middleware/errorObjects');
 
-const getProducts = async (id) => {
+const get = async (id) => {
   if (id) {
     const products = await connection().then((db) =>
       db
@@ -17,7 +17,7 @@ const getProducts = async (id) => {
   return products;
 };
 
-const addProduct = async ({ name, quantity }) => {
+const add = async ({ name, quantity }) => {
   await connection().then((db) =>
     db.collection('products').indexInformation((err, data) => {
       if (!data) return db.collection('products').createIndex({ name: 1 }, { unique: true });
@@ -34,15 +34,27 @@ const addProduct = async ({ name, quantity }) => {
   return true;
 };
 
-const removeProduct = async (id) => connection().then((db) =>
+const remove = async (id) => connection().then((db) =>
   db
     .collection('products').deleteOne({ _id: ObjectId(id) }))
   .catch((err) => {
     throw new error.MongoError(err.message);
   });
 
+const update = async ({ id, name, quantity }) => {
+  const products = await connection().then((db) =>
+    db
+      .collection('products').updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } }))
+    .catch((err) => {
+      throw new error.MongoError(err.message);
+    });
+
+  return products;
+};
+
 module.exports = {
-  getProducts,
-  addProduct,
-  removeProduct,
+  get,
+  add,
+  remove,
+  update,
 };

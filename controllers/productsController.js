@@ -3,9 +3,9 @@ const error = require('../middleware/errorObjects');
 const models = require('../models');
 const schema = require('../services/joiValidation');
 
-const getProducts = rescue(async (req, res) => {
+const get = rescue(async (req, res) => {
   const { params: { id } } = req;
-  const products = await models.productModel.getProducts(id);
+  const products = await models.productModel.get(id);
 
   if (!products) throw new error.ProductNotFound(id);
   if (products.length === 0) throw new error.ProductNotFound();
@@ -13,26 +13,38 @@ const getProducts = rescue(async (req, res) => {
   res.status(200).send({ ...products });
 });
 
-const addProduct = rescue(async (req, res) => {
+const add = rescue(async (req, res) => {
   const { body: { name, quantity } } = req;
   await schema.validateAsync({ name, quantity });
 
-  const products = await models.productModel.addProduct({ name, quantity });
+  const products = await models.productModel.add({ name, quantity });
 
-  if (products) return res.status(200).send({ name, quantity });
+  if (products) return res.status(201).send({ name, quantity });
   throw new Error();
 });
 
-const removeProduct = rescue(async (req, res) => {
+const remove = rescue(async (req, res) => {
   const { params: { id } } = req;
-  const product = await models.productModel.removeProduct(id);
+  const product = await models.productModel.remove(id);
   if (product.deletedCount === 0) throw new error.ProductNotFound(id);
 
   res.status(200).send({ message: `Produto ${id} removido com sucesso.` });
 });
 
+const update = rescue(async (req, res) => {
+  const { params: { id }, body: { name, quantity } } = req;
+  await schema.validateAsync({ name, quantity });
+
+  const products = await models.productModel.update({ id, name, quantity });
+
+  if (products.matchedCount === 0) throw new error.ProductNotFound(id);
+
+  return res.status(200).send({ name, quantity });
+});
+
 module.exports = {
-  getProducts,
-  addProduct,
-  removeProduct,
+  get,
+  add,
+  remove,
+  update,
 };
