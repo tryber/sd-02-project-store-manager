@@ -4,9 +4,11 @@ const complexCalculation = require('../services/complexCalculation');
 const { ProductNotFound, InsuficientQuantity } = require('../middleware/errorObjects');
 const { get: getProduct, remove: removeProduct } = require('./productModel');
 
+const getProductsData = async (salesData) => Promise.all(salesData.map(({ productId }) =>
+  getProduct(productId))).then((result) => result);
+
 const create = async (salesData) => {
-  const productsData = await Promise.all(salesData.map(({ productId }) => getProduct(productId)))
-    .then((result) => result);
+  const productsData = await getProductsData(salesData);
 
   if (productsData.indexOf(null) !== -1) {
     throw new ProductNotFound(salesData[productsData.indexOf(null)].productId);
@@ -40,7 +42,7 @@ const get = async (id) => {
     const sales = await connection().then((db) =>
       db
         .collection('sales').findOne(ObjectId(id)));
-    return sales;
+    return [sales];
   }
   const sales = await connection().then((db) =>
     db
@@ -49,26 +51,23 @@ const get = async (id) => {
 };
 
 const remove = async (id) => {
-  const { products } = await get(id);
+  const [{ products }] = await get(id);
 
-  const updateQuantity = await products
+  const sales = await products
     .map(({ productId, name, quantity: soldQuantity }) => connection().then((db) =>
       db
         .collection('products')
         .updateOne(
-          { _id: ObjectId(productId) },
-          { $set: { name }, $inc: { quantity: soldQuantity } },
+          { name: { $eq: name } },
+          { $setOnInsert: { _id: ObjectId(productId), name }, $inc: { quantity: soldQuantity } },
           { upsert: true },
         )));
-
-  const sales = await Promise.all(updateQuantity).then(() => connection().then((db) => db.collection('sales').deleteOne({ _id: ObjectId(id) })));
 
   return sales;
 };
 
 const update = async (salesId, salesData) => {
-  const productsData = await Promise.all(salesData.map(({ productId }) => getProduct(productId)))
-    .then((result) => result);
+  const productsData = await getProductsData(salesData);
 
   if (productsData.indexOf(null) !== -1) {
     throw new ProductNotFound(salesData[productsData.indexOf(null)].productId);
