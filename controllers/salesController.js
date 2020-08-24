@@ -14,12 +14,19 @@ router
     }
     return res.status(200).json({ status: "success", sales: [...sales] });
   });
-/*
+
 router
   .get('/:id', async (req, res) => {
+    const saleId = { _id: Number(req.params.id) };
+    const dbSales = await genericModel.getById('sales', saleId);
 
+    if (!dbSales) return res.status(404).json({ error: 'sale not Found', code: 'not_found' });
+
+    const { _id, ...data } = dbSales;
+
+    return res.status(200).json({ ...data });
   });
- */
+
 router
   .post('/', async (req, res) => {
     const joiVerify = services.validateSales(req.body);
