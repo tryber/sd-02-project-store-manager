@@ -31,7 +31,12 @@ const get = async (id) => {
   return sales;
 };
 
+const remove = async (id) => connection().then((db) =>
+  db
+    .collection('sales').deleteOne({ _id: ObjectId(id) }));
+
 module.exports = {
   create,
   get,
+  remove,
 };

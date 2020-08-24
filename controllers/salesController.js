@@ -36,7 +36,19 @@ const get = rescue(async (req, res) => {
   res.status(200).send({ ...sales });
 });
 
+const remove = rescue(async (req, res) => {
+  const { params: { id } } = req;
+  const product = await models.productModel.remove(id)
+    .catch((err) => {
+      throw new MongoError(err.message);
+    });
+  if (product.deletedCount === 0) throw new SalesNotFound(id);
+
+  res.status(200).send({ message: `Produto ${id} removido com sucesso.` });
+});
+
 module.exports = {
   create,
   get,
+  remove,
 };
