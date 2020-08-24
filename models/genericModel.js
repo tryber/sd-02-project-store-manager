@@ -34,6 +34,11 @@ const deleteById = async (coll, obj) =>
     .then((db) => db
       .deleteOne(obj));
 
+const updateOne = async (coll, obj, upd) =>
+  dbConnection(coll)
+    .then((db) => db
+      .updateOne(obj, { $set: { ...upd } }));
+
 module.exports = {
   insert,
   findBy,
@@ -41,4 +46,5 @@ module.exports = {
   getLastId,
   getById,
   deleteById,
+  updateOne,
 };

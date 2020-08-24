@@ -10,4 +10,6 @@ app.use(bodyParser.json());
 
 app.use('/products', productsController.router);
 
+app.use('*', (_req, res) => res.status(404).json({ message: 'Route not valid', code: 'not_found' }));
+
 app.listen(PORT, () => console.log(`Port: ${PORT}`));

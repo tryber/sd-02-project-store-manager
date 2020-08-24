@@ -61,8 +61,25 @@ router
 
     await genericModel.deleteById('products', docExists);
 
-    return res.status(200).json({ message: 'product deleted', code: "success" });
-  })
+    return res.status(200).json({ message: 'product deleted', code: 'success' });
+  });
+
+router
+  .patch('/:id', async (req, res) => {
+    const id = req.params.id;
+    const isValid = services.validateProduct(req.body)
+
+    if (isValid) return res.status(422).json({ error: isValid, code: 'bad_data' });
+
+    const isExists = await genericModel.getById('products', { _id: Number(id) });
+
+    if (!isExists) return res.status(404).json({ error: 'product not exists', code: 'not_found' });
+
+    const { name, quantity } = req.body;
+    await genericModel.updateOne('products', isExists, { name, quantity });
+
+    return res.status(200).json({ message: 'updated success', code: 'success' })
+  });
 
 module.exports = {
   router,
