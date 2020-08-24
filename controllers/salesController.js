@@ -7,10 +7,10 @@ const create = rescue(async (req, res) => {
   const { body } = req;
 
   const validation = () => body.map(async ({ quantity }) =>
-    salesValidation.validateAsync({ quantity }))
-    .catch((err) => {
-      throw new MongoError(err.message);
-    });
+    salesValidation.validateAsync({ quantity })
+      .catch((err) => {
+        throw new MongoError(err.message, err.status);
+      }));
 
   await Promise.all(validation())
     .then(async () => {
@@ -19,7 +19,7 @@ const create = rescue(async (req, res) => {
       if (sales.insertedCount === 1) return res.status(201).send({ ...body });
     })
     .catch((err) => {
-      throw new MongoError(err.message);
+      throw new MongoError(err.message, err.status);
     });
 });
 
@@ -27,7 +27,7 @@ const get = rescue(async (req, res) => {
   const { params: { id } } = req;
   const sales = await models.salesModel.get(id)
     .catch((err) => {
-      throw new MongoError(err.message);
+      throw new MongoError(err.message, err.status);
     });
 
   if (!sales) throw new SalesNotFound(id);
@@ -40,7 +40,7 @@ const remove = rescue(async (req, res) => {
   const { params: { id } } = req;
   const sales = await models.salesModel.remove(id)
     .catch((err) => {
-      throw new MongoError(err.message);
+      throw new MongoError(err.message, err.status);
     });
   if (sales.deletedCount === 0) throw new SalesNotFound(id);
 
@@ -53,7 +53,7 @@ const update = rescue(async (req, res) => {
   const validation = () => products.map(async ({ quantity }) =>
     salesValidation.validateAsync({ quantity })
       .catch((err) => {
-        throw new MongoError(err.message);
+        throw new MongoError(err.message, err.status);
       }));
 
   await Promise.all(validation())
@@ -65,7 +65,7 @@ const update = rescue(async (req, res) => {
       return res.status(200).send({ id, products });
     })
     .catch((err) => {
-      throw new MongoError(err.message);
+      throw new MongoError(err.message, err.status);
     });
 });
 

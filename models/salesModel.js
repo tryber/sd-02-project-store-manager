@@ -1,15 +1,31 @@
 const { ObjectId } = require('mongodb');
 const connection = require('./connection');
-const { ProductNotFound } = require('../middleware/errorObjects');
-const { get: getProduct } = require('./productModel');
+const { ProductNotFound, InsuficientQuantity } = require('../middleware/errorObjects');
+const { get: getProduct, remove: removeProduct } = require('./productModel');
 
-const create = async (data) => {
-  const check = await Promise.all(data.map(({ productId }) => getProduct(productId)))
+const create = async (salesData) => {
+  const productsData = await Promise.all(salesData.map(({ productId }) => getProduct(productId)))
     .then((result) => result);
-  if (check.indexOf(null) !== -1) throw new ProductNotFound(data[check.indexOf(null)].productId);
-  const sales = await connection().then((db) =>
+
+  if (productsData.indexOf(null) !== -1) {
+    throw new ProductNotFound(salesData[productsData.indexOf(null)].productId);
+  }
+
+  const updateQuantity = productsData
+    .map(({ _id: id, quantity: existingQuantity }) =>
+      salesData.map(async ({ productId, quantity: soldQuantity }) => {
+        if (String(id) === String(productId) && existingQuantity >= soldQuantity) {
+          const newQuantity = existingQuantity - soldQuantity;
+          if (newQuantity === 0) return removeProduct(id);
+          return connection().then((db) => db.collection('products').updateOne({ _id: id }, { $set: { quantity: newQuantity } }));
+        }
+        throw new InsuficientQuantity(productId);
+      }));
+
+  const sales = await Promise.all(...updateQuantity).then(() => connection().then((db) =>
     db
-      .collection('sales').insertOne({ products: data.map(({ productId, quantity }) => ({ productId, quantity })) }));
+      .collection('sales').insertOne({ products: salesData.map(({ productId, quantity }) => ({ productId, quantity })) })));
+
   return sales;
 };
 

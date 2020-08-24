@@ -7,7 +7,7 @@ const get = rescue(async (req, res) => {
   const { params: { id } } = req;
   const products = await models.productModel.get(id)
     .catch((err) => {
-      throw new MongoError(err.message);
+      throw new MongoError(err.message, err.status);
     });
 
   if (!products) throw new ProductNotFound(id);
@@ -20,12 +20,12 @@ const add = rescue(async (req, res) => {
   const { body: { name, quantity } } = req;
   await productValidation.validateAsync({ name, quantity })
     .catch((err) => {
-      throw new MongoError(err.message);
+      throw new MongoError(err.message, err.status);
     });
 
   const products = await models.productModel.add({ name, quantity })
     .catch((err) => {
-      throw new MongoError(err.message);
+      throw new MongoError(err.message, err.status);
     });
 
   if (products) return res.status(201).send({ name, quantity });
@@ -36,7 +36,7 @@ const remove = rescue(async (req, res) => {
   const { params: { id } } = req;
   const product = await models.productModel.remove(id)
     .catch((err) => {
-      throw new MongoError(err.message);
+      throw new MongoError(err.message, err.status);
     });
   if (product.deletedCount === 0) throw new ProductNotFound(id);
 
@@ -49,7 +49,7 @@ const update = rescue(async (req, res) => {
 
   const products = await models.productModel.update({ id, name, quantity })
     .catch((err) => {
-      throw new MongoError(err.message);
+      throw new MongoError(err.message, err.status);
     });
 
   if (products.matchedCount === 0) throw new ProductNotFound(id);
