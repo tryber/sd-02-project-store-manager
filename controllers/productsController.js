@@ -29,12 +29,21 @@ router
         });
     }
 
-    await genericModel.insert('products', { name, quantity });
+    const dbLastId = await genericModel.getLastId('products') || {};
+    const lastIdObj = dbLastId[0] || {};
+    const newId = lastIdObj._id + 1 || 1;
+
+    await genericModel.insert('products', { _id: newId, name, quantity });
 
     return res.status(201).json({
       message: 'Successfully Inserted',
       status: 'created',
     });
+  });
+
+router
+  .delete('/:id', async (req, res) => {
+    res.status(200).json({ status: req.params.id });
   });
 
 module.exports = {
