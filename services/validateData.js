@@ -10,7 +10,7 @@ const validateSales = (data) => {
   const { productId, quantity } = data;
   const { error } = schema.sales.validate({ productId, quantity });
   return error ? error.details[0].message : null;
-}
+};
 
 module.exports = {
   validateProduct,

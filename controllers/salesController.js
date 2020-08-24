@@ -10,7 +10,7 @@ router
     if (!sales.length) {
       return res.status(200).json({ message: 'No Sales', status: 'success' });
     }
-    return res.status(200).json({ status: "success", sales: [...sales] });
+    return res.status(200).json({ status: 'success', sales: [...sales] });
   });
 
 router
@@ -42,15 +42,15 @@ router
     }
 
     const dbLastId = await genericModel.getLastId('sales') || {};
-    const lastIdObj = dbLastId[0] || {};
-    const newId = lastIdObj._id + 1 || 1;
+    const { _id } = dbLastId[0] || {};
+    const newId = _id + 1 || 1;
 
     const toReturnAPI = { _id: newId, ...req.body };
 
     const newQuantity = productExists.quantity - quantity;
 
     await genericModel.insert('sales', toReturnAPI);
-    await genericModel.getById('products', { _id: Number(productId) })
+    await genericModel.getById('products', { _id: Number(productId) });
     await genericModel.updateOne('products', { _id: productId }, { quantity: newQuantity });
 
     return res.status(201).json({ message: 'Sale successfully registered', sale: { ...toReturnAPI } });
@@ -79,8 +79,8 @@ router
     }
 
     const newQuantity = sumQuantity - quantity;
-
-    await genericModel.updateOne('products', { _id: productExists._id }, { quantity: newQuantity });
+    const { _id } = productExists;
+    await genericModel.updateOne('products', { _id }, { quantity: newQuantity });
     await genericModel.updateOne('sales', saleExists, { productId, quantity });
 
     return res.status(200).json({ message: 'updated success', code: 'success' });
@@ -98,7 +98,7 @@ router
     const actualQuantity = saleExists.quantity + quantity;
 
     await genericModel.updateOne('products', { _id }, { quantity: actualQuantity });
-  
+
     await genericModel.deleteById('sales', saleExists);
 
     return res.status(200).json({ message: 'sale deleted', code: 'success' });

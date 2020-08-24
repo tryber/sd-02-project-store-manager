@@ -10,7 +10,7 @@ router
     if (!results.length) {
       return res.status(200).json({ message: 'Database is empty' });
     }
-    return res.status(200).json({ status: "success", products: [...results] });
+    return res.status(200).json({ status: 'success', products: [...results] });
   });
 
 router
@@ -30,10 +30,10 @@ router
     }
 
     const dbLastId = await genericModel.getLastId('products') || {};
-    const lastIdObj = dbLastId[0] || {};
-    const newId = lastIdObj._id + 1 || 1;
+    const { _id } = dbLastId[0] || {};
+    const newId = _id + 1 || 1;
 
-    const product = { _id: newId, name, quantity }
+    const product = { _id: newId, name, quantity };
 
     await genericModel.insert('products', product);
 
@@ -78,7 +78,7 @@ router
     const { name, quantity } = req.body;
     await genericModel.updateOne('products', isExists, { name, quantity });
 
-    return res.status(200).json({ message: 'updated success', code: 'success' })
+    return res.status(200).json({ message: 'updated success', code: 'success' });
   });
 
 module.exports = {
