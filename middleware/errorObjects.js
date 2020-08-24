@@ -4,7 +4,7 @@ function ProductNotFound(message = '') {
 }
 
 function SalesNotFound(message = '') {
-  this.message = `Produto ${message} não foi encontrado.`;
+  this.message = `Venda ${message} não foi encontrada.`;
   this.status = 404;
 }
 

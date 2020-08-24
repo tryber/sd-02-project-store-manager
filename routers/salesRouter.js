@@ -8,6 +8,8 @@ router.get('/:id', (req, res, next) => controllers.salesController.get(req, res,
 
 router.delete('/:id', (req, res, next) => controllers.salesController.remove(req, res, next));
 
+router.put('/:id', (req, res, next) => controllers.salesController.update(req, res, next));
+
 router.get('/', (req, res, next) => controllers.salesController.get(req, res, next));
 
 router.post('/', (req, res, next) => controllers.salesController.create(req, res, next));

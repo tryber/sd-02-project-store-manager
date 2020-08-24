@@ -14,9 +14,9 @@ const create = rescue(async (req, res) => {
 
   await Promise.all(validation())
     .then(async () => {
-      const products = await models.salesModel.create(body);
+      const sales = await models.salesModel.create(body);
 
-      if (products.insertedCount === 1) return res.status(201).send({ ...body });
+      if (sales.insertedCount === 1) return res.status(201).send({ ...body });
     })
     .catch((err) => {
       throw new MongoError(err.message);
@@ -38,17 +38,40 @@ const get = rescue(async (req, res) => {
 
 const remove = rescue(async (req, res) => {
   const { params: { id } } = req;
-  const product = await models.productModel.remove(id)
+  const sales = await models.salesModel.remove(id)
     .catch((err) => {
       throw new MongoError(err.message);
     });
-  if (product.deletedCount === 0) throw new SalesNotFound(id);
+  if (sales.deletedCount === 0) throw new SalesNotFound(id);
 
   res.status(200).send({ message: `Produto ${id} removido com sucesso.` });
+});
+
+const update = rescue(async (req, res) => {
+  const { params: { id }, body: products } = req;
+
+  const validation = () => products.map(async ({ quantity }) =>
+    salesValidation.validateAsync({ quantity })
+      .catch((err) => {
+        throw new MongoError(err.message);
+      }));
+
+  await Promise.all(validation())
+    .then(async () => {
+      const sales = await models.salesModel.update(id, products);
+
+      if (sales.matchedCount === 0) throw new SalesNotFound(id);
+
+      return res.status(200).send({ id, products });
+    })
+    .catch((err) => {
+      throw new MongoError(err.message);
+    });
 });
 
 module.exports = {
   create,
   get,
   remove,
+  update,
 };
