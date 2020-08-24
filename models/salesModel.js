@@ -46,15 +46,36 @@ const remove = async (id) => connection().then((db) =>
   db
     .collection('sales').deleteOne({ _id: ObjectId(id) }));
 
-const update = async (id, products) => {
-  const check = await Promise.all(products.map(({ productId }) => getProduct(productId)))
+
+const update = async (salesId, salesData) => {
+  const productsData = await Promise.all(salesData.map(({ productId }) => getProduct(productId)))
     .then((result) => result);
-  if (check.indexOf(null) !== -1) {
-    throw new ProductNotFound(products[check.indexOf(null)].productId);
+
+  if (productsData.indexOf(null) !== -1) {
+    throw new ProductNotFound(salesData[productsData.indexOf(null)].productId);
   }
-  const sales = await connection().then((db) =>
+
+  const updateQuantity = productsData
+    .map(({ _id: id, quantity: existingQuantity }) =>
+      salesData.map(async ({ productId, quantity: updatedQuantity }) => {
+        const { products } = await get(salesId);
+        console.log(products)
+        const [{ quantity: alreadySoldQty }] = products
+          .filter(({ productId: thisId }) => thisId === productId);
+        console.log(alreadySoldQty);
+        const difference = alreadySoldQty - updatedQuantity;
+
+        if (String(id) === String(productId) && existingQuantity >= difference * -1) {
+          const newQuantity = existingQuantity + difference;
+          if (newQuantity === 0) return removeProduct(id);
+          return connection().then((db) => db.collection('products').updateOne({ _id: id }, { $set: { quantity: newQuantity } }));
+        }
+        throw new InsuficientQuantity(productId);
+      }));
+
+  const sales = await Promise.all(...updateQuantity).then(() => connection().then((db) =>
     db
-      .collection('sales').updateOne({ _id: ObjectId(id) }, { $set: { products } }));
+      .collection('sales').updateOne({ _id: ObjectId(salesId) }, { $set: { products: salesData } })));
   return sales;
 };
 
