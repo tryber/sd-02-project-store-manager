@@ -1,6 +1,5 @@
 const { ObjectId } = require('mongodb');
 const connection = require('./connection');
-const error = require('../middleware/errorObjects');
 
 const get = async (id) => {
   if (id) {
@@ -24,30 +23,19 @@ const add = async ({ name, quantity }) => {
       if (!data.name_1) return db.collection('products').createIndex({ name: 1 }, { unique: true });
     }));
 
-  await connection().then((db) =>
+  return connection().then((db) =>
     db
-      .collection('products').insertOne({ name, quantity }))
-    .catch((err) => {
-      throw new error.MongoError(err.message);
-    });
-
-  return true;
+      .collection('products').insertOne({ name, quantity }));
 };
 
 const remove = async (id) => connection().then((db) =>
   db
-    .collection('products').deleteOne({ _id: ObjectId(id) }))
-  .catch((err) => {
-    throw new error.MongoError(err.message);
-  });
+    .collection('products').deleteOne({ _id: ObjectId(id) }));
 
 const update = async ({ id, name, quantity }) => {
   const products = await connection().then((db) =>
     db
-      .collection('products').updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } }))
-    .catch((err) => {
-      throw new error.MongoError(err.message);
-    });
+      .collection('products').updateOne({ _id: ObjectId(id) }, { $set: { name, quantity } }));
 
   return products;
 };

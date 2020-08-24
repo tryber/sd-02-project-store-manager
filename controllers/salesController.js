@@ -1,5 +1,5 @@
 const rescue = require('express-rescue');
-const error = require('../middleware/errorObjects');
+const { MongoError, SalesNotFound } = require('../middleware/errorObjects');
 const models = require('../models');
 const { salesValidation } = require('../services/joiValidation');
 
@@ -7,7 +7,10 @@ const create = rescue(async (req, res) => {
   const { body } = req;
 
   const validation = () => body.map(async ({ quantity }) =>
-    salesValidation.validateAsync({ quantity }));
+    salesValidation.validateAsync({ quantity }))
+    .catch((err) => {
+      throw new MongoError(err.message);
+    });
 
   await Promise.all(validation())
     .then(async () => {
@@ -16,10 +19,24 @@ const create = rescue(async (req, res) => {
       if (products.insertedCount === 1) return res.status(201).send({ ...body });
     })
     .catch((err) => {
-      throw new Error(err.message);
+      throw new MongoError(err.message);
     });
+});
+
+const get = rescue(async (req, res) => {
+  const { params: { id } } = req;
+  const sales = await models.salesModel.get(id)
+    .catch((err) => {
+      throw new MongoError(err.message);
+    });
+
+  if (!sales) throw new SalesNotFound(id);
+  if (sales.length === 0) throw new SalesNotFound();
+
+  res.status(200).send({ ...sales });
 });
 
 module.exports = {
   create,
+  get,
 };
