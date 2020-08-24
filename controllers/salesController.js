@@ -1,10 +1,8 @@
 const express = require('express');
 const genericModel = require('../models/genericModel');
 const services = require('../services');
-const { product } = require('../services/schema');
 
 const router = express.Router();
-
 
 router
   .get('/', async (_req, res) => {
@@ -53,12 +51,24 @@ router
 
     return res.status(201).json({ message: 'Sale successfully registered', sale: { ...toReturnAPI } });
   });
-/*
-router
-  .patch('/', async (req, res) => {
 
+router
+  .put('/:id', async (req, res) => {
+    const id = req.params.id;
+    const isValid = services.validateSales(req.body);
+
+    if (isValid) return res.status(422).json({ error: isValid, code: 'bad_data' });
+
+    const isExists = await genericModel.getById('sales', { _id: Number(id) });
+
+    if (!isExists) return res.status(404).json({ error: 'sale not exists', code: 'not_found' });
+
+    const { productId, quantity } = req.body;
+    await genericModel.updateOne('sales', isExists, { productId, quantity });
+
+    return res.status(200).json({ message: 'updated success', code: 'success' });
   });
-*/
+
 
 router
   .delete('/:id', async (req, res) => {

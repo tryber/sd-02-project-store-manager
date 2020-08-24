@@ -33,11 +33,13 @@ router
     const lastIdObj = dbLastId[0] || {};
     const newId = lastIdObj._id + 1 || 1;
 
-    await genericModel.insert('products', { _id: newId, name, quantity });
+    const product = { _id: newId, name, quantity }
+
+    await genericModel.insert('products', product);
 
     return res.status(201).json({
       message: 'Successfully Inserted',
-      status: 'created',
+      product,
     });
   });
 
@@ -65,10 +67,9 @@ router
   });
 
 router
-  .patch('/:id', async (req, res) => {
+  .put('/:id', async (req, res) => {
     const id = req.params.id;
     const isValid = services.validateProduct(req.body);
-    // validar apenas o campo que vier
 
     if (isValid) return res.status(422).json({ error: isValid, code: 'bad_data' });
 
