@@ -51,8 +51,6 @@ const get = async (id) => {
 const remove = async (id) => {
   const { products } = await get(id);
 
-  console.log(products);
-
   const updateQuantity = await products
     .map(({ productId, name, quantity: soldQuantity }) => connection().then((db) =>
       db
@@ -82,7 +80,6 @@ const update = async (salesId, salesData) => {
 
   const updatedValues = await
   complexCalculation.updateQuantityCheck(productsData, salesData, get, salesId);
-
 
   const useUpdatedValues = productsData.map(({ _id: id }, index) =>
     salesData.map(async ({ productId }) => {
