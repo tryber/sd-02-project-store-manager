@@ -58,12 +58,19 @@ router
   .patch('/', async (req, res) => {
 
   });
-*//*
+*/
+
 router
   .delete('/:id', async (req, res) => {
+    const saleExists = await genericModel.getById('sales', { _id: Number(req.params.id) });
 
+    if (!saleExists) return res.status(404).json({ error: 'sale not Found', code: 'not_found' });
+
+    await genericModel.deleteById('sales', saleExists);
+
+    return res.status(200).json({ message: 'sale deleted', code: 'success' });
   });
-*/
+
 
 module.exports = {
   router,
