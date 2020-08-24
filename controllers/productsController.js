@@ -10,7 +10,7 @@ router
     if (!results.length) {
       return res.status(200).json({ message: 'Database is empty' });
     }
-    return res.status(200).json({ products: [...results] });
+    return res.status(200).json({ status: "success", products: [...results] });
   });
 
 router
@@ -42,9 +42,27 @@ router
   });
 
 router
-  .delete('/:id', async (req, res) => {
-    res.status(200).json({ status: req.params.id });
+  .get('/:id', async (req, res) => {
+    const idObj = { _id: Number(req.params.id) };
+    const dbResponse = await genericModel.getById('products', idObj);
+
+    if (!dbResponse) return res.status(404).json({ error: 'product not Found', code: 'not_found' });
+
+    const { _id, ...data } = dbResponse;
+
+    return res.status(200).json({ ...data });
   });
+
+router
+  .delete('/:id', async (req, res) => {
+    const docExists = await genericModel.getById('products', { _id: Number(req.params.id) });
+
+    if (!docExists) return res.status(404).json({ error: 'product not Found', code: 'not_found' });
+
+    await genericModel.deleteById('products', docExists);
+
+    return res.status(200).json({ message: 'product deleted', code: "success" });
+  })
 
 module.exports = {
   router,
