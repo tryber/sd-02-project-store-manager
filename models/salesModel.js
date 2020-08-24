@@ -51,12 +51,14 @@ const get = async (id) => {
 const remove = async (id) => {
   const { products } = await get(id);
 
+  console.log(products);
+
   const updateQuantity = await products
     .map(({ productId, name, quantity: soldQuantity }) => connection().then((db) =>
       db
         .collection('products')
         .updateOne(
-          { _id: productId },
+          { _id: ObjectId(productId) },
           { $set: { name }, $inc: { quantity: soldQuantity } },
           { upsert: true },
         )));
