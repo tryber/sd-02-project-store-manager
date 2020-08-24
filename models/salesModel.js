@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const connection = require('./connection');
-const isQuantitySuficient = require('../services/complexCalculation');
+const complexCalculation = require('../services/complexCalculation');
 const { ProductNotFound, InsuficientQuantity } = require('../middleware/errorObjects');
 const { get: getProduct, remove: removeProduct } = require('./productModel');
 
@@ -12,16 +12,16 @@ const create = async (salesData) => {
     throw new ProductNotFound(salesData[productsData.indexOf(null)].productId);
   }
 
-  if (!isQuantitySuficient(productsData, salesData)) throw new InsuficientQuantity();
+  if (!complexCalculation.saleQuantityCheck(productsData, salesData)) {
+    throw new InsuficientQuantity();
+  }
 
   const updateValues = productsData.map(({ _id: id, quantity: existingQuantity }) =>
     salesData.map(async ({ productId, quantity: soldQuantity }) => {
       if (String(id) === String(productId)) {
-        if (existingQuantity >= soldQuantity) {
-          const newQuantity = existingQuantity - soldQuantity;
-          if (newQuantity === 0) await removeProduct(id);
-          await connection().then((db) => db.collection('products').updateOne({ _id: id }, { $set: { quantity: newQuantity } }));
-        }
+        const newQuantity = existingQuantity - soldQuantity;
+        if (newQuantity === 0) await removeProduct(id);
+        await connection().then((db) => db.collection('products').updateOne({ _id: id }, { $set: { quantity: newQuantity } }));
       }
     }));
 
@@ -74,27 +74,23 @@ const update = async (salesId, salesData) => {
     throw new ProductNotFound(salesData[productsData.indexOf(null)].productId);
   }
 
-  const updateQuantity = productsData
-    .map(({ _id: id, quantity: existingQuantity }) =>
-      salesData.map(async ({ productId, quantity: updatedQuantity }) => {
-        const { products } = await get(salesId);
-        const [{ quantity: alreadySoldQty }] = products
-          .filter(({ productId: thisId }) => String(thisId) === String(productId));
+  if (!await complexCalculation.updateQuantityCheck(productsData, salesData, get, salesId)) {
+    throw new InsuficientQuantity();
+  }
 
-        const difference = alreadySoldQty - updatedQuantity;
+  const updatedValues = await
+  complexCalculation.updateQuantityCheck(productsData, salesData, get, salesId);
 
-        if (String(id) === String(productId)) {
-          if (existingQuantity >= difference * -1) {
-            const newQuantity = existingQuantity + difference;
-            if (newQuantity === 0) return removeProduct(id);
-            return connection().then((db) => db.collection('products').updateOne({ _id: id }, { $set: { quantity: newQuantity } }));
-          }
-          throw new InsuficientQuantity(productId);
-        }
-        return undefined;
-      }));
 
-  const sales = await Promise.all(updateQuantity).then(() => connection().then((db) =>
+  const useUpdatedValues = productsData.map(({ _id: id }, index) =>
+    salesData.map(async ({ productId }) => {
+      if (String(id) === String(productId)) {
+        if (updatedValues[index] === 0) await removeProduct(id);
+        await connection().then((db) => db.collection('products').updateOne({ _id: id }, { $set: { quantity: updatedValues[index] } }));
+      }
+    }));
+
+  const sales = await Promise.all(useUpdatedValues).then(() => connection().then((db) =>
     db
       .collection('sales').updateOne({ _id: ObjectId(salesId) }, { $set: { products: salesData } })));
 
