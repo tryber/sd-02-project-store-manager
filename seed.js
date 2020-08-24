@@ -21,7 +21,6 @@ db.sales.insertMany([
   { "_id": 3, "productId": 4, "quantity": 19 },
   { "_id": 5, "productId": 5, "quantity": 4 },
   { "_id": 6, "productId": 5, "quantity": 4 },
-  { "_id": 7, "productId": 7, "quantity": 8 },
   { "_id": 8, "productId": 3, "quantity": 7 },
   { "_id": 9, "productId": 1, "quantity": 9 },
   { "_id": 10, "productId": 2, "quantity": 9 },
