@@ -39,6 +39,7 @@ const updateOne = async (coll, obj, upd) =>
     .then((db) => db
       .updateOne(obj, { $set: { ...upd } }));
 
+
 module.exports = {
   insert,
   findBy,

@@ -30,14 +30,14 @@ router
     const joiVerify = services.validateSales(req.body);
     if (joiVerify) return res.status(422).json({ error: joiVerify, code: 'bad_data' });
 
-    const { productId } = req.body;
+    const { productId, quantity } = req.body;
     const productExists = await genericModel.getById('products', { _id: Number(productId) });
 
-    if (!productExists) {
-      return res.status(404)
+    if (!productExists || productExists.quantity < quantity) {
+      return res.status(403)
         .json({
-          error: `Product with ProductID ${productId} not exists in db`,
-          code: 'not_found',
+          error: 'Product not found or quantity out of stock ',
+          code: 'forbidden',
         });
     }
 
@@ -47,7 +47,11 @@ router
 
     const toReturnAPI = { _id: newId, ...req.body };
 
+    const newQuantity = productExists.quantity - quantity;
+
     await genericModel.insert('sales', toReturnAPI);
+    await genericModel.getById('products', { _id: Number(productId) })
+    await genericModel.updateOne('products', { _id: productId }, { quantity: newQuantity });
 
     return res.status(201).json({ message: 'Sale successfully registered', sale: { ...toReturnAPI } });
   });
@@ -59,12 +63,25 @@ router
 
     if (isValid) return res.status(422).json({ error: isValid, code: 'bad_data' });
 
-    const isExists = await genericModel.getById('sales', { _id: Number(id) });
+    const saleExists = await genericModel.getById('sales', { _id: Number(id) });
 
-    if (!isExists) return res.status(404).json({ error: 'sale not exists', code: 'not_found' });
+    if (!saleExists) return res.status(404).json({ error: 'sale not exists', code: 'not_found' });
 
     const { productId, quantity } = req.body;
-    await genericModel.updateOne('sales', isExists, { productId, quantity });
+    const productExists = await genericModel.getById('products', { _id: productId });
+    const sumQuantity = productExists.quantity + saleExists.quantity;
+
+    if (!productExists || sumQuantity < quantity) {
+      return res.status(403).json({
+        error: 'product not exists or quantity out of stock',
+        code: 'not_found',
+      });
+    }
+
+    const newQuantity = sumQuantity - quantity;
+
+    await genericModel.updateOne('products', { _id: productExists._id }, { quantity: newQuantity });
+    await genericModel.updateOne('sales', saleExists, { productId, quantity });
 
     return res.status(200).json({ message: 'updated success', code: 'success' });
   });
@@ -76,6 +93,12 @@ router
 
     if (!saleExists) return res.status(404).json({ error: 'sale not Found', code: 'not_found' });
 
+    const { _id, quantity } = await genericModel.getById('products', { _id: saleExists.productId });
+
+    const actualQuantity = saleExists.quantity + quantity;
+
+    await genericModel.updateOne('products', { _id }, { quantity: actualQuantity });
+  
     await genericModel.deleteById('sales', saleExists);
 
     return res.status(200).json({ message: 'sale deleted', code: 'success' });

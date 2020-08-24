@@ -50,9 +50,7 @@ router
 
     if (!dbResponse) return res.status(404).json({ error: 'product not Found', code: 'not_found' });
 
-    const { _id, ...data } = dbResponse;
-
-    return res.status(200).json({ ...data });
+    return res.status(200).json({ ...dbResponse });
   });
 
 router
