@@ -67,7 +67,8 @@ router
 router
   .patch('/:id', async (req, res) => {
     const id = req.params.id;
-    const isValid = services.validateProduct(req.body)
+    const isValid = services.validateProduct(req.body);
+    // validar apenas o campo que vier
 
     if (isValid) return res.status(422).json({ error: isValid, code: 'bad_data' });
 
