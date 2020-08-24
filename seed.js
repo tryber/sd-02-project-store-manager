@@ -1,4 +1,6 @@
-// use storeManager;
+/*
+
+use storeManager;
 
 db.createCollection("products");
 
@@ -34,3 +36,5 @@ db.sales.insertMany([
   { "_id": 19, "productId": 1, "quantity": 3 },
   { "_id": 20, "productId": 1, "quantity": 2 },
 ]);
+
+*/
