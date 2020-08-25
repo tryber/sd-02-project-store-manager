@@ -15,7 +15,6 @@ const updateQuantityCheck = async (productsData, salesData, get, salesId) => {
   const calc = await productsData.map(async ({ _id: id, quantity: existingQuantity }) => {
     const qtyCalculation = salesData.map((async ({ productId, quantity: updatedQuantity }) => {
       const [{ products }] = await get(salesId);
-      console.log(products)
       const [{ quantity: alreadySoldQty }] = products
         .filter(({ productId: thisId }) => String(thisId) === String(productId));
 
