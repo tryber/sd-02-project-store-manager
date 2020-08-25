@@ -69,15 +69,16 @@ router
 
     const { productId, quantity } = req.body;
     const productExists = await genericModel.getById('products', { _id: productId });
-    const sumQuantity = productExists.quantity + saleExists.quantity;
 
-    if (!productExists || sumQuantity < quantity) {
+    if (!productExists || productExists.quantity < quantity) {
       return res.status(403).json({
         error: 'product not exists or quantity out of stock',
         code: 'not_found',
       });
     }
 
+    const sumQuantity = productExists.quantity + saleExists.quantity;
+    
     const newQuantity = sumQuantity - quantity;
     const { _id } = productExists;
     await genericModel.updateOne('products', { _id }, { quantity: newQuantity });
