@@ -78,7 +78,7 @@ router
     }
 
     const sumQuantity = productExists.quantity + saleExists.quantity;
-    
+
     const newQuantity = sumQuantity - quantity;
     const { _id } = productExists;
     await genericModel.updateOne('products', { _id }, { quantity: newQuantity });
