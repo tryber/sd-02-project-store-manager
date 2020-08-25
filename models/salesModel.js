@@ -61,7 +61,10 @@ const remove = async (id) => {
           { name: { $eq: name } },
           { $setOnInsert: { _id: ObjectId(productId), name }, $inc: { quantity: soldQuantity } },
           { upsert: true },
-        )));
+        ))
+      .then(() => connection().then((db) => db
+        .collection('sales')
+        .deleteOne({ _id: ObjectId(id) }))));
 
   return sales;
 };
