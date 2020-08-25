@@ -1,0 +1,29 @@
+{
+  "name": "sd-02-project-store-manager",
+  "version": "1.0.0",
+  "description": "SD-02 Store Manager",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tryber/sd-02-project-store-manager.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tryber/sd-02-project-store-manager/issues"
+  },
+  "homepage": "https://github.com/tryber/sd-02-project-store-manager#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "eslint": "^7.7.0",
+    "express": "^4.17.1",
+    "joi": "^17.2.1",
+    "mongodb": "^3.6.0",
+    "nodemon": "^2.0.4"
+  }
+}
